@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FamTalk · 우리 가족 영어 프로젝트 기획서 v4.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EDEAE4; --card:#FFFFFF; --soft:#F6F4EF;
+    --ink:#1B1B1F; --ink-soft:#585860; --ink-faint:#9B9AA0; --line:#E4E0D8;
+    /* level gradients (from time-of-day reference) */
+    --gA:linear-gradient(180deg,#1FB6C6 0%,#4FC4A6 48%,#F2C173 100%);
+    --gB:linear-gradient(180deg,#3E86E6 0%,#36B0C4 55%,#46CFA0 100%);
+    --gC:linear-gradient(180deg,#4F73E6 0%,#8C7BE2 45%,#F39BC1 100%);
+    --gD:linear-gradient(180deg,#ED5C92 0%,#F47C77 52%,#F8B065 100%);
+    --gE:linear-gradient(180deg,#242A5E 0%,#4D3A7E 50%,#9C4F96 100%);
+    --gF:linear-gradient(180deg,#143B4C 0%,#1F6A72 55%,#37999A 100%);
+    /* level solids (readable) */
+    --cA:#159A93; --cB:#2E73C4; --cC:#6A5FCB; --cD:#D9527E; --cE:#6E4096; --cF:#1C6E72;
+    --brand:#2E73C4;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-weight:300;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 8% 4%, rgba(46,115,196,.05), transparent 38%),radial-gradient(circle at 94% 98%, rgba(217,82,126,.04), transparent 42%);}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 30px}
+  .reveal{opacity:0;transform:translateY(16px);animation:rise .85s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* cover */
+  header{padding:74px 0 48px;border-bottom:1.5px solid var(--ink);position:relative}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--brand);font-weight:500;display:flex;align-items:center;gap:14px;margin-bottom:26px}
+  .tag::after{content:"";flex:1;height:1px;background:var(--line)}
+  h1.title{font-weight:900;font-size:clamp(54px,10vw,120px);line-height:.92;letter-spacing:-.035em;color:var(--ink)}
+  h1.title .dot{background:var(--gC);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .subtitle{font-size:clamp(20px,3.1vw,30px);margin-top:16px;color:var(--ink);font-weight:800;letter-spacing:-.02em}
+  .lede{margin-top:20px;max-width:680px;font-size:16.5px;color:var(--ink-soft);font-weight:400}
+  .lede b{color:var(--ink);font-weight:700}
+  .meta{margin-top:36px;display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:7px;overflow:hidden;width:fit-content;background:var(--card)}
+  .meta div{padding:13px 24px;border-right:1px solid var(--line)}
+  .meta div:last-child{border-right:none}
+  .meta .k{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase}
+  .meta .v{font-size:14.5px;font-weight:600;color:var(--ink);margin-top:3px}
+  .swatches{margin-top:26px}
+  .sw-l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:9px}
+  .sw-row{display:flex;gap:7px}
+  .sw{flex:1;border-radius:7px;overflow:hidden;text-align:center}
+  .sw .bar{height:34px;background:var(--g)}
+  .sw .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--ink-soft);padding:5px 0 0}
+
+  /* section */
+  section{padding:60px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:14px}
+  .sec-num{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--brand)}
+  .sec-title{font-size:clamp(28px,4.2vw,42px);font-weight:800;color:var(--ink);letter-spacing:-.025em}
+  .sec-desc{color:var(--ink-soft);max-width:740px;font-size:15.5px;font-weight:400;margin-bottom:32px}
+  .sec-desc b{color:var(--ink);font-weight:700}
+
+  /* vision */
+  .vision-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px}
+  .vision-card{background:linear-gradient(140deg,#242A5E 0%,#4A3A7E 46%,#1F6A72 100%);color:#F3F1EC;border-radius:16px;padding:40px;position:relative;overflow:hidden}
+  .vision-card .big{font-size:27px;line-height:1.42;font-weight:800;letter-spacing:-.02em}
+  .vision-card .big b{background:var(--gA);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  .vision-card .rip{position:absolute;right:-90px;bottom:-90px;width:260px;height:260px;border-radius:50%;background:repeating-radial-gradient(circle at center,transparent 0 8px,rgba(255,255,255,.08) 8px 9px)}
+  .goals{display:flex;flex-direction:column;gap:12px}
+  .goal{display:flex;gap:15px;align-items:flex-start;padding:15px 19px;background:var(--card);border:1px solid var(--line);border-radius:11px}
+  .goal .ic{font-family:'IBM Plex Mono',monospace;font-weight:600;color:#fff;font-size:11px;background:var(--g);padding:4px 7px;border-radius:7px;margin-top:1px}
+  .goal .gt{font-weight:700;font-size:15px}
+  .goal .gd{font-size:13px;color:var(--ink-soft);font-weight:400}
+
+  /* level ladder */
+  .ladder-cap{display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+  .ladder{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+  .rung{display:grid;grid-template-columns:236px 1fr;border-top:1px solid var(--line);position:relative}
+  .rung:first-child{border-top:none}
+  .rung .lhs{display:flex;gap:15px;align-items:center;padding:17px 22px}
+  .rung .badge{width:54px;height:54px;border-radius:15px;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:25px;flex-shrink:0;box-shadow:0 5px 14px rgba(0,0,0,.13)}
+  .rung .meta2 .cefr{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--ink-faint);font-weight:500}
+  .rung .meta2 .lname{font-size:20px;font-weight:800;color:var(--ink);margin:1px 0 3px;letter-spacing:-.02em}
+  .rung .meta2 .who{font-size:12px;color:var(--ink-soft);font-weight:400;line-height:1.4}
+  .rung .rhs{display:grid;grid-template-columns:repeat(3,1fr)}
+  .skill{padding:16px 18px;border-left:1px solid var(--line)}
+  .skill.key{background:var(--soft)}
+  .skill .sl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--c2);font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+  .skill .sl .star{font-size:11px}
+  .skill .sv{font-size:13px;color:var(--ink);font-weight:400;line-height:1.5}
+
+  /* placement */
+  .place{margin-top:24px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:24px 26px 20px}
+  .place .pl-title{font-size:18px;font-weight:800;margin-bottom:4px;letter-spacing:-.02em}
+  .place .pl-sub{font-size:13px;color:var(--ink-soft);font-weight:400;margin-bottom:22px}
+  .strip-names{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:8px;align-items:end;min-height:64px}
+  .ncell{display:flex;flex-direction:column;gap:5px;justify-content:flex-end}
+  .nchip{font-size:12px;font-weight:700;text-align:center;padding:6px 4px;border-radius:8px;color:#fff;background:var(--g);line-height:1.2;text-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .nchip small{display:block;font-weight:500;font-size:9.5px;opacity:.92}
+  .strip-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .seg{text-align:center;border-radius:9px;padding:14px 4px;color:#fff;background:var(--g);text-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .seg .sgl{font-weight:900;font-size:22px;line-height:1}
+  .seg .sgc{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;opacity:.95;margin-top:3px}
+  .place .pl-note{font-size:12px;color:var(--ink-faint);font-weight:400;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  .place .pl-note b{color:var(--ink-soft);font-weight:600}
+
+  /* UI mockups */
+  .ui-note{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:14px 20px;margin-bottom:26px;flex-wrap:wrap}
+  .ui-note .uib{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:#fff;background:var(--ink);padding:5px 11px;border-radius:20px}
+  .ui-note .uit{font-size:13.5px;color:var(--ink-soft);font-weight:400}
+  .ui-note .uit b{color:var(--ink);font-weight:700}
+  .uikit{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .screen{border-radius:24px;overflow:hidden;position:relative;aspect-ratio:9/16;background:var(--g);box-shadow:0 14px 34px rgba(0,0,0,.16);color:#fff;display:flex;flex-direction:column}
+  .screen .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0}
+  .screen .topbar .right{display:flex;gap:12px;align-items:center}
+  .screen .topbar svg{opacity:.95;display:block}
+  .screen .scr-body{padding:26px 22px 0}
+  .screen .scr-lv{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.13em;opacity:.92;font-weight:500}
+  .screen .scr-t{font-size:30px;font-weight:900;line-height:1.04;margin:8px 0 9px;letter-spacing:-.03em;text-shadow:0 1px 8px rgba(0,0,0,.12)}
+  .screen .scr-a{font-size:13px;opacity:.92;font-weight:400}
+  .screen .ripple{margin-top:auto;height:46%;position:relative;-webkit-mask-image:linear-gradient(180deg,transparent,#000 60%);mask-image:linear-gradient(180deg,transparent,#000 60%)}
+  .screen .ripple::before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(circle at 50% 108%,transparent 0 8px,rgba(255,255,255,.22) 8px 9px)}
+  .screen .dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+  .screen .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.7)}
+  .screen .dots i:first-child{background:#fff}
+  .screen .voice{position:absolute;right:16px;bottom:16px;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .screen .voice .vc{width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+  .screen .voice .vl{font-family:'IBM Plex Mono',monospace;font-size:7px;letter-spacing:.12em;opacity:.85}
+
+  /* TOEFL */
+  .toefl{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card)}
+  .toefl-head{display:flex;align-items:center;gap:16px;padding:24px 28px;background:var(--gE);color:#fff;flex-wrap:wrap}
+  .toefl-head .tbadge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;border:1px solid rgba(255,255,255,.42);padding:5px 11px;border-radius:20px}
+  .toefl-head h3{font-size:25px;font-weight:800;letter-spacing:-.02em}
+  .toefl-head .thint{font-size:12.5px;color:rgba(255,255,255,.82);font-weight:400;margin-left:auto}
+  .toefl-body{padding:28px}
+  .tflow{display:grid;grid-template-columns:repeat(5,1fr);margin-bottom:26px}
+  .tstep{padding:0 14px;position:relative;text-align:center}
+  .tstep:not(:last-child)::after{content:"→";position:absolute;right:-7px;top:14px;color:var(--cE);font-size:16px}
+  .tstep .tsn{width:32px;height:32px;border-radius:50%;background:var(--gE);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+  .tstep .tst{font-weight:700;font-size:13.5px}
+  .tstep .tsd{font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-top:3px;line-height:1.4}
+  .tareas{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+  .tarea{border:1px solid var(--line);border-radius:11px;padding:14px;background:var(--soft)}
+  .tarea .tah{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .tarea .tan{font-weight:800;font-size:14px}
+  .tarea .emp{font-size:11px;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:11px;font-weight:600}
+  .emp.core{background:var(--cE);color:#fff}
+  .emp.imp{background:var(--cB);color:#fff}
+  .emp.min{background:#EDEAE4;color:var(--ink-faint);border:1px solid var(--line)}
+  .tarea .tad{font-size:12px;color:var(--ink-soft);font-weight:400;line-height:1.45}
+  .tlegend{font-size:11px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;margin-bottom:18px}
+  .tmock{display:flex;align-items:center;gap:14px;background:var(--gE);border-radius:12px;padding:18px 22px;color:#fff}
+  .tmock .tmi{font-size:24px}
+  .tmock .tmt{font-weight:700;font-size:15px}
+  .tmock .tmd{font-size:13px;color:rgba(255,255,255,.85);font-weight:400}
+
+  /* axes */
+  .axes{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
+  .axis{border:1px solid var(--line);border-radius:14px;padding:30px;background:var(--card)}
+  .axis.a1{border-top:5px solid var(--cB)}
+  .axis.a2{border-top:5px solid var(--cD)}
+  .axis .anum{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;color:var(--ink-faint)}
+  .axis h3{font-size:23px;font-weight:800;margin:6px 0 5px;letter-spacing:-.02em}
+  .axis .ahint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--brand);margin-bottom:12px}
+  .axis p{font-size:14px;color:var(--ink-soft);font-weight:400}
+  .axis .feats{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .axis .feats span{font-size:12px;font-weight:500;background:var(--soft);border:1px solid var(--line);padding:5px 11px;border-radius:20px}
+  .joiner{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 18px}
+  .joiner .plus{width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:300}
+  .joiner .jt{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--ink-faint);margin-top:12px;text-align:center;text-transform:uppercase}
+
+  /* principle */
+  .principle{display:flex;align-items:center;gap:16px;background:var(--ink);color:#F3F1EC;border-radius:12px;padding:16px 24px;margin-bottom:26px;flex-wrap:wrap}
+  .principle .pi{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;border:1px solid rgba(255,255,255,.32);padding:5px 11px;border-radius:20px}
+  .principle .pt{font-size:14px;font-weight:400}
+  .principle .pt b{font-weight:700;background:var(--gA);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* features */
+  .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .feat-col{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+  .feat-col .ch{padding:18px 24px;color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
+  .feat-col.indiv .ch{background:var(--gB)}
+  .feat-col.fam .ch{background:var(--gD)}
+  .feat-col .ch .cm{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.85;margin-left:auto;letter-spacing:.1em;font-weight:500}
+  .feat-item{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:15px}
+  .feat-item.hl{background:var(--soft)}
+  .feat-item .fi{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);padding-top:3px;min-width:34px}
+  .feat-item .ft{font-weight:700;font-size:14.5px}
+  .feat-item .ft .badge2{font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--cD);color:#fff;padding:2px 7px;border-radius:10px;margin-left:7px;font-weight:500;letter-spacing:.06em;vertical-align:middle}
+  .feat-item .fd{font-size:13px;color:var(--ink-soft);font-weight:400;margin-top:2px}
+
+  /* weekly */
+  .weekly{background:linear-gradient(160deg,#0F2F3C 0%,#1B5560 55%,#143B4C 100%);border-radius:16px;padding:38px;color:#F3F1EC;position:relative;overflow:hidden}
+  .weekly::before{content:"";position:absolute;top:-70px;right:-50px;width:280px;height:280px;border-radius:50%;background:repeating-radial-gradient(circle at center,transparent 0 9px,rgba(255,255,255,.07) 9px 10px)}
+  .weekly .wk-h{font-size:25px;font-weight:800;margin-bottom:6px;position:relative;letter-spacing:-.02em}
+  .weekly .wk-h b{background:var(--gA);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .weekly .wk-sub{font-size:14px;color:rgba(243,241,236,.74);font-weight:400;margin-bottom:28px;position:relative}
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+  .step{padding:0 22px;position:relative}
+  .step:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:6px;color:#F2C173;font-size:20px}
+  .step .sn{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#F2C173;letter-spacing:.1em}
+  .step .st{font-weight:700;font-size:16px;margin:8px 0 7px;color:#fff;letter-spacing:-.01em}
+  .step .sd{font-size:13px;color:rgba(243,241,236,.8);font-weight:300;line-height:1.6}
+  .step .sd em{color:#F2C173;font-style:normal;font-weight:500}
+  .topics{margin-top:30px;position:relative}
+  .topics .tl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(243,241,236,.55);margin-bottom:12px}
+  .topics .tt{display:flex;flex-wrap:wrap;gap:9px}
+  .topics .tt span{font-size:13px;background:rgba(255,255,255,.09);border:1px solid rgba(243,241,236,.18);padding:7px 14px;border-radius:22px;color:#F3F1EC;font-weight:400}
+
+  /* architecture */
+  .arch{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:34px}
+  .stitle{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px;text-align:center}
+  .node{border-radius:11px;padding:16px 12px;text-align:center;font-size:13px;font-weight:500;border:1.5px solid}
+  .node .nl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:5px;opacity:.8}
+  .n-client{border-color:var(--cB);color:var(--cB);background:rgba(46,115,196,.05)}
+  .n-server{border-color:var(--cF);color:var(--cF);background:rgba(28,110,114,.06)}
+  .n-db{border-color:var(--ink);color:var(--ink);background:var(--soft)}
+  .n-ai{border-color:var(--cD);color:var(--cD);background:rgba(217,82,126,.05)}
+  .clients-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .arch-conn{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-faint);margin:16px 0}
+  .ai-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+  /* stack */
+  .stack{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .stack-col h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brand);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .stack-col .it{font-size:14px;font-weight:500;padding:7px 0;display:flex;align-items:baseline;gap:8px}
+  .stack-col .it::before{content:"▸";color:var(--cF);font-size:11px}
+  .stack-col .it small{color:var(--ink-faint);font-weight:300;font-size:12px}
+
+  /* coding steps */
+  .cphase{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;font-family:'IBM Plex Mono',monospace;font-size:11px}
+  .cphase span{padding:7px 13px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--ink-soft)}
+  .cphase b{color:var(--ink)}
+  .csteps{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+  .cstep{display:grid;grid-template-columns:220px 1fr;border-top:1px solid var(--line)}
+  .cstep:first-child{border-top:none}
+  .cstep .cs-l{padding:20px 22px;display:flex;flex-direction:column;gap:6px;position:relative}
+  .cstep .cs-l::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:5px;border-radius:3px;background:var(--g)}
+  .cstep .cs-n{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--c2)}
+  .cstep .cs-t{font-size:19px;font-weight:800;color:var(--ink);line-height:1.2;letter-spacing:-.02em}
+  .cstep .cs-w{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint)}
+  .cstep .cs-r{padding:20px 22px}
+  .cstep .cs-r ul{list-style:none;font-size:13.5px;font-weight:400;margin-bottom:12px}
+  .cstep .cs-r ul li{padding:4px 0 4px 16px;position:relative;line-height:1.5;color:var(--ink-soft)}
+  .cstep .cs-r ul li::before{content:"–";position:absolute;left:0;color:var(--c2)}
+  .cstep .cs-r ul li b{color:var(--ink);font-weight:700}
+  .cs-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .cs-tags span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--soft);border:1px solid var(--line);padding:3px 9px;border-radius:6px;color:var(--ink-soft)}
+
+  /* ops + kpi */
+  .ops-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:22px}
+  .ops{border:1px solid var(--line);border-radius:14px;padding:28px;background:var(--card)}
+  .ops h3{font-size:21px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+  .ops .note{font-size:14px;color:var(--ink-soft);font-weight:400;margin-bottom:13px;padding-left:18px;position:relative}
+  .ops .note::before{content:"●";position:absolute;left:0;color:var(--brand);font-size:7px;top:8px}
+  .ops .note b{color:var(--ink);font-weight:700}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .kpi{border-radius:11px;padding:18px;color:#fff;background:var(--g);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+  .kpi .kn{font-size:28px;font-weight:900;line-height:1;letter-spacing:-.02em;text-shadow:0 1px 4px rgba(0,0,0,.15)}
+  .kpi .kl{font-size:12px;margin-top:7px;font-weight:400;opacity:.95}
+
+  footer{padding:50px 0 74px;text-align:center}
+  footer .ft{font-size:24px;color:var(--ink);font-weight:900;letter-spacing:-.02em}
+  footer .fm{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.16em;margin-top:12px;text-transform:uppercase}
+
+  @media(max-width:900px){
+    .vision-grid,.feat-grid,.ops-grid{grid-template-columns:1fr}
+    .axes{grid-template-columns:1fr}
+    .joiner{flex-direction:row;padding:14px 0}
+    .joiner .jt{margin-top:0;margin-left:12px}
+    .stack{grid-template-columns:repeat(2,1fr)}
+    .ai-row{grid-template-columns:1fr}
+    .clients-row{grid-template-columns:repeat(3,1fr)}
+    .rung{grid-template-columns:1fr}
+    .rung .rhs{border-top:1px solid var(--line)}
+    .skill:first-child{border-left:none}
+    .uikit{grid-template-columns:repeat(2,1fr)}
+    .tflow{grid-template-columns:1fr 1fr;gap:18px}
+    .tstep:not(:last-child)::after{display:none}
+    .tareas{grid-template-columns:repeat(2,1fr)}
+    .flow{grid-template-columns:1fr;gap:18px}
+    .step:not(:last-child)::after{content:"↓";right:auto;left:18px;top:auto;bottom:-16px}
+    .strip-names .ncell .nchip small{display:none}
+    .cstep{grid-template-columns:1fr}
+    .cstep .cs-r{border-top:1px solid var(--line)}
+    .cstep .cs-l::before{top:auto;bottom:auto;height:5px;width:auto;left:22px;right:22px;top:14px}
+  }
+  @media print{
+    body{background:#fff;background-image:none}
+    section,header,.weekly,.ladder,.toefl,.csteps,.uikit{break-inside:avoid}
+    .reveal{opacity:1;transform:none;animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- COVER -->
+  <header class="reveal">
+    <div class="tag">Project Brief · 기획서 v4.0</div>
+    <h1 class="title">FamTalk<span class="dot">.</span></h1>
+    <div class="subtitle">우리 가족 영어 프로젝트 — 같은 사다리, 각자의 출발점</div>
+    <p class="lede">다섯 식구가 하나의 레벨 사다리(A→F)를 오른다. 각자 자기 레벨을 골라 매일 <b>단어·말하기 중심</b>으로 연습하고(발음·억양까지 체크), 매주 공통 주제로 모여 함께 영어로 이야기한다. 하울은 TOEFL을 별도로 준비한다.</p>
+    <div class="meta">
+      <div><div class="k">Family</div><div class="v">5인 · 부모 + 3남매</div></div>
+      <div><div class="k">Learn</div><div class="v">레벨 A–F · 단어·말하기 중심</div></div>
+      <div><div class="k">Special</div><div class="v">하울 TOEFL 트랙</div></div>
+      <div><div class="k">Together</div><div class="v">매주 공통 주제 토론</div></div>
+    </div>
+    <div class="swatches">
+      <div class="sw-l">Level Color System · 레벨별 그라데이션</div>
+      <div class="sw-row">
+        <div class="sw"><div class="bar" style="--g:var(--gA)"></div><div class="lab">A</div></div>
+        <div class="sw"><div class="bar" style="--g:var(--gB)"></div><div class="lab">B</div></div>
+        <div class="sw"><div class="bar" style="--g:var(--gC)"></div><div class="lab">C</div></div>
+        <div class="sw"><div class="bar" style="--g:var(--gD)"></div><div class="lab">D</div></div>
+        <div class="sw"><div class="bar" style="--g:var(--gE)"></div><div class="lab">E</div></div>
+        <div class="sw"><div class="bar" style="--g:var(--gF)"></div><div class="lab">F</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 01 VISION -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">01</span><span class="sec-title">비전 &amp; 목표</span></div>
+    <div class="vision-grid">
+      <div class="vision-card">
+        <div class="big">영어를 <b>공부</b>가 아니라<br><b>우리집 언어</b>로.<br>출발점은 다르지만,<br>식탁에선 같은 주제로 만난다.</div>
+        <div class="rip"></div>
+      </div>
+      <div class="goals">
+        <div class="goal"><span class="ic" style="--g:var(--gA)">G1</span><div><div class="gt">레벨 선택</div><div class="gd">A부터 F까지, 각자 맞는 칸에서 시작</div></div></div>
+        <div class="goal"><span class="ic" style="--g:var(--gB)">G2</span><div><div class="gt">단어·말하기 중심</div><div class="gd">매일 10–20분, 발음·억양까지 체크</div></div></div>
+        <div class="goal"><span class="ic" style="--g:var(--gD)">G3</span><div><div class="gt">공통 주제 토론</div><div class="gd">매주 같은 주제로 모여 실전 회화</div></div></div>
+        <div class="goal"><span class="ic" style="--g:var(--gE)">G4</span><div><div class="gt">하울 TOEFL</div><div class="gd">시험 준비·공부·모의 체험을 별도로</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 LEVEL LADDER -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">레벨 사다리 — A에서 F까지</span></div>
+    <p class="sec-desc">공부 내용은 한 줄기다. 가장 기초가 A, 가장 유창함이 F. 각자 배치 테스트로 자기 칸을 정해 시작하고, 한 레벨을 마치면 위 칸으로 올라간다. <b>단어와 말하기가 중심축</b>, 듣기는 입력으로 받쳐주고, 쓰기는 다루지 않는다.</p>
+
+    <div class="ladder-cap"><span>↑ 기초 (A)</span><span>레벨이 오를수록 깊어진다</span><span>유창 (F) ↓</span></div>
+
+    <div class="ladder">
+      <div class="rung" style="--g:var(--gA);--c2:var(--cA)">
+        <div class="lhs"><div class="badge">A</div><div class="meta2"><div class="cefr">PRE-A1</div><div class="lname">첫걸음</div><div class="who">영어를 거의 처음 · 알파벳부터</div></div></div>
+        <div class="rhs">
+          <div class="skill key"><div class="sl"><span class="star">★</span>단어</div><div class="sv">생활 기초 300<br>(숫자·색·음식)</div></div>
+          <div class="skill"><div class="sl">듣기</div><div class="sv">또박또박 단어·짧은 구</div></div>
+          <div class="skill key"><div class="sl"><span class="star">★</span>말하기</div><div class="sv">인사·자기소개<br>따라 말하기</div></div>
+        </div>
+      </div>
+      <div class="rung" style="--g:var(--gB);--c2:var(--cB)">
+        <div class="lhs"><div class="badge">B</div><div class="meta2"><div class="cefr">A1</div><div class="lname">기초</div><div class="who">단어는 알아도 문장이 어려움</div></div></div>
+        <div class="rhs">
+          <div class="skill key"><div class="sl"><span class="star">★</span>단어</div><div class="sv">일상 기본 600<br>(요일·날씨·위치)</div></div>
+          <div class="skill"><div class="sl">듣기</div><div class="sv">느린 짧은 문장</div></div>
+          <div class="skill key"><div class="sl"><span class="star">★</span>말하기</div><div class="sv">짧게 묻고 답하기<br>(이름·나이·취향)</div></div>
+        </div>
+      </div>
+      <div class="rung" style="--g:var(--gC);--c2:var(--cC)">
+        <div class="lhs"><div class="badge">C</div><div class="meta2"><div class="cefr">A2</div><div class="lname">생활</div><div class="who">여행·생활영어를 하고 싶은</div></div></div>
+        <div class="rhs">
+          <div class="skill key"><div class="sl"><span class="star">★</span>단어</div><div class="sv">생활 1,500<br>(쇼핑·길찾기·식당)</div></div>
+          <div class="skill"><div class="sl">듣기</div><div class="sv">느린 일상 대화<br>핵심 파악</div></div>
+          <div class="skill key"><div class="sl"><span class="star">★</span>말하기</div><div class="sv">일상 상황 대화<br>(주문·길묻기)</div></div>
+        </div>
+      </div>
+      <div class="rung" style="--g:var(--gD);--c2:var(--cD)">
+        <div class="lhs"><div class="badge">D</div><div class="meta2"><div class="cefr">B1</div><div class="lname">소통</div><div class="who">대화를 더 자연스럽게</div></div></div>
+        <div class="rhs">
+          <div class="skill key"><div class="sl"><span class="star">★</span>단어</div><div class="sv">확장 2,500<br>(감정·의견·추상어)</div></div>
+          <div class="skill"><div class="sl">듣기</div><div class="sv">보통 속도 대화<br>짧은 이야기</div></div>
+          <div class="skill key"><div class="sl"><span class="star">★</span>말하기</div><div class="sv">의견·경험 말하기<br>짧은 토론</div></div>
+        </div>
+      </div>
+      <div class="rung" style="--g:var(--gE);--c2:var(--cE)">
+        <div class="lhs"><div class="badge">E</div><div class="meta2"><div class="cefr">B2</div><div class="lname">심화</div><div class="who">고급 회화 · TOEFL 병행 구간</div></div></div>
+        <div class="rhs">
+          <div class="skill key"><div class="sl"><span class="star">★</span>단어</div><div class="sv">학술·시사 4,000+</div></div>
+          <div class="skill"><div class="sl">듣기</div><div class="sv">강의·뉴스 등<br>긴 담화</div></div>
+          <div class="skill key"><div class="sl"><span class="star">★</span>말하기</div><div class="sv">논리적 주장<br>주제 토론</div></div>
+        </div>
+      </div>
+      <div class="rung" style="--g:var(--gF);--c2:var(--cF)">
+        <div class="lhs"><div class="badge">F</div><div class="meta2"><div class="cefr">C1</div><div class="lname">유창</div><div class="who">고급 유창성·학술 영어</div></div></div>
+        <div class="rhs">
+          <div class="skill key"><div class="sl"><span class="star">★</span>단어</div><div class="sv">고급·뉘앙스<br>관용표현</div></div>
+          <div class="skill"><div class="sl">듣기</div><div class="sv">빠른 자연 담화<br>함의 파악</div></div>
+          <div class="skill key"><div class="sl"><span class="star">★</span>말하기</div><div class="sv">길고 유창하게<br>추상 주제 토론</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="place">
+      <div class="pl-title">우리 가족 추천 출발점</div>
+      <div class="pl-sub">아래는 제안일 뿐 — 각자 배치 테스트 후 직접 선택한다.</div>
+      <div class="strip-names">
+        <div class="ncell"></div>
+        <div class="ncell"><span class="nchip" style="--g:var(--gB)">하람<small>중1</small></span></div>
+        <div class="ncell"><span class="nchip" style="--g:var(--gC)">엄마<small>40대</small></span><span class="nchip" style="--g:var(--gC)">아빠<small>40대</small></span></div>
+        <div class="ncell"><span class="nchip" style="--g:var(--gD)">하음<small>고3·일상회화</small></span></div>
+        <div class="ncell"><span class="nchip" style="--g:var(--gE)">하울<small>고1·TOEFL 병행</small></span></div>
+        <div class="ncell"></div>
+      </div>
+      <div class="strip-bar">
+        <div class="seg" style="--g:var(--gA)"><div class="sgl">A</div><div class="sgc">PRE-A1</div></div>
+        <div class="seg" style="--g:var(--gB)"><div class="sgl">B</div><div class="sgc">A1</div></div>
+        <div class="seg" style="--g:var(--gC)"><div class="sgl">C</div><div class="sgc">A2</div></div>
+        <div class="seg" style="--g:var(--gD)"><div class="sgl">D</div><div class="sgc">B1</div></div>
+        <div class="seg" style="--g:var(--gE)"><div class="sgl">E</div><div class="sgc">B2</div></div>
+        <div class="seg" style="--g:var(--gF)"><div class="sgl">F</div><div class="sgc">C1</div></div>
+      </div>
+      <div class="pl-note">※ 하울은 사다리 E에서 일상 영어를 다지면서, 아래 <b>전용 TOEFL 트랙</b>을 따로 병행한다. 하음은 D에서 일상 회화를 자연스럽게.</div>
+    </div>
+  </section>
+
+  <!-- 03 UI DESIGN -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">UI 디자인 — 레벨별 컬러 시스템</span></div>
+    <p class="sec-desc">레벨(=챕터)마다 <b>고유한 그라데이션</b>을 입혀, 어느 칸에 있는지 색으로 바로 알 수 있게 한다. 첨부한 시간대 그라데이션을 레퍼런스로 A→F를 배치했고, 글자체는 깔끔한 볼드 산세리프(Pretendard)로 통일했다.</p>
+    <div class="ui-note">
+      <span class="uib">DESIGN REF</span>
+      <div class="uit">하단 <b>라디얼 리플</b>은 음성·말하기 인터랙션, 우하단 <b>VOICE 버튼</b>은 말하기 진입. 글자체 <b>Pretendard Bold</b>, 배경은 레벨 그라데이션.</div>
+    </div>
+    <div class="uikit">
+
+      <div class="screen" style="--g:var(--gA)">
+        <div class="topbar">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="right">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" fill="#fff"/><path d="M15.5 8.5c1.6 1.2 1.6 5.8 0 7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="scr-body"><div class="scr-lv">LEVEL A · PRE-A1</div><div class="scr-t">첫걸음</div><div class="scr-a">단어부터 시작해요</div></div>
+        <div class="ripple"></div><div class="dots"><i></i><i></i><i></i></div>
+        <div class="voice"><div class="vc"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0012 0M12 17v3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div class="vl">VOICE</div></div>
+      </div>
+
+      <div class="screen" style="--g:var(--gB)">
+        <div class="topbar">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="right">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" fill="#fff"/><path d="M15.5 8.5c1.6 1.2 1.6 5.8 0 7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="scr-body"><div class="scr-lv">LEVEL B · A1</div><div class="scr-t">기초</div><div class="scr-a">짧은 문장 만들기</div></div>
+        <div class="ripple"></div><div class="dots"><i></i><i></i><i></i></div>
+        <div class="voice"><div class="vc"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0012 0M12 17v3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div class="vl">VOICE</div></div>
+      </div>
+
+      <div class="screen" style="--g:var(--gC)">
+        <div class="topbar">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="right">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" fill="#fff"/><path d="M15.5 8.5c1.6 1.2 1.6 5.8 0 7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="scr-body"><div class="scr-lv">LEVEL C · A2</div><div class="scr-t">생활</div><div class="scr-a">여행·일상 회화</div></div>
+        <div class="ripple"></div><div class="dots"><i></i><i></i><i></i></div>
+        <div class="voice"><div class="vc"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0012 0M12 17v3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div class="vl">VOICE</div></div>
+      </div>
+
+      <div class="screen" style="--g:var(--gD)">
+        <div class="topbar">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="right">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" fill="#fff"/><path d="M15.5 8.5c1.6 1.2 1.6 5.8 0 7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="scr-body"><div class="scr-lv">LEVEL D · B1</div><div class="scr-t">소통</div><div class="scr-a">내 생각 말하기</div></div>
+        <div class="ripple"></div><div class="dots"><i></i><i></i><i></i></div>
+        <div class="voice"><div class="vc"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0012 0M12 17v3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div class="vl">VOICE</div></div>
+      </div>
+
+      <div class="screen" style="--g:var(--gE)">
+        <div class="topbar">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="right">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" fill="#fff"/><path d="M15.5 8.5c1.6 1.2 1.6 5.8 0 7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="scr-body"><div class="scr-lv">LEVEL E · B2</div><div class="scr-t">심화</div><div class="scr-a">토론하고 주장하기</div></div>
+        <div class="ripple"></div><div class="dots"><i></i><i></i><i></i></div>
+        <div class="voice"><div class="vc"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0012 0M12 17v3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div class="vl">VOICE</div></div>
+      </div>
+
+      <div class="screen" style="--g:var(--gF)">
+        <div class="topbar">
+          <svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div class="right">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z" fill="#fff"/><path d="M15.5 8.5c1.6 1.2 1.6 5.8 0 7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="scr-body"><div class="scr-lv">LEVEL F · C1</div><div class="scr-t">유창</div><div class="scr-a">자유롭게 대화하기</div></div>
+        <div class="ripple"></div><div class="dots"><i></i><i></i><i></i></div>
+        <div class="voice"><div class="vc"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0012 0M12 17v3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div><div class="vl">VOICE</div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 TOEFL -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">하울 전용 — TOEFL 트랙</span></div>
+    <p class="sec-desc">가족 사다리(하울은 E→F)와는 <b>별개로</b>, TOEFL iBT를 따로 준비·공부하고 실전처럼 체험하는 전용 모듈. 사다리가 "일상 영어"라면, 이 트랙은 "시험 영어"를 맡는다.</p>
+    <div class="toefl">
+      <div class="toefl-head">
+        <span class="tbadge">하울 전용 · SEPARATE TRACK</span>
+        <h3>TOEFL iBT 준비 모듈</h3>
+        <span class="thint">사다리와 병행 · 진단 → 훈련 → 체험</span>
+      </div>
+      <div class="toefl-body">
+        <div class="tflow">
+          <div class="tstep"><div class="tsn">1</div><div class="tst">진단</div><div class="tsd">현재 점수대 파악 · 약점 분석</div></div>
+          <div class="tstep"><div class="tsn">2</div><div class="tst">영역별 훈련</div><div class="tsd">리딩·리스닝·스피킹 집중</div></div>
+          <div class="tstep"><div class="tsn">3</div><div class="tst">통합형 과제</div><div class="tsd">읽고+듣고 → 말하기(TOEFL 특유)</div></div>
+          <div class="tstep"><div class="tsn">4</div><div class="tst">모의고사 체험</div><div class="tsd">실전 타이밍으로 풀 세트</div></div>
+          <div class="tstep"><div class="tsn">5</div><div class="tst">점수 리포트</div><div class="tsd">영역별 강·약점 피드백</div></div>
+        </div>
+        <div class="tlegend">영역별 비중 — ◎ 핵심 · ○ 중요 · △ 기본만(쓰기 최소화)</div>
+        <div class="tareas">
+          <div class="tarea"><div class="tah"><span class="tan">단어</span><span class="emp core">◎ 핵심</span></div><div class="tad">학술·시사 어휘, 분야별 빈출어</div></div>
+          <div class="tarea"><div class="tah"><span class="tan">Speaking</span><span class="emp core">◎ 핵심</span></div><div class="tad">독립형 45초 + 통합형, 발음·억양 채점</div></div>
+          <div class="tarea"><div class="tah"><span class="tan">Listening</span><span class="emp core">◎ 핵심</span></div><div class="tad">강의·대화 청취, 노트테이킹</div></div>
+          <div class="tarea"><div class="tah"><span class="tan">Reading</span><span class="emp imp">○ 중요</span></div><div class="tad">학술 지문 독해, 문제 유형 훈련</div></div>
+          <div class="tarea"><div class="tah"><span class="tan">Writing</span><span class="emp min">△ 기본만</span></div><div class="tad">시험 필수라 최소한의 틀만 연습</div></div>
+        </div>
+        <div class="tmock">
+          <span class="tmi">🎯</span>
+          <div><div class="tmt">모의고사 체험 모드</div><div class="tmd">실전과 같은 타이밍·구성으로 풀 세트를 풀고, AI가 스피킹·라이팅을 채점해 예상 점수와 리포트를 준다.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 TWO AXES -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">05</span><span class="sec-title">핵심 컨셉 — 두 개의 축</span></div>
+    <div class="axes">
+      <div class="axis a1">
+        <div class="anum">AXIS 01</div>
+        <h3>내 레벨 오르기</h3>
+        <div class="ahint">개인 · 매일</div>
+        <p>사다리에서 자기 레벨의 단어·말하기를 매일 짧게. 발음·억양 피드백을 받고, 한 레벨을 마치면 다음 칸을 연다.</p>
+        <div class="feats"><span>레벨 단어 SRS</span><span>말하기</span><span>발음·억양 체크</span><span>승급</span></div>
+      </div>
+      <div class="joiner"><div class="plus">+</div><div class="jt">레벨은 달라도<br>주제는 하나로</div></div>
+      <div class="axis a2">
+        <div class="anum">AXIS 02</div>
+        <h3>함께 모이기</h3>
+        <div class="ahint">가족 · 공통</div>
+        <p>매일 표현 하나를 공유하고, 매주 같은 주제로 모여 영어로 대화. AI가 레벨 차이를 메워 중1도 부모도 함께 말한다.</p>
+        <div class="feats"><span>공통 주간 주제</span><span>오늘의 표현</span><span>가족 채팅</span><span>대시보드</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 FEATURES -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">06</span><span class="sec-title">기능 명세</span></div>
+    <div class="principle">
+      <span class="pi">DESIGN PRINCIPLE</span>
+      <div class="pt"><b>단어·말하기 중심</b> · 듣기는 입력 보강 · <b>쓰기는 최소</b>(TOEFL 필수 영역만) · <b>발음·억양 피드백</b> 강화</div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-col indiv">
+        <div class="ch">🎯 개인 학습 (레벨별)<span class="cm">AXIS 01</span></div>
+        <div class="feat-item"><span class="fi">단어</span><div><div class="ft">레벨 단어장 · 간격 반복(SRS)</div><div class="fd">현재 레벨 단어를 FSRS로 망각 직전 복습. 레벨 오르면 단어장 교체.</div></div></div>
+        <div class="feat-item"><span class="fi">말하기</span><div><div class="ft">AI 회화 + 즉시 교정</div><div class="fd">레벨에 맞춰 LLM과 대화, 문장·표현을 자연스럽게 고쳐줌.</div></div></div>
+        <div class="feat-item hl"><span class="fi">발음</span><div><div class="ft">발음·억양 체크<span class="badge2">KEY</span></div><div class="fd">원어민 대비 발음 정확도 점수 + 강세·리듬·억양(피치)을 시각화. 문장 따라 말하고 비교해 교정.</div></div></div>
+        <div class="feat-item"><span class="fi">듣기</span><div><div class="ft">레벨 듣기 + 받아쓰기</div><div class="fd">레벨 난이도 오디오(TTS 생성)로 빈칸·받아쓰기. 말하기 입력을 받쳐줌.</div></div></div>
+        <div class="feat-item"><span class="fi">승급</span><div><div class="ft">레벨 진단 &amp; 다음 칸 열기</div><div class="fd">목표 달성 시 다음 칸 해제, 어려우면 한 칸 내려도 됨.</div></div></div>
+      </div>
+      <div class="feat-col fam">
+        <div class="ch">👨‍👩‍👧‍👦 가족 소통 (공통)<span class="cm">AXIS 02</span></div>
+        <div class="feat-item"><span class="fi">주제</span><div><div class="ft">매주 공통 주제 배포</div><div class="fd">온 가족 같은 주제 1개. 참고 콘텐츠 + 레벨별 질문·표현 제공.</div></div></div>
+        <div class="feat-item"><span class="fi">데일리</span><div><div class="ft">오늘의 가족 표현</div><div class="fd">매일 표현 1개를 그날 채팅에서 써보기.</div></div></div>
+        <div class="feat-item"><span class="fi">채팅</span><div><div class="ft">가족 영어 채팅방</div><div class="fd">텍스트·음성으로 영어 소통, AI 교정은 선택.</div></div></div>
+        <div class="feat-item"><span class="fi">현황</span><div><div class="ft">가족 대시보드 · 리더보드</div><div class="fd">각자 레벨·연속일(streak)·학습량을 함께 확인.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 WEEKLY -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">07</span><span class="sec-title">주간 공통 토론</span></div>
+    <p class="sec-desc">개인 학습은 레벨이 다 다르지만, 토론 주제는 온 가족 하나로 묶는다. 같은 주제를 각자 자기 수준으로 준비해 와서, 함께 영어로 이야기한다.</p>
+    <div class="weekly">
+      <div class="wk-h">주제는 <b>하나</b>, 준비는 <b>각자 레벨</b>로</div>
+      <div class="wk-sub">매주 같은 주제로 만나니 대화가 통하고, 준비는 수준에 맞아 누구도 소외되지 않는다.</div>
+      <div class="flow">
+        <div class="step"><div class="sn">STEP 1 · 월요일</div><div class="st">이번 주 주제 배포</div><div class="sd">온 가족에게 <em>동일한 주제 1개</em> 전달. (예: "기억에 남는 음식")</div></div>
+        <div class="step"><div class="sn">STEP 2 · 한 주간</div><div class="st">레벨별로 준비</div><div class="sd">앱이 주는 짧은 읽기·영상과 핵심 표현으로 연습. <em>A–B는 쉬운 질문·단어, E–F는 깊은 질문·찬반 논점</em>까지.</div></div>
+        <div class="step"><div class="sn">STEP 3 · 주말</div><div class="st">모여서 영어로</div><div class="sd">그 주제로 가족이 대화. <em>막히면 AI가 표현·질문을 옆에서 거든다.</em></div></div>
+      </div>
+      <div class="topics">
+        <div class="tl">주제 예시 — 매주 순환</div>
+        <div class="tt"><span>기억에 남는 음식</span><span>가보고 싶은 여행지</span><span>기술과 우리 생활</span><span>환경을 위한 작은 습관</span><span>우리집 전통</span><span>인생 영화·책</span><span>10년 뒤의 나</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 ARCHITECTURE -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">08</span><span class="sec-title">시스템 아키텍처</span></div>
+    <p class="sec-desc">5인 계정이 모바일 앱(PWA)으로 접속 → 백엔드 API 서버가 레벨·복습·소통·TOEFL 로직 처리 → DB에 진도 저장 → 회화·음성·발음평가는 외부 AI 호출.</p>
+    <div class="arch">
+      <div class="stitle">— 클라이언트 (Client) —</div>
+      <div class="clients-row">
+        <div class="node n-client"><span class="nl">User · Lv.C</span>엄마</div>
+        <div class="node n-client"><span class="nl">User · Lv.C</span>아빠</div>
+        <div class="node n-client"><span class="nl">User · Lv.D</span>하음</div>
+        <div class="node n-client"><span class="nl">Lv.E + TOEFL</span>하울</div>
+        <div class="node n-client"><span class="nl">User · Lv.B</span>하람</div>
+      </div>
+      <div class="arch-conn">↕ HTTPS / WebSocket ↕</div>
+      <div class="stitle">— 서버 &amp; 데이터 (Backend) —</div>
+      <div class="clients-row" style="grid-template-columns:2fr 1fr">
+        <div class="node n-server"><span class="nl">API Server</span>레벨·승급 · 단어 SRS · TOEFL 모듈 · 주간 주제 · 채팅 중계</div>
+        <div class="node n-db"><span class="nl">Database</span>사용자·레벨 · 단어 복습큐 · TOEFL 기록 · 토론/채팅</div>
+      </div>
+      <div class="arch-conn">↕ API 호출 ↕</div>
+      <div class="stitle">— 외부 AI 서비스 (AI Layer) —</div>
+      <div class="ai-row">
+        <div class="node n-ai"><span class="nl">LLM</span>회화 · 교정 · 콘텐츠/채점</div>
+        <div class="node n-ai"><span class="nl">TTS</span>레벨별 듣기 음성</div>
+        <div class="node n-ai"><span class="nl">STT + 발음</span>발음·억양 분석</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 STACK -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">09</span><span class="sec-title">기술 스택 (제안)</span></div>
+    <p class="sec-desc">정답은 아니고, 직접 개발 시 자료가 많고 무난한 조합. 익숙한 언어가 있으면 바꿔도 된다.</p>
+    <div class="stack">
+      <div class="stack-col"><h4>Frontend</h4><div class="it">React <small>+ PWA</small></div><div class="it">Tailwind CSS</div><div class="it">React Native <small>(앱화 시)</small></div></div>
+      <div class="stack-col"><h4>Backend</h4><div class="it">Node.js <small>(Nest/Express)</small></div><div class="it">또는 Python <small>(FastAPI)</small></div><div class="it">WebSocket <small>(채팅)</small></div></div>
+      <div class="stack-col"><h4>Data &amp; AI</h4><div class="it">PostgreSQL</div><div class="it">LLM API <small>(회화/채점)</small></div><div class="it">TTS · STT/발음 평가</div></div>
+      <div class="stack-col"><h4>Infra</h4><div class="it">소형 VPS / 클라우드</div><div class="it">Docker</div><div class="it">자가 호스팅도 가능</div></div>
+    </div>
+  </section>
+
+  <!-- 10 CODING PLAN -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">10</span><span class="sec-title">단계별 개발(코딩) 계획</span></div>
+    <p class="sec-desc">한 번에 다 만들지 않는다. 작은 MVP로 "가족이 실제로 쓰는가"부터 확인하고 위로 쌓아 올린다. 아래는 "무엇을 만들고, 무엇으로 만드나"의 순서.</p>
+    <div class="cphase">
+      <span><b>STEP 1–2</b> · 기반 + MVP</span>
+      <span><b>STEP 3–5</b> · 핵심 기능</span>
+      <span><b>STEP 6</b> · TOEFL 트랙</span>
+      <span><b>STEP 7</b> · 확장·배포</span>
+    </div>
+    <div class="csteps">
+      <div class="cstep" style="--g:var(--gA);--c2:var(--cA)">
+        <div class="cs-l"><div class="cs-n">STEP 1</div><div class="cs-t">프로젝트 셋업</div><div class="cs-w">≈ 1주</div></div>
+        <div class="cs-r"><ul><li>개발 환경 구축 · Git 저장소 · 프론트/백 폴더 구조</li><li>PostgreSQL 설치 + users 테이블</li><li>회원가입·로그인 (가족 5인 계정)</li></ul><div class="cs-tags"><span>React</span><span>Node.js</span><span>PostgreSQL</span><span>Git</span></div></div>
+      </div>
+      <div class="cstep" style="--g:var(--gB);--c2:var(--cB)">
+        <div class="cs-l"><div class="cs-n">STEP 2</div><div class="cs-t">데이터 모델 &amp; 레벨</div><div class="cs-w">≈ 1–2주</div></div>
+        <div class="cs-r"><ul><li>핵심 테이블: users(level) · words(레벨별) · reviews(SRS) · sessions · topics · messages</li><li>배치 테스트 → 레벨 자동 배정</li><li>단어 간격반복(FSRS) 알고리즘 구현</li></ul><div class="cs-tags"><span>DB Schema</span><span>FSRS</span><span>REST API</span></div></div>
+      </div>
+      <div class="cstep" style="--g:var(--gC);--c2:var(--cC)">
+        <div class="cs-l"><div class="cs-n">STEP 3</div><div class="cs-t">개인 학습 (단어→말하기)</div><div class="cs-w">≈ 2–3주</div></div>
+        <div class="cs-r"><ul><li>단어 학습/복습 화면 + API 연결 <b>(먼저)</b></li><li>말하기: 마이크 녹음 → STT 변환</li><li>발음·억양 체크 연동 (발음 점수·피치 시각화)</li><li>듣기 모듈 (TTS 음성 생성)</li></ul><div class="cs-tags"><span>STT</span><span>TTS</span><span>발음 평가 API</span><span>Web Audio</span></div></div>
+      </div>
+      <div class="cstep" style="--g:var(--gD);--c2:var(--cD)">
+        <div class="cs-l"><div class="cs-n">STEP 4</div><div class="cs-t">AI 연동</div><div class="cs-w">≈ 2–3주</div></div>
+        <div class="cs-r"><ul><li>LLM 회화 파트너 + 문장 교정</li><li>레벨별 프롬프트 설계 (대화 난이도·교정 방식)</li><li>콘텐츠 자동 생성 (예문·듣기 지문·토론 주제)</li><li>비용 관리 — 캐싱 · 사용량 상한</li></ul><div class="cs-tags"><span>LLM API</span><span>Prompt 설계</span><span>캐싱</span></div></div>
+      </div>
+      <div class="cstep" style="--g:var(--gE);--c2:var(--cE)">
+        <div class="cs-l"><div class="cs-n">STEP 5</div><div class="cs-t">가족 소통 &amp; 공통 토론</div><div class="cs-w">≈ 2–3주</div></div>
+        <div class="cs-r"><ul><li>실시간 가족 채팅 (WebSocket)</li><li>매주 공통 주제 배포 + 레벨별 참고 콘텐츠</li><li>오늘의 표현</li><li>가족 대시보드 (레벨·streak·학습량)</li></ul><div class="cs-tags"><span>WebSocket</span><span>Dashboard</span><span>스케줄러</span></div></div>
+      </div>
+      <div class="cstep" style="--g:var(--gF);--c2:var(--cF)">
+        <div class="cs-l"><div class="cs-n">STEP 6</div><div class="cs-t">하울 TOEFL 트랙</div><div class="cs-w">≈ 2–3주</div></div>
+        <div class="cs-r"><ul><li>영역별 훈련 (리딩·리스닝·스피킹) + 통합형 과제</li><li>모의고사 체험 (실전 타이머 · 풀 세트)</li><li>AI 채점 + 영역별 점수 리포트</li></ul><div class="cs-tags"><span>TOEFL Module</span><span>AI 채점</span><span>Timer</span></div></div>
+      </div>
+      <div class="cstep" style="--g:linear-gradient(180deg,#585860,#1B1B1F);--c2:var(--ink)">
+        <div class="cs-l"><div class="cs-n">STEP 7</div><div class="cs-t">게임화 · 배포 · 운영</div><div class="cs-w">이후 · 지속</div></div>
+        <div class="cs-r"><ul><li>배지 · 리더보드 · 레벨 재배치</li><li>배포 — Docker · VPS · 도메인 · HTTPS</li><li>백업 · 모니터링 · 가족 피드백 반영</li></ul><div class="cs-tags"><span>Docker</span><span>Deploy</span><span>Monitoring</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 OPS + KPI -->
+  <section class="reveal" style="animation-delay:.06s">
+    <div class="sec-head"><span class="sec-num">11</span><span class="sec-title">운영 · 비용 &amp; 성공 지표</span></div>
+    <div class="ops-grid">
+      <div class="ops">
+        <h3>⚙️ 운영 &amp; 비용 포인트</h3>
+        <div class="note"><b>핵심 비용은 AI API 사용량</b> (LLM · TTS · STT/발음평가). 사용량 상한·캐싱으로 관리.</div>
+        <div class="note">서버는 <b>5인 규모라 소형으로 충분</b> — 부담이 작다.</div>
+        <div class="note">레벨·TOEFL 콘텐츠는 AI로 생성하되 <b>난이도 검수</b>는 사람이 한 번 거른다.</div>
+        <div class="note">음성·개인 데이터는 <b>가족 내부용</b>으로 최소 수집·보관.</div>
+      </div>
+      <div class="ops">
+        <h3>📊 성공 지표 (KPI)</h3>
+        <div class="kpi-grid">
+          <div class="kpi" style="--g:var(--gA)"><div class="kn">7일+</div><div class="kl">가족 평균 연속 학습일(streak)</div></div>
+          <div class="kpi" style="--g:var(--gB)"><div class="kn">5/5</div><div class="kl">주간 공통 토론 참여 인원</div></div>
+          <div class="kpi" style="--g:var(--gD)"><div class="kn">발음 ↑</div><div class="kl">발음·억양 점수 향상폭</div></div>
+          <div class="kpi" style="--g:var(--gE)"><div class="kn">↑ Lv</div><div class="kl">분기별 레벨 승급 · TOEFL 점수</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="reveal">
+    <div class="ft">같은 사다리, 각자의 출발점.</div>
+    <div class="fm">FamTalk · Family English Project · Brief v4.0</div>
+  </footer>
+
+</div>
+</body>
+</html>
