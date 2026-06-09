@@ -8,6 +8,7 @@ import {
   getRecentFamilyMessages,
   sendFamilyMessage,
   sendAiFamilyMessage,
+  uploadVoice,
   subscribeFamilyMessages,
 } from '../lib/db'
 import { speak, isTTSSupported } from '../lib/tts'
@@ -15,6 +16,7 @@ import { listenOnce, isSTTSupported } from '../lib/stt'
 import { scoreFeedback } from '../lib/feedback'
 import { chat, fami } from '../lib/ai'
 import { FAMILY, LEVELS } from '../data/family'
+import Translatable from '../components/Translatable'
 
 const emojiOf = (key) => (key === 'ai' ? '🤖' : FAMILY.find((f) => f.key === key)?.emoji || '🙂')
 
@@ -48,10 +50,63 @@ export default function Family() {
   const [micLang, setMicLang] = useState('ko-KR') // 한국어로 말하면 한글로 입력 → ✨AI로 영어 변환
   const [famiBusy, setFamiBusy] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [recording, setRecording] = useState(false)
   const endRef = useRef(null)
   const famiAutoRef = useRef(false)
+  const recRef = useRef(null)
+  const chunksRef = useRef([])
   const sttOk = isSTTSupported()
+  const voiceOk = typeof window !== 'undefined' && !!window.MediaRecorder && !!navigator.mediaDevices
   const level = profile?.level || 'C'
+
+  // 🎙 음성 메시지 — 내 목소리 그대로 녹음 → 업로드 → 채팅에 전송
+  async function toggleRecord() {
+    if (recording) {
+      try {
+        recRef.current?.stop()
+      } catch {
+        setRecording(false)
+      }
+      return
+    }
+    if (!voiceOk) {
+      setAiError('이 기기는 음성 녹음을 지원하지 않아요.')
+      return
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mr = new MediaRecorder(stream)
+      chunksRef.current = []
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size) chunksRef.current.push(e.data)
+      }
+      mr.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop())
+        setRecording(false)
+        const blob = new Blob(chunksRef.current, { type: mr.mimeType || 'audio/webm' })
+        if (!blob.size) return
+        try {
+          const ext = (mr.mimeType || '').includes('mp4') ? 'mp4' : 'webm'
+          const url = await uploadVoice(user.id, blob, ext)
+          await sendFamilyMessage({
+            userId: user.id,
+            displayName: profile?.display_name || '가족',
+            memberKey: profile?.member_key,
+            text: '🎤 음성 메시지',
+            audioUrl: url,
+          })
+        } catch (e) {
+          setAiError('음성 전송 실패: ' + e.message)
+        }
+      }
+      recRef.current = mr
+      mr.start()
+      setRecording(true)
+      setAiError('')
+    } catch {
+      setAiError('마이크 권한이 필요해요.')
+    }
+  }
 
   // 🤖 패미(AI 가족) — 주제·최근 대화를 보고 대화를 이끔
   async function summonFami() {
@@ -62,8 +117,8 @@ export default function Family() {
       const recent = messages.slice(-8).map((m) => ({ name: m.display_name || '가족', text: m.text }))
       const names = members.map((mm) => mm.display_name).filter(Boolean)
       const topicText = topic ? `${topic.title} — ${topic.prompt_en || ''}` : ''
-      const text = await fami({ topic: topicText, recent, members: names })
-      if (text) await sendAiFamilyMessage({ text })
+      const { text, text_ko } = await fami({ topic: topicText, recent, members: names })
+      if (text) await sendAiFamilyMessage({ text, textKo: text_ko })
     } catch (e) {
       setAiError(e.message)
     } finally {
@@ -283,11 +338,20 @@ export default function Family() {
                       : 'bg-slate-700 text-slate-100'
                   }`}
                 >
-                  {renderText(m.text)}
-                  {m.is_ai && (
-                    <button onClick={() => speak(m.text)} disabled={!isTTSSupported()} className="block mt-1 text-indigo-200/70 text-xs">
-                      🔊 듣기
-                    </button>
+                  {m.audio_url ? (
+                    <div>
+                      <span className="block mb-1 text-xs opacity-80">🎤 음성 메시지</span>
+                      <audio controls src={m.audio_url} className="w-full max-w-[230px]" />
+                    </div>
+                  ) : m.is_ai ? (
+                    <>
+                      <Translatable ko={m.text_ko}>{renderText(m.text)}</Translatable>
+                      <button onClick={() => speak(m.text)} disabled={!isTTSSupported()} className="block mt-1 text-indigo-200/70 text-xs">
+                        🔊 듣기
+                      </button>
+                    </>
+                  ) : (
+                    renderText(m.text)
                   )}
                 </div>
               </div>
@@ -340,9 +404,20 @@ export default function Family() {
       )}
       {aiError && <p className="text-amber-300 text-xs mt-2">⚠️ {aiError}</p>}
 
+      {voiceOk && (
+        <button
+          onClick={toggleRecord}
+          className={`mt-3 w-full py-2.5 rounded-xl text-sm font-medium ${
+            recording ? 'bg-rose-600 text-white animate-pulse' : 'bg-slate-800 border border-slate-700'
+          }`}
+        >
+          {recording ? '⏹ 녹음 정지하고 전송' : '🎙 내 목소리로 음성 메시지 보내기'}
+        </button>
+      )}
+
       {sttOk && (
-        <div className="flex items-center gap-1.5 mt-3 text-xs">
-          <span className="text-slate-500">🎤 말하기 언어:</span>
+        <div className="flex items-center gap-1.5 mt-2 text-xs">
+          <span className="text-slate-500">🎤 받아쓰기 언어:</span>
           <button
             onClick={() => setMicLang('ko-KR')}
             className={`px-2.5 py-1 rounded-full ${micLang === 'ko-KR' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}

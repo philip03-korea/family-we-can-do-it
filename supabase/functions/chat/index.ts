@@ -27,10 +27,13 @@ const LEVEL_GUIDE: Record<string, string> = {
   F: 'CEFR C1. Near-native, nuanced English. Discuss abstract topics.',
 }
 
-function systemPrompt(level: string) {
+function systemPrompt(level: string, interests = '') {
   const guide = LEVEL_GUIDE[level] ?? LEVEL_GUIDE['C']
+  const interestLine = interests
+    ? `\nThe learner's interests: ${interests}. Naturally bring these up to make the conversation fun — e.g., proactively ask about their favorite star, team, game, or work, share a light comment, and keep it engaging.`
+    : ''
   return `You are FamTalk, a warm and helpful English tutor for a Korean family learner.
-Learner level: ${level}. ${guide}
+Learner level: ${level}. ${guide}${interestLine}
 
 The learner may do any of these — always be helpful and answer what they actually want:
 1) Chat in English → reply naturally in English at their level (1-3 sentences) and end with a light question.
@@ -38,7 +41,8 @@ The learner may do any of these — always be helpful and answer what they actua
 3) Ask a question — e.g. "What does X mean?", "이 문장 무슨 뜻이야?", "How do I say ___ in English?", "영어로 뭐라고 해?", grammar/usage questions → answer it clearly and simply.
 
 JSON fields (return JSON only):
-- "reply": your main response in English at the learner's level. For meaning/grammar questions you MAY add a short Korean gloss in parentheses so they understand.
+- "reply": your main response in ENGLISH ONLY at the learner's level (no Korean inside this field).
+- "reply_ko": the Korean translation of "reply" (so the learner can check it by tapping).
 - "english": ONE clean, natural English sentence the learner can say or send — the translation of their Korean, or the English answer to "how do I say…", or a model sentence. English only, no Korean. Empty "" if not applicable.
 - "english_ko": the Korean translation/meaning of the "english" sentence, so the learner can verify it. Empty "" if english is empty.
 - "correction": if the learner wrote English with mistakes, the corrected natural English; otherwise "".
@@ -72,7 +76,7 @@ Deno.serve(async (req) => {
     const { data: userData } = await supabase.auth.getUser()
     if (!userData?.user) return json({ error: 'UNAUTHORIZED' }, 401)
 
-    const { level = 'C', message = '', history = [] } = await req.json()
+    const { level = 'C', message = '', history = [], interests = '' } = await req.json()
     if (!message.trim()) return json({ error: 'EMPTY_MESSAGE' }, 400)
 
     // 1) 일일 쿼터
@@ -105,7 +109,7 @@ Deno.serve(async (req) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt(level) }] },
+          systemInstruction: { parts: [{ text: systemPrompt(level, interests) }] },
           contents,
           generationConfig: {
             temperature: 0.7,
@@ -116,6 +120,7 @@ Deno.serve(async (req) => {
               type: 'OBJECT',
               properties: {
                 reply: { type: 'STRING' },
+                reply_ko: { type: 'STRING' },
                 english: { type: 'STRING' },
                 english_ko: { type: 'STRING' },
                 correction: { type: 'STRING' },
@@ -135,7 +140,7 @@ Deno.serve(async (req) => {
     }
     const gem = await geminiRes.json()
     const raw = gem?.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'
-    let parsed: { reply?: string; english?: string; english_ko?: string; correction?: string; correction_ko?: string }
+    let parsed: { reply?: string; reply_ko?: string; english?: string; english_ko?: string; correction?: string; correction_ko?: string }
     try {
       parsed = JSON.parse(raw)
     } catch {
@@ -143,6 +148,7 @@ Deno.serve(async (req) => {
     }
     const result = {
       reply: parsed.reply ?? '...',
+      reply_ko: parsed.reply_ko ?? '',
       english: parsed.english ?? '',
       english_ko: parsed.english_ko ?? '',
       correction: parsed.correction ?? '',

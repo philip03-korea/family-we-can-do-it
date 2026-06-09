@@ -12,13 +12,30 @@ export function isSTTSupported() {
   )
 }
 
+// 음성인식 오류코드 → 친절한 한국어 안내
+function sttErrorMsg(code) {
+  switch (code) {
+    case 'no-speech':
+      return '소리가 잘 안 들렸어요. 다시 또박또박 말해 주세요. 🎤'
+    case 'not-allowed':
+    case 'service-not-allowed':
+      return '마이크 권한을 허용해 주세요.'
+    case 'language-not-supported':
+      return '이 기기에서 그 언어 음성인식이 안 될 수 있어요. 언어를 바꿔보세요.'
+    case 'aborted':
+      return '음성 입력이 취소됐어요.'
+    default:
+      return '잘 못 알아들었어요. 다시 한 번 말해 주세요.'
+  }
+}
+
 /**
- * 한 번 듣고 인식 결과를 돌려준다.
- * @param {object} opts { lang }
+ * 한 번 듣고 인식 결과를 돌려준다. (Promise가 항상 settle 되도록 보장 → 마이크 멈춤 방지)
+ * @param {object} opts { lang, timeout }
  * @returns {Promise<{transcript:string, confidence:number}>}
  */
 export function listenOnce(opts = {}) {
-  const { lang = 'en-US' } = opts
+  const { lang = 'en-US', timeout = 12000 } = opts
   return new Promise((resolve, reject) => {
     if (!isSTTSupported()) return reject(new Error('이 브라우저는 음성인식을 지원하지 않습니다.'))
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -28,13 +45,35 @@ export function listenOnce(opts = {}) {
     rec.maxAlternatives = 1
     rec.continuous = false
 
+    let settled = false
+    const finish = (fn, arg) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      try {
+        rec.stop()
+      } catch {
+        /* ignore */
+      }
+      fn(arg)
+    }
+    // 무응답/엔진 멈춤 대비 안전 타임아웃
+    const timer = setTimeout(() => finish(reject, new Error('음성을 듣지 못했어요. 다시 시도해 주세요. 🎤')), timeout)
+
     rec.onresult = (e) => {
       const result = e.results[0][0]
-      resolve({ transcript: result.transcript, confidence: result.confidence })
+      finish(resolve, { transcript: result.transcript, confidence: result.confidence })
     }
-    rec.onerror = (e) => reject(new Error(e.error || '음성인식 오류'))
-    rec.onend = () => {} // 결과 없이 끝나면 onresult 미호출 → 호출측 타임아웃 처리
-    rec.start()
+    rec.onerror = (e) => finish(reject, new Error(sttErrorMsg(e.error)))
+    rec.onnomatch = () => finish(reject, new Error('잘 못 알아들었어요. 다시 말해 주세요.'))
+    // 결과 없이 끝나도 반드시 reject → 호출측 'listening' 상태가 풀린다
+    rec.onend = () => finish(reject, new Error('음성을 인식하지 못했어요. 다시 시도해 주세요. 🎤'))
+
+    try {
+      rec.start()
+    } catch {
+      finish(reject, new Error('마이크를 시작할 수 없어요. 잠시 후 다시 시도해 주세요.'))
+    }
   })
 }
 

@@ -215,24 +215,37 @@ export async function getRecentFamilyMessages(limit = 50) {
   return (data || []).reverse()
 }
 
-/** 가족 채팅 메시지 전송 */
-export async function sendFamilyMessage({ userId, displayName, memberKey, text }) {
+/** 가족 채팅 메시지 전송 (audioUrl 있으면 음성 메시지) */
+export async function sendFamilyMessage({ userId, displayName, memberKey, text, audioUrl = null }) {
   const { error } = await supabase.from('family_messages').insert({
     user_id: userId,
     display_name: displayName,
     member_key: memberKey,
     text,
+    audio_url: audioUrl,
   })
   if (error) throw error
 }
 
+/** 음성 파일을 Storage(voice 버킷)에 올리고 공개 URL 반환 */
+export async function uploadVoice(userId, blob, ext = 'webm') {
+  const path = `${userId}/${Date.now()}.${ext}`
+  const { error } = await supabase.storage.from('voice').upload(path, blob, {
+    contentType: blob.type || 'audio/webm',
+    upsert: false,
+  })
+  if (error) throw error
+  return supabase.storage.from('voice').getPublicUrl(path).data.publicUrl
+}
+
 /** 패미(AI 가족) 메시지 전송 — user_id 없이 is_ai 로 저장 (가족 모두에게 실시간 표시) */
-export async function sendAiFamilyMessage({ text }) {
+export async function sendAiFamilyMessage({ text, textKo = null }) {
   const { error } = await supabase.from('family_messages').insert({
     user_id: null,
     display_name: '패미 🤖',
     member_key: 'ai',
     text,
+    text_ko: textKo,
     is_ai: true,
   })
   if (error) throw error
