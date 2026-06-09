@@ -10,6 +10,15 @@ import { LEVELS, LEVEL_ORDER } from '../data/family'
 
 const PAGE = 10
 
+const CATEGORIES = [
+  { key: 'general', label: '일반' },
+  { key: 'webtoon', label: '웹툰·배우' },
+  { key: 'football', label: '축구' },
+  { key: 'kpop_rap', label: '랩·음악' },
+  { key: 'games', label: '게임' },
+]
+const catLabel = (k) => CATEGORIES.find((c) => c.key === k)?.label || '일반'
+
 export default function Study() {
   const { user, profile } = useAuth()
   const navigate = useNavigate()
@@ -19,6 +28,7 @@ export default function Study() {
 
   const level = (params.get('level') || profile?.level || 'B').toUpperCase()
   const mode = params.get('mode') === 'review' ? 'review' : 'learn'
+  const category = params.get('cat') || 'general'
   const levelBg = LEVELS[level]?.bg || 'bg-level-b'
 
   const [loading, setLoading] = useState(true)
@@ -55,13 +65,13 @@ export default function Study() {
     ;(async () => {
       try {
         if (mode === 'review') {
-          const { words, progressById } = await getLearnedWords(user.id, level)
+          const { words, progressById } = await getLearnedWords(user.id, level, category)
           const items = words.map((w) => ({ word: w, progress: progressById[w.id] || null }))
           if (!alive) return
           setAllLearned(items)
           setQueue(items.slice(0, PAGE))
         } else {
-          const { due, fresh, progressById } = await getStudyQueue(user.id, level, 10)
+          const { due, fresh, progressById } = await getStudyQueue(user.id, level, 10, category)
           const items = [...due, ...fresh].map((w) => ({ word: w, progress: progressById[w.id] || null }))
           if (!alive) return
           setAllLearned([])
@@ -76,7 +86,7 @@ export default function Study() {
     return () => {
       alive = false
     }
-  }, [user.id, level, mode])
+  }, [user.id, level, mode, category])
 
   const current = queue[idx]
 
@@ -174,10 +184,13 @@ export default function Study() {
   }
 
   function setLevel(lv) {
-    setParams({ level: lv, mode })
+    setParams({ level: lv, mode, cat: category })
   }
   function setMode(m) {
-    setParams({ level, mode: m })
+    setParams({ level, mode: m, cat: category })
+  }
+  function setCat(c) {
+    setParams({ level, mode, cat: c })
   }
 
   if (loading) return <Center>단어 불러오는 중…</Center>
@@ -189,7 +202,7 @@ export default function Study() {
     const hasMorePages = mode === 'review' && allLearned.length > (page + 1) * PAGE
     return (
       <div className="min-h-screen max-w-md mx-auto p-5 flex flex-col">
-        <TopBar level={level} mode={mode} setLevel={setLevel} setMode={setMode} onExit={() => navigate('/')} />
+        <TopBar level={level} mode={mode} category={category} setLevel={setLevel} setMode={setMode} setCat={setCat} onExit={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center w-full">
             <div className="text-6xl mb-4">{emptyReview ? '🌱' : queue.length || finished ? '🎉' : '☕'}</div>
@@ -222,7 +235,7 @@ export default function Study() {
               )}
               {mode === 'learn' && (
                 <button onClick={() => setMode('review')} className="bg-slate-800 border border-slate-700 w-full py-3 rounded-2xl font-medium">
-                  📚 레벨 {level} 전체 복습하기
+                  📚 {category === 'general' ? `레벨 ${level}` : catLabel(category)} 전체 복습하기
                 </button>
               )}
               {mode === 'review' && (
@@ -381,8 +394,8 @@ export default function Study() {
   )
 }
 
-// 상단: 나가기 + 레벨 선택 + 학습/복습 토글
-function TopBar({ level, mode, setLevel, setMode, onExit }) {
+// 상단: 나가기 + 학습/복습 토글 + 관심사 카테고리 + (일반일 때) 레벨 선택
+function TopBar({ level, mode, category, setLevel, setMode, setCat, onExit }) {
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between mb-3">
@@ -398,19 +411,38 @@ function TopBar({ level, mode, setLevel, setMode, onExit }) {
           </button>
         </div>
       </div>
-      <div className="flex gap-1.5">
-        {LEVEL_ORDER.map((code) => (
+
+      {/* 관심사 카테고리 */}
+      <div className="flex gap-1.5 mb-2 overflow-x-auto">
+        {CATEGORIES.map((c) => (
           <button
-            key={code}
-            onClick={() => setLevel(code)}
-            className={`flex-1 py-1.5 rounded-lg text-sm font-bold ${
-              code === level ? (LEVELS[code]?.bg || 'bg-slate-600') + ' text-white' : 'bg-slate-800 text-slate-400'
+            key={c.key}
+            onClick={() => setCat(c.key)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold ${
+              c.key === category ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
             }`}
           >
-            {code}
+            {c.label}
           </button>
         ))}
       </div>
+
+      {/* 레벨 선택 (일반 단어일 때만) */}
+      {category === 'general' && (
+        <div className="flex gap-1.5">
+          {LEVEL_ORDER.map((code) => (
+            <button
+              key={code}
+              onClick={() => setLevel(code)}
+              className={`flex-1 py-1.5 rounded-lg text-sm font-bold ${
+                code === level ? (LEVELS[code]?.bg || 'bg-slate-600') + ' text-white' : 'bg-slate-800 text-slate-400'
+              }`}
+            >
+              {code}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

@@ -7,6 +7,16 @@ import { computeXP, computeBadges } from '../lib/gamify'
 import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
 
+// 아이별 관심사 → 학습 카테고리 바로가기
+const INTEREST_LINKS = {
+  haeum: [{ cat: 'webtoon', label: '🎬 웹툰·배우 영어' }],
+  haul: [
+    { cat: 'football', label: '⚽ 축구 영어' },
+    { cat: 'kpop_rap', label: '🎤 랩·음악 영어' },
+  ],
+  haram: [{ cat: 'games', label: '🎮 게임 영어' }],
+}
+
 export default function Dashboard() {
   const { user, profile, signOut, refreshProfile } = useAuth()
   const navigate = useNavigate()
@@ -155,6 +165,25 @@ export default function Dashboard() {
           📚 학습한 단어 복습하기
         </button>
       </div>
+
+      {/* 내 관심사 영어 — 좋아하는 주제로 단어 학습 */}
+      {INTEREST_LINKS[profile.member_key] && (
+        <div className="mb-6">
+          <h2 className="text-lg font-bold mb-1">🎯 내 관심사 영어</h2>
+          <p className="text-slate-500 text-xs mb-3">좋아하는 주제로 단어를 익혀요</p>
+          <div className="flex flex-wrap gap-2">
+            {INTEREST_LINKS[profile.member_key].map((it) => (
+              <button
+                key={it.cat}
+                onClick={() => navigate(`/study?cat=${it.cat}`)}
+                className="flex-1 min-w-[45%] bg-slate-800/60 border border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium"
+              >
+                {it.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 무료 음성(TTS/STT) 데모 — 비용 0원 동작 확인 */}
       <VoiceDemo />

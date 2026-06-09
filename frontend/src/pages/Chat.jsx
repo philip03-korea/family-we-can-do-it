@@ -6,6 +6,15 @@ import { speak, isTTSSupported } from '../lib/tts'
 import { listenOnce, isSTTSupported } from '../lib/stt'
 import { LEVELS } from '../data/family'
 
+// 관심사별 대화/질문 시작점 (아이들 흥미 기반)
+const INTEREST_TOPICS = {
+  webtoon: ['What webtoon are you reading these days?', 'Who is your favorite actor and why?', 'Tell me about the drama Weak Hero.', 'Describe your favorite webtoon character.'],
+  football: ['Why do you love Barcelona?', 'Who is the greatest football player ever?', 'Talk about the last match you watched.', 'What makes a great striker?'],
+  kpop_rap: ['Who is your favorite Korean rapper?', 'What makes a good rap flow?', 'Describe a song you love right now.', 'What is your favorite punchline?'],
+  games: ['What game are you playing now?', 'Describe your favorite game character.', 'How do you survive in ARK?', 'Tell me about your best match.'],
+}
+const INTEREST_BY_MEMBER = { haeum: ['webtoon'], haul: ['football', 'kpop_rap'], haram: ['games'] }
+
 // 레벨별 대화 시작 주제 (무료, 정적)
 const TOPICS = {
   A: ['Say hello', 'My family', 'Colors I like'],
@@ -110,6 +119,22 @@ export default function Chat() {
                 </button>
               ))}
             </div>
+
+            {/* 관심사 주제 (좋아하는 분야로 영어 대화) */}
+            {(INTEREST_BY_MEMBER[profile?.member_key] || []).flatMap((c) => INTEREST_TOPICS[c] || []).length > 0 && (
+              <div className="mt-5">
+                <p className="text-xs text-slate-500 mb-2">🎯 내 관심사로 이야기하기</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {(INTEREST_BY_MEMBER[profile?.member_key] || [])
+                    .flatMap((c) => INTEREST_TOPICS[c] || [])
+                    .map((t) => (
+                      <button key={t} onClick={() => send(t)} className="bg-indigo-600/20 border border-indigo-500/40 px-3 py-2 rounded-full text-sm text-indigo-100">
+                        {t}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
