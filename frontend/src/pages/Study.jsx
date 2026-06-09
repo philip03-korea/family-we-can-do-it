@@ -15,6 +15,7 @@ const CATEGORIES = [
   { key: 'webtoon', label: '웹툰·배우' },
   { key: 'football', label: '축구' },
   { key: 'kpop_rap', label: '랩·음악' },
+  { key: 'popsong', label: '팝송' },
   { key: 'games', label: '게임' },
 ]
 const catLabel = (k) => CATEGORIES.find((c) => c.key === k)?.label || '일반'
