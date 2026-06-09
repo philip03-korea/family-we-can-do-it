@@ -84,7 +84,7 @@ export default function Family() {
     }
   }
 
-  // ✏️ AI 교정 — 문법·어순 교정해서 완성 문장 제시
+  // ✨ AI 도움 — 한국어→영어 번역 / 질문 답변 / 영어 문장 교정
   async function getCorrection() {
     const text = input.trim()
     if (!text || busy) return
@@ -94,11 +94,18 @@ export default function Family() {
     try {
       const res = await chat({ level, message: text })
       const fixed = (res.correction || '').trim()
-      if (!fixed || fixed.toLowerCase() === text.toLowerCase()) {
-        setCorrection({ fixed: text, ko: '👍 고칠 부분이 없어요. 자연스러운 문장이에요!', changed: false })
-      } else {
-        setCorrection({ fixed, ko: res.correction_ko || '어순·문법을 자연스럽게 다듬었어요.', changed: true })
-      }
+      const english = (res.english || '').trim()
+      // 연습/전송할 영어: 교정된 영어 > 번역/모범 영어 > 원문
+      const target = fixed || english || text
+      const changed =
+        (!!fixed && fixed.toLowerCase() !== text.toLowerCase()) ||
+        (!!english && english.toLowerCase() !== text.toLowerCase())
+      setCorrection({
+        fixed: target,
+        ko: res.correction_ko || (changed ? '어순·문법을 자연스럽게 다듬었어요.' : '👍 자연스러운 문장이에요!'),
+        changed,
+        reply: (res.reply || '').trim(),
+      })
     } catch (e) {
       setAiError(e.message)
     } finally {
@@ -222,8 +229,9 @@ export default function Family() {
       {/* AI 교정 결과 */}
       {correction && (
         <div className="mt-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3">
+          {correction.reply && <p className="text-slate-200 text-sm mb-2">💬 {correction.reply}</p>}
           <p className="text-amber-200 text-sm">
-            {correction.changed ? '✏️ 교정된 문장' : '👍 좋아요'}: <span className="font-medium">{correction.fixed}</span>
+            {correction.changed ? '✨ 영어로' : '👍 좋아요'}: <span className="font-medium">{correction.fixed}</span>
           </p>
           {correction.ko && <p className="text-slate-400 text-xs mt-1">{correction.ko}</p>}
           <div className="flex flex-wrap gap-2 mt-2">
@@ -271,15 +279,15 @@ export default function Family() {
           placeholder={sttOk ? '메시지 (🎤 말하기 가능)' : '메시지 (영어로 연습해도 좋아요)'}
           className="flex-1 min-w-0 px-4 py-2.5 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none text-sm"
         />
-        <button onClick={getCorrection} disabled={!input.trim() || busy} className="shrink-0 bg-slate-700 px-3 rounded-full text-sm disabled:opacity-40" title="AI 교정">
-          {busy ? '…' : '✏️교정'}
+        <button onClick={getCorrection} disabled={!input.trim() || busy} className="shrink-0 bg-slate-700 px-3 rounded-full text-sm disabled:opacity-40" title="AI 번역·교정·질문">
+          {busy ? '…' : '✨AI'}
         </button>
         <button onClick={() => handleSend()} disabled={!input.trim()} className="shrink-0 bg-level-c px-4 rounded-full font-bold disabled:opacity-40">
           전송
         </button>
       </div>
       <p className="text-slate-500 text-[11px] mt-2 text-center">
-        영어로 말하거나 입력 → ✏️교정 으로 어순·문법을 다듬고 🔊듣고 🎤따라 읽어보세요
+        한국어로 써도 ✨AI 가 영어로 바꿔주고, 단어·문장 뜻도 물어보세요 → 🔊듣고 🎤따라 읽기
       </p>
     </div>
   )

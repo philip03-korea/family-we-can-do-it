@@ -54,7 +54,8 @@ Deno.serve(async (req) => {
           contents: [{ role: 'user', parts: [{ text: userContent }] }],
           generationConfig: {
             temperature: 0.3,
-            maxOutputTokens: 600,
+            maxOutputTokens: 800,
+            thinkingConfig: { thinkingBudget: 0 }, // 2.5-flash thinking 끔
             responseMimeType: 'application/json',
             responseSchema: {
               type: 'OBJECT',
