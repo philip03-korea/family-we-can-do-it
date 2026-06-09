@@ -7,6 +7,18 @@
 
 let cachedVoices = null
 
+// 모듈 로드 시 음성 목록을 미리 받아 캐싱한다.
+// (iOS는 speak() 안에서 await 하면 '사용자 클릭' 컨텍스트가 끊겨 무음이 됨 →
+//  미리 캐싱해 두고 speak()는 동기적으로 재생해야 한다.)
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  const grab = () => {
+    const v = window.speechSynthesis.getVoices()
+    if (v.length) cachedVoices = v
+  }
+  grab()
+  window.speechSynthesis.addEventListener?.('voiceschanged', grab)
+}
+
 /** 사용 가능한 음성 목록을 로드 (브라우저가 비동기로 채워줌) */
 export function loadVoices() {
   return new Promise((resolve) => {
@@ -21,6 +33,22 @@ export function loadVoices() {
       resolve(cachedVoices)
     }
   })
+}
+
+/**
+ * iOS 오디오 잠금 해제용. 첫 사용자 제스처(탭) 안에서 한 번 호출하면
+ * 이후 speak()가 정상 동작한다. (무음의 짧은 발화로 엔진을 깨움)
+ */
+export function primeTTS() {
+  if (!isTTSSupported()) return
+  try {
+    const u = new SpeechSynthesisUtterance(' ')
+    u.volume = 0
+    window.speechSynthesis.speak(u)
+    window.speechSynthesis.resume()
+  } catch {
+    /* noop */
+  }
 }
 
 /** 영어(en-*) 음성 중 가장 적절한 것을 고름 */
@@ -43,27 +71,39 @@ export function isTTSSupported() {
  * @param {object} opts { lang, rate(0.5~1.5), pitch, voiceURI }
  * @returns {Promise<void>} 재생 완료 시 resolve
  */
-export async function speak(text, opts = {}) {
-  if (!isTTSSupported() || !text) return
+export function speak(text, opts = {}) {
+  if (!isTTSSupported() || !text) return Promise.resolve()
   const { lang = 'en-US', rate = 0.95, pitch = 1, voiceURI } = opts
+  const synth = window.speechSynthesis
 
   // 이전 발화 중지 (버튼 연타 대비)
-  window.speechSynthesis.cancel()
+  synth.cancel()
 
-  const voices = cachedVoices || (await loadVoices())
   const utter = new SpeechSynthesisUtterance(text)
   utter.lang = lang
   utter.rate = rate
   utter.pitch = pitch
-  const voice = voiceURI
-    ? voices.find((v) => v.voiceURI === voiceURI)
-    : pickEnglishVoice(voices, lang)
-  if (voice) utter.voice = voice
+
+  // ⚠️ 동기적으로만 음성 선택 (await 금지 — iOS 클릭 제스처 유지).
+  // 캐시가 비어 있으면 voice 없이 lang 기준 기본 음성으로 재생하고,
+  // 다음을 위해 캐시를 백그라운드로 채운다.
+  const voices = cachedVoices || synth.getVoices()
+  if (voices?.length) {
+    cachedVoices = voices
+    const voice = voiceURI
+      ? voices.find((v) => v.voiceURI === voiceURI)
+      : pickEnglishVoice(voices, lang)
+    if (voice) utter.voice = voice
+  } else {
+    loadVoices()
+  }
 
   return new Promise((resolve) => {
     utter.onend = () => resolve()
     utter.onerror = () => resolve()
-    window.speechSynthesis.speak(utter)
+    synth.speak(utter)
+    // iOS/일부 브라우저가 발화를 일시정지 상태로 두는 경우 대비
+    if (synth.paused) synth.resume()
   })
 }
 

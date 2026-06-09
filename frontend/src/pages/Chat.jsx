@@ -21,6 +21,7 @@ export default function Chat() {
   const navigate = useNavigate()
   const level = profile?.level || 'C'
   const levelBg = LEVELS[level]?.bg || 'bg-level-c'
+  const sttOk = isSTTSupported() // iPhone(iOS)은 false → 마이크 숨기고 타이핑으로
 
   const [messages, setMessages] = useState([]) // {role:'user'|'assistant', text, correction?, correction_ko?}
   const [input, setInput] = useState('')
@@ -148,21 +149,23 @@ export default function Chat() {
 
       {/* 입력 */}
       <div className="p-3 border-t border-slate-800 flex gap-2 sticky bottom-0 bg-slate-900">
-        <button
-          onClick={speakInput}
-          disabled={listening || busy || !isSTTSupported()}
-          className={`w-12 h-12 rounded-full shrink-0 disabled:opacity-40 ${
-            listening ? 'bg-rose-600 relative ripple text-rose-600' : 'bg-slate-700'
-          }`}
-          aria-label="말하기"
-        >
-          <span className="relative z-10 text-white">🎤</span>
-        </button>
+        {sttOk && (
+          <button
+            onClick={speakInput}
+            disabled={listening || busy}
+            className={`w-12 h-12 rounded-full shrink-0 disabled:opacity-40 ${
+              listening ? 'bg-rose-600 relative ripple text-rose-600' : 'bg-slate-700'
+            }`}
+            aria-label="말하기"
+          >
+            <span className="relative z-10 text-white">🎤</span>
+          </button>
+        )}
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && send()}
-          placeholder="영어로 입력하거나 🎤 눌러 말하기"
+          placeholder={sttOk ? '영어로 입력하거나 🎤 눌러 말하기' : '영어로 입력하세요'}
           className="flex-1 px-4 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none"
         />
         <button

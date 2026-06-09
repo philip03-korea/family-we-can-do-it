@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { speak, isTTSSupported } from '../lib/tts'
+import { speak, isTTSSupported, loadVoices } from '../lib/tts'
 import { listenOnce, isSTTSupported, scorePronunciation } from '../lib/stt'
 
 const SAMPLE = 'How are you today?'
@@ -13,8 +13,8 @@ export default function VoiceDemo() {
   const sttOk = isSTTSupported()
 
   useEffect(() => {
-    // 음성 목록 미리 로드
-    if (ttsOk) speak('', {})
+    // 음성 목록 미리 로드 (빈 문자열 speak는 무음 발화라 의미 없음 → loadVoices)
+    if (ttsOk) loadVoices()
   }, [ttsOk])
 
   async function handleListen() {

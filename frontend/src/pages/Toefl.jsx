@@ -177,7 +177,7 @@ function ProductionSection({ section, userId, onSaved }) {
       )}
 
       {/* 응답 입력 */}
-      {section === 'speaking' && (
+      {section === 'speaking' && isSTTSupported() && (
         <button
           onClick={record}
           disabled={listening}
@@ -186,15 +186,26 @@ function ProductionSection({ section, userId, onSaved }) {
           }`}
         >
           <span className="relative z-10 text-white">
-            {listening ? '🎙 녹음 중…' : isSTTSupported() ? '🎤 말하기 (음성→텍스트)' : '음성인식 미지원 — 아래에 입력'}
+            {listening ? '🎙 녹음 중…' : '🎤 말하기 (음성→텍스트)'}
           </span>
         </button>
+      )}
+      {section === 'speaking' && !isSTTSupported() && (
+        <p className="text-slate-400 text-xs mb-2">
+          ℹ️ 이 기기(아이폰 등)는 음성인식을 지원하지 않아요. 답변을 아래에 <b>직접 입력</b>하면 동일하게 AI 채점을 받을 수 있어요.
+        </p>
       )}
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={section === 'writing' ? 8 : 4}
-        placeholder={section === 'speaking' ? '말한 내용이 여기에 표시됩니다 (수정 가능)' : '여기에 에세이를 작성하세요'}
+        placeholder={
+          section === 'speaking'
+            ? isSTTSupported()
+              ? '말한 내용이 여기에 표시됩니다 (수정 가능)'
+              : '답변을 영어로 입력하세요'
+            : '여기에 에세이를 작성하세요'
+        }
         className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 focus:border-indigo-500 outline-none text-sm"
       />
       <div className="text-right text-xs text-slate-500 mt-1">{text.trim().split(/\s+/).filter(Boolean).length} 단어</div>
