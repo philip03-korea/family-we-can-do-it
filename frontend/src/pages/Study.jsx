@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getStudyQueue, saveProgress, logSpeechAttempt } from '../lib/db'
+import { getStudyQueue, saveProgress, logSpeechAttempt, recordActivity } from '../lib/db'
 import { schedule, previewInterval, RATINGS } from '../lib/fsrs'
 import { speak, isTTSSupported } from '../lib/tts'
 import { listenOnce, isSTTSupported, scorePronunciation } from '../lib/stt'
@@ -97,6 +97,7 @@ export default function Study() {
     }
 
     setDone((d) => d + 1)
+    recordActivity(1).catch(() => {})
     if (idx + 1 >= queue.length) {
       setIdx(queue.length) // 종료 트리거
     } else {

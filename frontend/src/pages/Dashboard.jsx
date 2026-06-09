@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
-import { getStudyStats } from '../lib/db'
+import { getStudyStats, getStreak } from '../lib/db'
 import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
 
@@ -11,12 +11,16 @@ export default function Dashboard() {
   const navigate = useNavigate()
   const [saving, setSaving] = useState(false)
   const [stats, setStats] = useState(null)
+  const [streak, setStreak] = useState(null)
 
   useEffect(() => {
     if (!profile) return
     getStudyStats(user.id, profile.level)
       .then(setStats)
       .catch(() => setStats(null))
+    getStreak(user.id)
+      .then(setStreak)
+      .catch(() => setStreak(null))
   }, [user?.id, profile])
 
   // 프로필이 없으면: 내가 어떤 가족 구성원인지 선택
@@ -36,9 +40,16 @@ export default function Dashboard() {
             {member.emoji} {member.name}
           </h1>
         </div>
-        <button onClick={signOut} className="text-sm text-slate-400 hover:text-slate-200">
-          로그아웃
-        </button>
+        <div className="flex items-center gap-3">
+          {streak && (
+            <span className="text-sm font-bold bg-slate-800 px-3 py-1.5 rounded-full" title="연속 학습일">
+              🔥 {streak.streak}일
+            </span>
+          )}
+          <button onClick={signOut} className="text-sm text-slate-400 hover:text-slate-200">
+            로그아웃
+          </button>
+        </div>
       </header>
 
       {/* 내 레벨 카드 */}
@@ -51,6 +62,19 @@ export default function Dashboard() {
           </span>
         </div>
         <p className="text-white/80 text-sm mt-2">{member.focus}</p>
+        {streak && (
+          <p className="text-white/70 text-xs mt-3">오늘 {streak.todayReviews}개 학습 · 🔥 연속 {streak.streak}일</p>
+        )}
+      </div>
+
+      {/* 바로가기 */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        <button onClick={() => navigate('/words')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 font-medium">
+          📒 단어장
+        </button>
+        <button onClick={() => navigate('/chat')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 font-medium">
+          💬 AI 회화
+        </button>
       </div>
 
       {/* 오늘의 학습 */}

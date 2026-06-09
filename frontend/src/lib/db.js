@@ -83,6 +83,40 @@ export async function logSpeechAttempt(userId, { wordId, targetText, transcript,
   if (error) throw error
 }
 
+/** 오늘 학습 수 누적 기록 (연속 학습일/통계용) */
+export async function recordActivity(reviews) {
+  if (!reviews) return
+  const { error } = await supabase.rpc('add_activity', { p_reviews: reviews })
+  if (error) throw error
+}
+
+/** 최근 활동을 받아 연속 학습일(streak)과 오늘 학습량 계산 */
+export async function getStreak(userId) {
+  const { data, error } = await supabase
+    .from('daily_activity')
+    .select('day, reviews')
+    .eq('user_id', userId)
+    .order('day', { ascending: false })
+    .limit(120)
+  if (error) throw error
+  const rows = data || []
+  const byDay = new Map(rows.map((r) => [r.day, r.reviews]))
+
+  const todayKey = new Date().toISOString().slice(0, 10)
+  const todayReviews = byDay.get(todayKey) || 0
+
+  // 오늘(또는 어제)부터 연속으로 기록된 날 수 세기
+  let streak = 0
+  const cursor = new Date()
+  // 오늘 학습 안 했으면 어제부터 카운트(오늘은 아직 진행 가능)
+  if (!byDay.has(todayKey)) cursor.setDate(cursor.getDate() - 1)
+  while (byDay.has(cursor.toISOString().slice(0, 10))) {
+    streak++
+    cursor.setDate(cursor.getDate() - 1)
+  }
+  return { streak, todayReviews }
+}
+
 /** 대시보드용 요약: 오늘 복습 대기 수, 학습한 단어 수 */
 export async function getStudyStats(userId, level) {
   const { due, fresh, words, progressById } = await getStudyQueue(userId, level, 9999)

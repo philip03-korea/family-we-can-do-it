@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Study from './pages/Study'
+import Words from './pages/Words'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -41,6 +42,14 @@ export default function App() {
         element={
           <Protected>
             <Study />
+          </Protected>
+        }
+      />
+      <Route
+        path="/words"
+        element={
+          <Protected>
+            <Words />
           </Protected>
         }
       />
