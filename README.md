@@ -30,27 +30,31 @@
 FamTalk/
 ├── README.md
 ├── docs/
-│   └── 기획서_v4.html      ← 전체 기획서 (브라우저에서 열기)
-├── frontend/                ← (예정) React + PWA
-├── backend/                 ← (예정) Node.js / FastAPI
-└── database/                ← (예정) PostgreSQL 스키마
+│   ├── 기획서_v4.html              ← 전체 기획서 (브라우저에서 열기)
+│   └── 작업계획서_및_비용분석.md    ← TTS 캐싱·비용 전략
+├── frontend/                       ← React + PWA (STEP 1 완료 ✅)
+│   └── README.md                   ← 실행 방법
+├── database/
+│   └── schema.sql                  ← Supabase 테이블 + RLS
+└── backend/                        ← (필요 시) — 현재는 Supabase가 백엔드 역할
 ```
 
-### 🛠 기술 스택 (예정)
+### 🛠 기술 스택 (가성비 확정 — 운영비 ₩0 목표)
 
-| 영역 | 기술 |
-|------|------|
-| Frontend | React + PWA, Tailwind CSS |
-| Backend | Node.js (Nest/Express) 또는 Python (FastAPI) |
-| Database | PostgreSQL |
-| AI | LLM API (회화/교정), TTS (듣기), STT + 발음평가 |
-| Infra | Docker, 소형 VPS |
+| 영역 | 기술 | 비용 |
+|------|------|------|
+| Frontend | React + Vite + PWA + Tailwind | 무료 |
+| Backend·DB·인증·저장소 | **Supabase 무료 티어** | ₩0 |
+| 듣기(TTS) | **브라우저 Web Speech** | ₩0 |
+| 발음(STT) | **브라우저 SpeechRecognition** | ₩0 |
+| 호스팅 | Cloudflare Pages / Vercel 무료 | ₩0 |
+| AI 회화 (STEP 4~) | 경량 LLM (캐싱·쿼터 적용) | 소액 |
 
 ### 🗺 개발 로드맵
 
 | 단계 | 내용 | 기간 |
 |------|------|------|
-| STEP 1 | 프로젝트 셋업 · 계정 | ≈ 1주 |
+| STEP 1 ✅ | 프로젝트 셋업 · 계정 (PWA + Supabase 인증 + 무료 음성 데모) | 완료 |
 | STEP 2 | 데이터 모델 · 레벨 시스템 · SRS | ≈ 1–2주 |
 | STEP 3 | 개인 학습 (단어→말하기→발음) | ≈ 2–3주 |
 | STEP 4 | AI 연동 (회화·교정·생성) | ≈ 2–3주 |
