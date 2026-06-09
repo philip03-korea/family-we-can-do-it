@@ -117,6 +117,93 @@ export async function getStreak(userId) {
   return { streak, todayReviews }
 }
 
+// ===================== 가족 소통 (STEP 5) =====================
+
+/** 이번 주(또는 가장 최근) 공통 토론 주제 */
+export async function getWeeklyTopic() {
+  const today = new Date().toISOString().slice(0, 10)
+  const { data, error } = await supabase
+    .from('weekly_topics')
+    .select('*')
+    .lte('week_start', today)
+    .order('week_start', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) throw error
+  return data
+}
+
+/** 일자 집합으로 연속일수 계산 (오늘/어제 기준) */
+function streakFromDays(daySet) {
+  let streak = 0
+  const cursor = new Date()
+  const todayKey = new Date().toISOString().slice(0, 10)
+  if (!daySet.has(todayKey)) cursor.setDate(cursor.getDate() - 1)
+  while (daySet.has(cursor.toISOString().slice(0, 10))) {
+    streak++
+    cursor.setDate(cursor.getDate() - 1)
+  }
+  return streak
+}
+
+/** 가족 구성원 목록 + 각자의 스트릭/오늘 학습량 */
+export async function getFamilyOverview() {
+  const [{ data: profiles }, { data: activity }] = await Promise.all([
+    supabase.from('profiles').select('id, member_key, display_name, level, toefl_track'),
+    supabase.from('daily_activity').select('user_id, day, reviews').gte(
+      'day',
+      new Date(Date.now() - 120 * 86400000).toISOString().slice(0, 10),
+    ),
+  ])
+  const todayKey = new Date().toISOString().slice(0, 10)
+  const daysByUser = {}
+  const todayByUser = {}
+  for (const a of activity || []) {
+    ;(daysByUser[a.user_id] ||= new Set()).add(a.day)
+    if (a.day === todayKey) todayByUser[a.user_id] = a.reviews
+  }
+  return (profiles || []).map((p) => ({
+    ...p,
+    streak: streakFromDays(daysByUser[p.id] || new Set()),
+    todayReviews: todayByUser[p.id] || 0,
+  }))
+}
+
+/** 최근 가족 채팅 메시지 */
+export async function getRecentFamilyMessages(limit = 50) {
+  const { data, error } = await supabase
+    .from('family_messages')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return (data || []).reverse()
+}
+
+/** 가족 채팅 메시지 전송 */
+export async function sendFamilyMessage({ userId, displayName, memberKey, text }) {
+  const { error } = await supabase.from('family_messages').insert({
+    user_id: userId,
+    display_name: displayName,
+    member_key: memberKey,
+    text,
+  })
+  if (error) throw error
+}
+
+/** 새 메시지 실시간 구독 (반환된 channel 은 supabase.removeChannel 로 해제) */
+export function subscribeFamilyMessages(onInsert) {
+  const channel = supabase
+    .channel('family-chat')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'family_messages' },
+      (payload) => onInsert(payload.new),
+    )
+    .subscribe()
+  return channel
+}
+
 /** 대시보드용 요약: 오늘 복습 대기 수, 학습한 단어 수 */
 export async function getStudyStats(userId, level) {
   const { due, fresh, words, progressById } = await getStudyQueue(userId, level, 9999)

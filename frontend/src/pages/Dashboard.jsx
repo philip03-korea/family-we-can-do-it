@@ -68,12 +68,15 @@ export default function Dashboard() {
       </div>
 
       {/* 바로가기 */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <button onClick={() => navigate('/words')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 font-medium">
+      <div className="grid grid-cols-3 gap-2 mb-6">
+        <button onClick={() => navigate('/words')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
           📒 단어장
         </button>
-        <button onClick={() => navigate('/chat')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 font-medium">
+        <button onClick={() => navigate('/chat')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
           💬 AI 회화
+        </button>
+        <button onClick={() => navigate('/family')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
+          👨‍👩‍👧‍👦 가족
         </button>
       </div>
 
