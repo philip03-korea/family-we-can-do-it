@@ -71,7 +71,10 @@ Deno.serve(async (req) => {
         }),
       },
     )
-    if (!geminiRes.ok) return json({ error: 'GEMINI_ERROR', status: geminiRes.status, detail: await geminiRes.text() }, 502)
+    if (!geminiRes.ok) {
+      const code = geminiRes.status === 429 ? 'AI_QUOTA_EXCEEDED' : 'GEMINI_ERROR'
+      return json({ error: code, status: geminiRes.status, detail: await geminiRes.text() }, 200)
+    }
     const gem = await geminiRes.json()
     const raw = gem?.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'
     let parsed

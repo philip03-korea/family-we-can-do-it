@@ -16,13 +16,19 @@ export async function scoreToefl({ section, prompt, response }) {
   const { data, error } = await supabase.functions.invoke('toefl', {
     body: { section, prompt, response },
   })
-  const payload = data || {}
+  // 함수가 4xx/5xx면 본문은 error.context(Response)에 담김
+  let payload = data || {}
+  if ((!data || !Object.keys(data).length) && error?.context?.json) {
+    try { payload = await error.context.json() } catch { /* ignore */ }
+  }
   if (payload.error || error) {
     const map = {
-      AI_NOT_CONFIGURED: 'AI 채점이 아직 설정되지 않았어요. (docs/AI_설정_가이드.md — toefl 함수도 배포 필요)',
+      AI_NOT_CONFIGURED: 'AI 채점이 아직 설정되지 않았어요. (무료 Gemini 키 + toefl 함수 배포 필요)',
+      AI_QUOTA_EXCEEDED: '오늘 AI 무료 사용량/크레딧이 소진됐어요. 잠시 후 다시 시도하거나 키 교체가 필요해요.',
       DAILY_LIMIT_REACHED: '오늘 AI 사용 한도를 다 썼어요. 내일 다시 시도해요 🌙',
+      GEMINI_ERROR: 'AI 채점 서버가 잠시 응답하지 않아요. 잠시 후 다시 시도해 주세요.',
     }
-    throw new Error(map[payload.error] || payload.detail || error?.message || '채점 중 오류')
+    throw new Error(map[payload.error] || '채점 중 문제가 발생했어요. 잠시 후 다시 시도해 주세요.')
   }
   return payload // { score, score_reason, strengths, improvements, corrected_sample, usageToday, limit }
 }

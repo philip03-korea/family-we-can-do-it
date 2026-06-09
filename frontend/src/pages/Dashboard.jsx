@@ -148,37 +148,46 @@ export default function Dashboard() {
             ? '오늘 학습 완료 ☕'
             : '학습 시작 →'}
         </button>
+        <button
+          onClick={() => navigate('/study?mode=review')}
+          className="w-full py-3 mt-2 rounded-2xl font-medium bg-slate-900 border border-slate-700 text-slate-200"
+        >
+          📚 학습한 단어 복습하기
+        </button>
       </div>
 
       {/* 무료 음성(TTS/STT) 데모 — 비용 0원 동작 확인 */}
       <VoiceDemo />
 
-      {/* 레벨 사다리 A→F */}
-      <h2 className="text-lg font-bold mt-8 mb-3">레벨 사다리</h2>
+      {/* 레벨 사다리 A→F — 탭하면 그 레벨로 학습 */}
+      <h2 className="text-lg font-bold mt-8 mb-1">레벨 사다리</h2>
+      <p className="text-slate-500 text-xs mb-3">레벨을 눌러 그 레벨 단어로 학습할 수 있어요</p>
       <div className="space-y-2">
         {LEVEL_ORDER.map((code) => {
           const lv = LEVELS[code]
           const isMine = code === profile.level
           return (
-            <div
+            <button
               key={code}
-              className={`${lv.bg} rounded-2xl px-4 py-3 flex items-center justify-between ${
-                isMine ? 'ring-2 ring-white' : 'opacity-70'
+              onClick={() => navigate(`/study?level=${code}`)}
+              className={`${lv.bg} w-full rounded-2xl px-4 py-3 flex items-center justify-between text-left ${
+                isMine ? 'ring-2 ring-white' : 'opacity-80'
               }`}
             >
               <span className="font-bold text-white text-lg">{code}</span>
               <span className="text-white/90 text-sm">
                 {lv.name} · {lv.label}
               </span>
-              {isMine && <span className="text-white text-xs bg-black/20 px-2 py-0.5 rounded-full">나</span>}
-            </div>
+              <span className="flex items-center gap-1.5">
+                {isMine && <span className="text-white text-xs bg-black/20 px-2 py-0.5 rounded-full">나</span>}
+                <span className="text-white/70 text-lg">›</span>
+              </span>
+            </button>
           )
         })}
       </div>
 
-      <p className="text-center text-xs text-slate-600 mt-8">
-        STEP 1 완료 — 다음: 단어·SRS / 학습 UI (STEP 2~3)
-      </p>
+      <p className="text-center text-xs text-slate-600 mt-8">FamTalk · 우리 가족 영어 🔥</p>
     </div>
   )
 }
