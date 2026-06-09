@@ -41,5 +41,20 @@ export async function chat({ level, message, history = [] }) {
     err.code = code
     throw err
   }
-  return payload // { reply, correction, correction_ko, cached, usageToday, limit }
+  return payload // { reply, english, english_ko, correction, correction_ko, cached, usageToday, limit }
+}
+
+// 패미(AI 가족) — 주제·최근 대화 기반으로 대화를 이끄는 메시지 생성
+export async function fami({ topic, recent = [], members = [] }) {
+  const { data, error } = await supabase.functions.invoke('famichat', {
+    body: { topic, recent, members },
+  })
+  const payload = await readPayload(data, error)
+  if (payload.error || error) {
+    const msg = FRIENDLY[payload.error] || 'AI 가족을 잠시 부르지 못했어요. 잠시 후 다시 시도해 주세요.'
+    const err = new Error(msg)
+    err.code = payload.error
+    throw err
+  }
+  return (payload.text || '').trim()
 }

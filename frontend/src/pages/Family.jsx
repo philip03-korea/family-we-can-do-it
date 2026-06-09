@@ -7,15 +7,31 @@ import {
   getFamilyOverview,
   getRecentFamilyMessages,
   sendFamilyMessage,
+  sendAiFamilyMessage,
   subscribeFamilyMessages,
 } from '../lib/db'
 import { speak, isTTSSupported } from '../lib/tts'
 import { listenOnce, isSTTSupported } from '../lib/stt'
 import { scoreFeedback } from '../lib/feedback'
-import { chat } from '../lib/ai'
+import { chat, fami } from '../lib/ai'
 import { FAMILY, LEVELS } from '../data/family'
 
-const emojiOf = (key) => FAMILY.find((f) => f.key === key)?.emoji || '🙂'
+const emojiOf = (key) => (key === 'ai' ? '🤖' : FAMILY.find((f) => f.key === key)?.emoji || '🙂')
+
+// @멘션을 강조 표시
+function renderText(text) {
+  return String(text || '')
+    .split(/(@[\w가-힣]+)/g)
+    .map((part, i) =>
+      part.startsWith('@') ? (
+        <span key={i} className="text-indigo-300 font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    )
+}
 
 export default function Family() {
   const { user, profile } = useAuth()
@@ -30,14 +46,38 @@ export default function Family() {
   const [practice, setPractice] = useState(null) // {score, transcript}
   const [aiError, setAiError] = useState('')
   const [micLang, setMicLang] = useState('ko-KR') // 한국어로 말하면 한글로 입력 → ✨AI로 영어 변환
+  const [famiBusy, setFamiBusy] = useState(false)
+  const [loaded, setLoaded] = useState(false)
   const endRef = useRef(null)
+  const famiAutoRef = useRef(false)
   const sttOk = isSTTSupported()
   const level = profile?.level || 'C'
+
+  // 🤖 패미(AI 가족) — 주제·최근 대화를 보고 대화를 이끔
+  async function summonFami() {
+    if (famiBusy) return
+    setFamiBusy(true)
+    setAiError('')
+    try {
+      const recent = messages.slice(-8).map((m) => ({ name: m.display_name || '가족', text: m.text }))
+      const names = members.map((mm) => mm.display_name).filter(Boolean)
+      const topicText = topic ? `${topic.title} — ${topic.prompt_en || ''}` : ''
+      const text = await fami({ topic: topicText, recent, members: names })
+      if (text) await sendAiFamilyMessage({ text })
+    } catch (e) {
+      setAiError(e.message)
+    } finally {
+      setFamiBusy(false)
+    }
+  }
 
   useEffect(() => {
     getWeeklyTopic().then(setTopic).catch(() => {})
     getFamilyOverview().then(setMembers).catch(() => {})
-    getRecentFamilyMessages().then(setMessages).catch(() => {})
+    getRecentFamilyMessages()
+      .then((m) => setMessages(m))
+      .catch(() => {})
+      .finally(() => setLoaded(true))
 
     const channel = subscribeFamilyMessages((msg) => {
       setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]))
@@ -46,6 +86,15 @@ export default function Family() {
       supabase.removeChannel(channel)
     }
   }, [])
+
+  // 채팅이 비어 있으면 패미가 먼저 대화를 시작 (1회)
+  useEffect(() => {
+    if (loaded && messages.length === 0 && !famiAutoRef.current) {
+      famiAutoRef.current = true
+      summonFami()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded, messages.length])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -104,6 +153,7 @@ export default function Family() {
         (!!english && english.toLowerCase() !== text.toLowerCase())
       setCorrection({
         fixed: target,
+        ek: (res.english_ko || '').trim(),
         ko: res.correction_ko || (changed ? '어순·문법을 자연스럽게 다듬었어요.' : '👍 자연스러운 문장이에요!'),
         changed,
         reply: (res.reply || '').trim(),
@@ -199,27 +249,46 @@ export default function Family() {
       </div>
 
       {/* 가족 채팅 */}
-      <h2 className="text-lg font-bold mb-3">가족 채팅 <span className="text-xs text-slate-500 font-normal">· 실시간</span></h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-lg font-bold">가족 채팅 <span className="text-xs text-slate-500 font-normal">· 실시간</span></h2>
+        <button
+          onClick={summonFami}
+          disabled={famiBusy}
+          className="text-xs bg-indigo-600/30 border border-indigo-500/40 text-indigo-100 px-3 py-1.5 rounded-full disabled:opacity-50"
+          title="패미가 대화를 이어줘요"
+        >
+          {famiBusy ? '🤖 …' : '🤖 패미야 이어줘'}
+        </button>
+      </div>
       <div className="flex-1 min-h-[240px] bg-slate-800/40 rounded-2xl border border-slate-700 p-3 space-y-2 overflow-y-auto">
         {messages.length === 0 && (
           <p className="text-slate-500 text-sm text-center py-8">첫 메시지를 남겨보세요 👋</p>
         )}
         {messages.map((m) => {
-          const mine = m.user_id === user.id
+          const mine = m.user_id === user.id && !m.is_ai
           return (
             <div key={m.id} className={mine ? 'flex justify-end' : 'flex justify-start'}>
-              <div className="max-w-[80%]">
+              <div className="max-w-[85%]">
                 {!mine && (
-                  <span className="text-xs text-slate-400 ml-1">
+                  <span className={`text-xs ml-1 ${m.is_ai ? 'text-indigo-300 font-medium' : 'text-slate-400'}`}>
                     {emojiOf(m.member_key)} {m.display_name}
                   </span>
                 )}
                 <div
-                  className={`rounded-2xl px-3 py-2 text-sm ${
-                    mine ? 'bg-level-c text-white' : 'bg-slate-700 text-slate-100'
+                  className={`rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap ${
+                    mine
+                      ? 'bg-level-c text-white'
+                      : m.is_ai
+                      ? 'bg-indigo-600/25 border border-indigo-500/40 text-indigo-50'
+                      : 'bg-slate-700 text-slate-100'
                   }`}
                 >
-                  {m.text}
+                  {renderText(m.text)}
+                  {m.is_ai && (
+                    <button onClick={() => speak(m.text)} disabled={!isTTSSupported()} className="block mt-1 text-indigo-200/70 text-xs">
+                      🔊 듣기
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -231,9 +300,15 @@ export default function Family() {
       {/* AI 교정 결과 */}
       {correction && (
         <div className="mt-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3">
-          {correction.reply && <p className="text-slate-200 text-sm mb-2">💬 {correction.reply}</p>}
+          <div className="flex items-start justify-between gap-2">
+            {correction.reply && <p className="text-slate-200 text-sm mb-1 flex-1">💬 {correction.reply}</p>}
+            <button onClick={() => { setCorrection(null); setPractice(null) }} className="shrink-0 text-slate-400 text-lg leading-none px-1" aria-label="닫기">
+              ✖
+            </button>
+          </div>
           <p className="text-amber-200 text-sm">
             {correction.changed ? '✨ 영어로' : '👍 좋아요'}: <span className="font-medium">{correction.fixed}</span>
+            {correction.ek && <span className="text-amber-100/80"> ({correction.ek})</span>}
           </p>
           {correction.ko && <p className="text-slate-400 text-xs mt-1">{correction.ko}</p>}
           <div className="flex flex-wrap gap-2 mt-2">
@@ -310,7 +385,7 @@ export default function Family() {
         </button>
       </div>
       <p className="text-slate-500 text-[11px] mt-2 text-center">
-        한국어로 써도 ✨AI 가 영어로 바꿔주고, 단어·문장 뜻도 물어보세요 → 🔊듣고 🎤따라 읽기
+        한국어로 써도 ✨AI 가 영어로 바꿔줘요 · @이름 으로 가족을 부르고 · 🤖패미가 대화를 이어줘요
       </p>
     </div>
   )

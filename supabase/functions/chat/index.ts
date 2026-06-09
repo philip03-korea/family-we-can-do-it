@@ -40,6 +40,7 @@ The learner may do any of these — always be helpful and answer what they actua
 JSON fields (return JSON only):
 - "reply": your main response in English at the learner's level. For meaning/grammar questions you MAY add a short Korean gloss in parentheses so they understand.
 - "english": ONE clean, natural English sentence the learner can say or send — the translation of their Korean, or the English answer to "how do I say…", or a model sentence. English only, no Korean. Empty "" if not applicable.
+- "english_ko": the Korean translation/meaning of the "english" sentence, so the learner can verify it. Empty "" if english is empty.
 - "correction": if the learner wrote English with mistakes, the corrected natural English; otherwise "".
 - "correction_ko": one short Korean line explaining the correction or the key point; otherwise "".`
 }
@@ -116,6 +117,7 @@ Deno.serve(async (req) => {
               properties: {
                 reply: { type: 'STRING' },
                 english: { type: 'STRING' },
+                english_ko: { type: 'STRING' },
                 correction: { type: 'STRING' },
                 correction_ko: { type: 'STRING' },
               },
@@ -133,7 +135,7 @@ Deno.serve(async (req) => {
     }
     const gem = await geminiRes.json()
     const raw = gem?.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'
-    let parsed: { reply?: string; english?: string; correction?: string; correction_ko?: string }
+    let parsed: { reply?: string; english?: string; english_ko?: string; correction?: string; correction_ko?: string }
     try {
       parsed = JSON.parse(raw)
     } catch {
@@ -142,6 +144,7 @@ Deno.serve(async (req) => {
     const result = {
       reply: parsed.reply ?? '...',
       english: parsed.english ?? '',
+      english_ko: parsed.english_ko ?? '',
       correction: parsed.correction ?? '',
       correction_ko: parsed.correction_ko ?? '',
     }
