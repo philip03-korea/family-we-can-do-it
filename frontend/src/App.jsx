@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Study from './pages/Study'
 import Words from './pages/Words'
+import Chat from './pages/Chat'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -50,6 +51,14 @@ export default function App() {
         element={
           <Protected>
             <Words />
+          </Protected>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <Protected>
+            <Chat />
           </Protected>
         }
       />
