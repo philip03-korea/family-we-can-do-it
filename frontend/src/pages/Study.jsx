@@ -5,6 +5,7 @@ import { getStudyQueue, getLearnedWords, saveProgress, logSpeechAttempt, recordA
 import { schedule, previewInterval, RATINGS } from '../lib/fsrs'
 import { speak, isTTSSupported } from '../lib/tts'
 import { listenOnce, isSTTSupported, scorePronunciation } from '../lib/stt'
+import { scoreFeedback, recallFeedback, meaningMatches } from '../lib/feedback'
 import { LEVELS, LEVEL_ORDER } from '../data/family'
 
 const PAGE = 10
@@ -96,11 +97,13 @@ export default function Study() {
       const lang = kind === 'recall' ? 'ko-KR' : 'en-US'
       const { transcript } = await listenOnce({ lang })
       if (kind === 'recall') {
-        setRecall({ transcript })
+        const correct = meaningMatches(current.word.meaning_ko, transcript)
+        setRecall({ transcript, correct, ...recallFeedback(correct) })
       } else {
         const res = scorePronunciation(target, transcript)
-        if (kind === 'term') setTermResult({ transcript, ...res })
-        else setSentResult({ transcript, ...res })
+        const fb = scoreFeedback(res.score)
+        if (kind === 'term') setTermResult({ transcript, ...res, fb })
+        else setSentResult({ transcript, ...res, fb })
         logSpeechAttempt(user.id, {
           wordId: current.word.id,
           targetText: target,
@@ -284,7 +287,9 @@ export default function Study() {
           </div>
           {termResult && !termResult.error && (
             <p className="text-white/90 text-xs mt-2">
-              발음 {termResult.score}점 · "{termResult.transcript}"
+              발음 {termResult.score}/100점 · {termResult.fb.msg}
+              <br />
+              <span className="text-white/60">인식: "{termResult.transcript}"</span>
             </p>
           )}
 
@@ -311,7 +316,9 @@ export default function Study() {
                   </div>
                   {sentResult && !sentResult.error && (
                     <p className="text-white/90 text-xs mt-2">
-                      발음 {sentResult.score}점 · "{sentResult.transcript}"
+                      발음 {sentResult.score}/100점 · {sentResult.fb.msg}
+                      <br />
+                      <span className="text-white/60">인식: "{sentResult.transcript}"</span>
                     </p>
                   )}
                 </div>
@@ -335,7 +342,9 @@ export default function Study() {
               </button>
             )}
             {recall && !recall.error && (
-              <p className="text-center text-slate-300 text-sm">내가 말한 뜻: "{recall.transcript}"</p>
+              <p className={`text-center text-sm ${recall.good ? 'text-emerald-300' : 'text-amber-300'}`}>
+                {recall.msg} <span className="text-slate-400">— 내가 말한 뜻: "{recall.transcript}"</span>
+              </p>
             )}
           </div>
         )}

@@ -11,6 +11,7 @@ import {
 } from '../lib/db'
 import { speak, isTTSSupported } from '../lib/tts'
 import { listenOnce, isSTTSupported } from '../lib/stt'
+import { scoreFeedback } from '../lib/feedback'
 import { chat } from '../lib/ai'
 import { FAMILY, LEVELS } from '../data/family'
 
@@ -28,6 +29,7 @@ export default function Family() {
   const [correction, setCorrection] = useState(null) // {fixed, ko, changed}
   const [practice, setPractice] = useState(null) // {score, transcript}
   const [aiError, setAiError] = useState('')
+  const [micLang, setMicLang] = useState('ko-KR') // 한국어로 말하면 한글로 입력 → ✨AI로 영어 변환
   const endRef = useRef(null)
   const sttOk = isSTTSupported()
   const level = profile?.level || 'C'
@@ -69,13 +71,13 @@ export default function Family() {
     }
   }
 
-  // 🎤 말로 입력 (영어 음성 → 텍스트)
+  // 🎤 말로 입력 (선택 언어로 인식 → 텍스트). 한국어면 한글로 입력되고 ✨AI로 영어 변환.
   async function speakInput() {
     if (!sttOk) return
     setListening(true)
     setAiError('')
     try {
-      const { transcript } = await listenOnce({ lang: 'en-US' })
+      const { transcript } = await listenOnce({ lang: micLang })
       setInput(transcript)
     } catch (e) {
       setAiError(e.message)
@@ -122,7 +124,7 @@ export default function Family() {
       const t = target.toLowerCase().replace(/[.,!?;:"']/g, '').split(/\s+/).filter(Boolean)
       const s = new Set(transcript.toLowerCase().replace(/[.,!?;:"']/g, '').split(/\s+/).filter(Boolean))
       const score = t.length ? Math.round((t.filter((w) => s.has(w)).length / t.length) * 100) : 0
-      setPractice({ score, transcript })
+      setPractice({ score, transcript, fb: scoreFeedback(score) })
     } catch (e) {
       setAiError(e.message)
     } finally {
@@ -254,14 +256,35 @@ export default function Family() {
           </div>
           {practice && (
             <p className="text-xs mt-2 text-slate-300">
-              발음 <span className={practice.score >= 70 ? 'text-emerald-400' : 'text-amber-400'}>{practice.score}점</span> · "{practice.transcript}"
+              발음 <span className={practice.fb.good ? 'text-emerald-400' : 'text-amber-400'}>{practice.score}/100점</span> · {practice.fb.msg}
+              <br />
+              <span className="text-slate-500">인식: "{practice.transcript}"</span>
             </p>
           )}
         </div>
       )}
       {aiError && <p className="text-amber-300 text-xs mt-2">⚠️ {aiError}</p>}
 
-      <div className="flex gap-2 mt-3 items-center">
+      {sttOk && (
+        <div className="flex items-center gap-1.5 mt-3 text-xs">
+          <span className="text-slate-500">🎤 말하기 언어:</span>
+          <button
+            onClick={() => setMicLang('ko-KR')}
+            className={`px-2.5 py-1 rounded-full ${micLang === 'ko-KR' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+          >
+            한국어
+          </button>
+          <button
+            onClick={() => setMicLang('en-US')}
+            className={`px-2.5 py-1 rounded-full ${micLang === 'en-US' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+          >
+            English
+          </button>
+          {micLang === 'ko-KR' && <span className="text-slate-500">→ ✨AI로 영어 변환</span>}
+        </div>
+      )}
+
+      <div className="flex gap-2 mt-2 items-center">
         {sttOk && (
           <button
             onClick={speakInput}
