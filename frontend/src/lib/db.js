@@ -83,6 +83,16 @@ export async function logSpeechAttempt(userId, { wordId, targetText, transcript,
   if (error) throw error
 }
 
+/** 누적 복습 횟수(평생) — 게임화 XP용 */
+export async function getLifetimeReviews(userId) {
+  const { data, error } = await supabase
+    .from('daily_activity')
+    .select('reviews')
+    .eq('user_id', userId)
+  if (error) throw error
+  return (data || []).reduce((sum, r) => sum + (r.reviews || 0), 0)
+}
+
 /** 오늘 학습 수 누적 기록 (연속 학습일/통계용) */
 export async function recordActivity(reviews) {
   if (!reviews) return

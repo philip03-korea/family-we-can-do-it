@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
-import { getStudyStats, getStreak } from '../lib/db'
+import { getStudyStats, getStreak, getLifetimeReviews } from '../lib/db'
+import { computeXP, computeBadges } from '../lib/gamify'
 import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
 
@@ -12,15 +13,22 @@ export default function Dashboard() {
   const [saving, setSaving] = useState(false)
   const [stats, setStats] = useState(null)
   const [streak, setStreak] = useState(null)
+  const [game, setGame] = useState(null)
 
   useEffect(() => {
     if (!profile) return
-    getStudyStats(user.id, profile.level)
-      .then(setStats)
-      .catch(() => setStats(null))
-    getStreak(user.id)
-      .then(setStreak)
-      .catch(() => setStreak(null))
+    Promise.all([
+      getStudyStats(user.id, profile.level),
+      getStreak(user.id),
+      getLifetimeReviews(user.id),
+    ])
+      .then(([st, sk, totalReviews]) => {
+        setStats(st)
+        setStreak(sk)
+        const merged = { totalReviews, learned: st.learned, total: st.total, streak: sk.streak }
+        setGame({ xp: computeXP(merged), badges: computeBadges(merged) })
+      })
+      .catch(() => {})
   }, [user?.id, profile])
 
   // 프로필이 없으면: 내가 어떤 가족 구성원인지 선택
@@ -66,6 +74,33 @@ export default function Dashboard() {
           <p className="text-white/70 text-xs mt-3">오늘 {streak.todayReviews}개 학습 · 🔥 연속 {streak.streak}일</p>
         )}
       </div>
+
+      {/* 게임화: XP/레벨/배지 */}
+      {game && (
+        <div className="bg-slate-800/60 border border-slate-700 rounded-3xl p-5 mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-bold">⭐ Lv.{game.xp.level}</span>
+            <span className="text-xs text-slate-400">{game.xp.intoLevel}/{game.xp.perLevel} XP</span>
+          </div>
+          <div className="h-2.5 bg-slate-900 rounded-full overflow-hidden mb-4">
+            <div className="bg-level-c h-full transition-all" style={{ width: `${game.xp.progress * 100}%` }} />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {game.badges.map((b) => (
+              <div
+                key={b.id}
+                title={b.name}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs ${
+                  b.earned ? 'bg-slate-700 text-white' : 'bg-slate-900 text-slate-600'
+                }`}
+              >
+                <span className={b.earned ? '' : 'grayscale opacity-50'}>{b.emoji}</span>
+                <span>{b.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 바로가기 */}
       <div className="grid grid-cols-3 gap-2 mb-6">
