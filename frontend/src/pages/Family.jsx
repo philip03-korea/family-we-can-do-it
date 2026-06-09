@@ -10,6 +10,8 @@ import {
   subscribeFamilyMessages,
 } from '../lib/db'
 import { speak, isTTSSupported } from '../lib/tts'
+import { listenOnce, isSTTSupported } from '../lib/stt'
+import { chat } from '../lib/ai'
 import { FAMILY, LEVELS } from '../data/family'
 
 const emojiOf = (key) => FAMILY.find((f) => f.key === key)?.emoji || '🙂'
@@ -21,7 +23,14 @@ export default function Family() {
   const [members, setMembers] = useState([])
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
+  const [listening, setListening] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [correction, setCorrection] = useState(null) // {fixed, ko, changed}
+  const [practice, setPractice] = useState(null) // {score, transcript}
+  const [aiError, setAiError] = useState('')
   const endRef = useRef(null)
+  const sttOk = isSTTSupported()
+  const level = profile?.level || 'C'
 
   useEffect(() => {
     getWeeklyTopic().then(setTopic).catch(() => {})
@@ -40,10 +49,13 @@ export default function Family() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  async function handleSend() {
-    const text = input.trim()
+  async function handleSend(textArg) {
+    const text = (textArg ?? input).trim()
     if (!text) return
     setInput('')
+    setCorrection(null)
+    setPractice(null)
+    setAiError('')
     try {
       await sendFamilyMessage({
         userId: user.id,
@@ -54,6 +66,60 @@ export default function Family() {
       // 본인 메시지는 실시간 이벤트로 다시 들어오므로 별도 추가 안 함
     } catch (e) {
       setInput(text)
+    }
+  }
+
+  // 🎤 말로 입력 (영어 음성 → 텍스트)
+  async function speakInput() {
+    if (!sttOk) return
+    setListening(true)
+    setAiError('')
+    try {
+      const { transcript } = await listenOnce({ lang: 'en-US' })
+      setInput(transcript)
+    } catch (e) {
+      setAiError(e.message)
+    } finally {
+      setListening(false)
+    }
+  }
+
+  // ✏️ AI 교정 — 문법·어순 교정해서 완성 문장 제시
+  async function getCorrection() {
+    const text = input.trim()
+    if (!text || busy) return
+    setBusy(true)
+    setAiError('')
+    setPractice(null)
+    try {
+      const res = await chat({ level, message: text })
+      const fixed = (res.correction || '').trim()
+      if (!fixed || fixed.toLowerCase() === text.toLowerCase()) {
+        setCorrection({ fixed: text, ko: '👍 고칠 부분이 없어요. 자연스러운 문장이에요!', changed: false })
+      } else {
+        setCorrection({ fixed, ko: res.correction_ko || '어순·문법을 자연스럽게 다듬었어요.', changed: true })
+      }
+    } catch (e) {
+      setAiError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // 🎤 교정문 다시 따라 읽기 (발음 점수)
+  async function practiceRead(target) {
+    if (!sttOk) return
+    setListening(true)
+    try {
+      const { transcript } = await listenOnce({ lang: 'en-US' })
+      const t = target.toLowerCase().replace(/[.,!?;:"']/g, '').split(/\s+/).filter(Boolean)
+      const s = new Set(transcript.toLowerCase().replace(/[.,!?;:"']/g, '').split(/\s+/).filter(Boolean))
+      const score = t.length ? Math.round((t.filter((w) => s.has(w)).length / t.length) * 100) : 0
+      setPractice({ score, transcript })
+    } catch (e) {
+      setAiError(e.message)
+    } finally {
+      setListening(false)
     }
   }
 
@@ -153,22 +219,68 @@ export default function Family() {
         <div ref={endRef} />
       </div>
 
-      <div className="flex gap-2 mt-3">
+      {/* AI 교정 결과 */}
+      {correction && (
+        <div className="mt-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3">
+          <p className="text-amber-200 text-sm">
+            {correction.changed ? '✏️ 교정된 문장' : '👍 좋아요'}: <span className="font-medium">{correction.fixed}</span>
+          </p>
+          {correction.ko && <p className="text-slate-400 text-xs mt-1">{correction.ko}</p>}
+          <div className="flex flex-wrap gap-2 mt-2">
+            <button onClick={() => speak(correction.fixed)} disabled={!isTTSSupported()} className="text-xs bg-slate-700 px-3 py-1.5 rounded-full disabled:opacity-40">
+              🔊 듣기
+            </button>
+            {sttOk && (
+              <button onClick={() => practiceRead(correction.fixed)} disabled={listening} className={`text-xs px-3 py-1.5 rounded-full ${listening ? 'bg-rose-600' : 'bg-slate-700'}`}>
+                {listening ? '🎙 듣는 중…' : '🎤 따라 읽기'}
+              </button>
+            )}
+            {correction.changed && (
+              <button onClick={() => setInput(correction.fixed)} className="text-xs bg-amber-500/30 text-amber-100 px-3 py-1.5 rounded-full">
+                ⤵️ 이 문장으로 바꾸기
+              </button>
+            )}
+            <button onClick={() => handleSend(correction.fixed)} className="text-xs bg-level-c px-3 py-1.5 rounded-full font-bold">
+              교정문 전송
+            </button>
+          </div>
+          {practice && (
+            <p className="text-xs mt-2 text-slate-300">
+              발음 <span className={practice.score >= 70 ? 'text-emerald-400' : 'text-amber-400'}>{practice.score}점</span> · "{practice.transcript}"
+            </p>
+          )}
+        </div>
+      )}
+      {aiError && <p className="text-amber-300 text-xs mt-2">⚠️ {aiError}</p>}
+
+      <div className="flex gap-2 mt-3 items-center">
+        {sttOk && (
+          <button
+            onClick={speakInput}
+            disabled={listening || busy}
+            className={`w-11 h-11 shrink-0 rounded-full disabled:opacity-40 ${listening ? 'bg-rose-600' : 'bg-slate-700'}`}
+            aria-label="말로 입력"
+          >
+            🎤
+          </button>
+        )}
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="메시지 (영어로 연습해도 좋아요)"
-          className="flex-1 px-4 py-2.5 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none text-sm"
+          placeholder={sttOk ? '메시지 (🎤 말하기 가능)' : '메시지 (영어로 연습해도 좋아요)'}
+          className="flex-1 min-w-0 px-4 py-2.5 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none text-sm"
         />
-        <button
-          onClick={handleSend}
-          disabled={!input.trim()}
-          className="bg-level-c px-5 rounded-full font-bold disabled:opacity-40"
-        >
+        <button onClick={getCorrection} disabled={!input.trim() || busy} className="shrink-0 bg-slate-700 px-3 rounded-full text-sm disabled:opacity-40" title="AI 교정">
+          {busy ? '…' : '✏️교정'}
+        </button>
+        <button onClick={() => handleSend()} disabled={!input.trim()} className="shrink-0 bg-level-c px-4 rounded-full font-bold disabled:opacity-40">
           전송
         </button>
       </div>
+      <p className="text-slate-500 text-[11px] mt-2 text-center">
+        영어로 말하거나 입력 → ✏️교정 으로 어순·문법을 다듬고 🔊듣고 🎤따라 읽어보세요
+      </p>
     </div>
   )
 }

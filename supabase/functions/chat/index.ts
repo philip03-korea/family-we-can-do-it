@@ -117,7 +117,9 @@ Deno.serve(async (req) => {
     )
     if (!geminiRes.ok) {
       const detail = await geminiRes.text()
-      return json({ error: 'GEMINI_ERROR', status: geminiRes.status, detail }, 502)
+      // 429 = 무료 할당량/크레딧 소진 → 클라이언트가 친절히 안내하도록 200+코드로 반환
+      const code = geminiRes.status === 429 ? 'AI_QUOTA_EXCEEDED' : 'GEMINI_ERROR'
+      return json({ error: code, status: geminiRes.status, detail }, 200)
     }
     const gem = await geminiRes.json()
     const raw = gem?.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'

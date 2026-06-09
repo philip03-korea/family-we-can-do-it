@@ -53,6 +53,23 @@ export async function getStudyQueue(userId, level, newLimit = 10) {
   }
 }
 
+/** 이미 학습한(진행도가 있는) 단어 목록 — 복습 모드용 (기한 무관) */
+export async function getLearnedWords(userId, level) {
+  const words = await getWordsByLevel(level)
+  if (!words.length) return { words: [], progressById: {} }
+  const ids = words.map((w) => w.id)
+  const { data: progress, error } = await supabase
+    .from('word_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .in('word_id', ids)
+  if (error) throw error
+  const progressById = {}
+  for (const p of progress || []) progressById[p.word_id] = p
+  const learned = words.filter((w) => progressById[w.id])
+  return { words: learned, progressById }
+}
+
 /** FSRS 계산 결과를 word_progress 에 저장(upsert) */
 export async function saveProgress(userId, wordId, sched) {
   const { error } = await supabase.from('word_progress').upsert(
