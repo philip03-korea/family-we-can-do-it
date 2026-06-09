@@ -226,6 +226,18 @@ export async function sendFamilyMessage({ userId, displayName, memberKey, text }
   if (error) throw error
 }
 
+/** 패미(AI 가족) 메시지 전송 — user_id 없이 is_ai 로 저장 (가족 모두에게 실시간 표시) */
+export async function sendAiFamilyMessage({ text }) {
+  const { error } = await supabase.from('family_messages').insert({
+    user_id: null,
+    display_name: '패미 🤖',
+    member_key: 'ai',
+    text,
+    is_ai: true,
+  })
+  if (error) throw error
+}
+
 /** 새 메시지 실시간 구독 (반환된 channel 은 supabase.removeChannel 로 해제) */
 export function subscribeFamilyMessages(onInsert) {
   const channel = supabase

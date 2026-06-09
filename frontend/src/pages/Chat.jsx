@@ -64,7 +64,7 @@ export default function Chat() {
             break
           }
         }
-        return [...copy, { role: 'assistant', text: res.reply, english: res.english }]
+        return [...copy, { role: 'assistant', text: res.reply, english: res.english, english_ko: res.english_ko }]
       })
       if (isTTSSupported()) speak(res.reply)
     } catch (e) {
@@ -154,6 +154,7 @@ export default function Chat() {
                     title="이 영어 문장 듣기"
                   >
                     🔊 영어로: <span className="font-medium">{m.english}</span>
+                    {m.english_ko && <span className="text-white/70"> ({m.english_ko})</span>}
                   </button>
                 )}
                 {m.role === 'assistant' && (
