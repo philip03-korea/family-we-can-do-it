@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import Study from './pages/Study'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -32,6 +33,14 @@ export default function App() {
         element={
           <Protected>
             <Dashboard />
+          </Protected>
+        }
+      />
+      <Route
+        path="/study"
+        element={
+          <Protected>
+            <Study />
           </Protected>
         }
       />

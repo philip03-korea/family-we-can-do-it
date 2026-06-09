@@ -1,12 +1,23 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
+import { getStudyStats } from '../lib/db'
 import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
 
 export default function Dashboard() {
   const { user, profile, signOut, refreshProfile } = useAuth()
+  const navigate = useNavigate()
   const [saving, setSaving] = useState(false)
+  const [stats, setStats] = useState(null)
+
+  useEffect(() => {
+    if (!profile) return
+    getStudyStats(user.id, profile.level)
+      .then(setStats)
+      .catch(() => setStats(null))
+  }, [user?.id, profile])
 
   // 프로필이 없으면: 내가 어떤 가족 구성원인지 선택
   if (!profile) {
@@ -42,6 +53,31 @@ export default function Dashboard() {
         <p className="text-white/80 text-sm mt-2">{member.focus}</p>
       </div>
 
+      {/* 오늘의 학습 */}
+      <div className="bg-slate-800/60 rounded-3xl p-5 mb-6 border border-slate-700">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold">오늘의 학습</h2>
+          {stats && (
+            <span className="text-xs text-slate-400">
+              학습한 단어 {stats.learned}/{stats.total}
+            </span>
+          )}
+        </div>
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <Stat label="복습 대기" value={stats ? stats.dueCount : '…'} accent="text-amber-400" />
+          <Stat label="새 단어" value={stats ? stats.freshCount : '…'} accent="text-emerald-400" />
+        </div>
+        <button
+          onClick={() => navigate('/study')}
+          className={`${level.bg} w-full py-4 rounded-2xl font-bold text-lg`}
+          disabled={stats && stats.dueCount === 0 && stats.freshCount === 0}
+        >
+          {stats && stats.dueCount === 0 && stats.freshCount === 0
+            ? '오늘 학습 완료 ☕'
+            : '학습 시작 →'}
+        </button>
+      </div>
+
       {/* 무료 음성(TTS/STT) 데모 — 비용 0원 동작 확인 */}
       <VoiceDemo />
 
@@ -71,6 +107,15 @@ export default function Dashboard() {
       <p className="text-center text-xs text-slate-600 mt-8">
         STEP 1 완료 — 다음: 단어·SRS / 학습 UI (STEP 2~3)
       </p>
+    </div>
+  )
+}
+
+function Stat({ label, value, accent }) {
+  return (
+    <div className="bg-slate-900 rounded-2xl p-4 text-center">
+      <div className={`text-3xl font-black ${accent}`}>{value}</div>
+      <div className="text-slate-400 text-xs mt-1">{label}</div>
     </div>
   )
 }
