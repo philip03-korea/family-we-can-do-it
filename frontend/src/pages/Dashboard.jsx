@@ -80,6 +80,16 @@ export default function Dashboard() {
         </button>
       </div>
 
+      {/* 하울 전용 TOEFL 트랙 */}
+      {profile.toefl_track && (
+        <button
+          onClick={() => navigate('/toefl')}
+          className="bg-level-e w-full rounded-2xl py-3 mb-6 font-bold"
+        >
+          🎓 TOEFL 트랙 (영역별 훈련 + AI 채점)
+        </button>
+      )}
+
       {/* 오늘의 학습 */}
       <div className="bg-slate-800/60 rounded-3xl p-5 mb-6 border border-slate-700">
         <div className="flex items-center justify-between mb-4">

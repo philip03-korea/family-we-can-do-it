@@ -38,10 +38,11 @@ supabase secrets set AI_DAILY_LIMIT=100
 
 ## 5) Edge Function 배포
 ```bash
-supabase functions deploy chat
+supabase functions deploy chat     # AI 회화 (STEP 4)
+supabase functions deploy toefl    # TOEFL AI 채점 (STEP 6) — 같은 Gemini 키 공유
 ```
-배포되면 `https://<ref>.supabase.co/functions/v1/chat` 가 생깁니다.
-앱(`lib/ai.js`)이 자동으로 이 함수를 호출합니다.
+배포되면 `https://<ref>.supabase.co/functions/v1/chat`(회화), `/toefl`(채점) 가 생깁니다.
+앱(`lib/ai.js`, `lib/toefl.js`)이 자동으로 호출합니다.
 
 ## 6) 확인
 - 앱 → 대시보드 → **💬 AI 회화** → 영어로 입력하거나 🎤로 말하기

@@ -59,8 +59,8 @@ FamTalk/
 | STEP 3 ✅ | 학습 고도화 (연속 학습일·단어장·통계) | 완료 |
 | STEP 4 ✅ | AI 회화 (Gemini Flash 무료 + 캐싱·쿼터, 회화·교정) | 완료 |
 | STEP 5 ✅ | 가족 소통 (주간 토론 주제·가족 현황·실시간 채팅) | 완료 |
-| STEP 6 | 하울 TOEFL 트랙 | ≈ 2–3주 |
-| STEP 7 | 게임화 · 배포 · 운영 | 이후 |
+| STEP 6 ✅ | 하울 TOEFL 트랙 (Speaking·Writing AI 채점, Reading) | 완료 |
+| STEP 7 | 게임화 · 배포 · 운영 | 진행 중 |
 
 ### 🚀 시작하기
 

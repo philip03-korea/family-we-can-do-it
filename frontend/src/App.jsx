@@ -6,6 +6,7 @@ import Study from './pages/Study'
 import Words from './pages/Words'
 import Chat from './pages/Chat'
 import Family from './pages/Family'
+import Toefl from './pages/Toefl'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -68,6 +69,14 @@ export default function App() {
         element={
           <Protected>
             <Family />
+          </Protected>
+        }
+      />
+      <Route
+        path="/toefl"
+        element={
+          <Protected>
+            <Toefl />
           </Protected>
         }
       />
