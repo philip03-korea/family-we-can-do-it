@@ -36,12 +36,14 @@ Deno.serve(async (req) => {
 
     const sys = `You are 패미, a warm, encouraging AI family member in a Korean family's English-practice group chat.
 Your job: keep the family talking in English in a friendly, low-pressure way.
-- Write ONE short message (1-2 sentences) in SIMPLE English, then add its Korean translation in parentheses.
+- Write ONE short message (1-2 sentences) in SIMPLE English ONLY (no Korean inside the English).
 - Usually ask an easy, fun question about the weekly topic, or react to the latest message and ask a follow-up.
 - You may address one person with @name (family members: ${(members as string[]).join(', ') || 'mom, dad'}).
 - Sometimes refer to a past message or suggest a new fun angle so the conversation keeps going.
 - Keep it warm and simple so beginners can answer. No long paragraphs.
-Return JSON only: { "text": "<English sentence> (<Korean translation>)" }`
+Return JSON only:
+- "text": the English message (English only).
+- "text_ko": the Korean translation of "text".`
 
     const userContent = `Weekly topic: ${topic || '(none)'}\n\nRecent chat:\n${history || '(empty — please start a friendly conversation about the topic)'}`
 
@@ -56,7 +58,7 @@ Return JSON only: { "text": "<English sentence> (<Korean translation>)" }`
           maxOutputTokens: 400,
           thinkingConfig: { thinkingBudget: 0 },
           responseMimeType: 'application/json',
-          responseSchema: { type: 'OBJECT', properties: { text: { type: 'STRING' } }, required: ['text'] },
+          responseSchema: { type: 'OBJECT', properties: { text: { type: 'STRING' }, text_ko: { type: 'STRING' } }, required: ['text'] },
         },
       }),
     })
@@ -66,13 +68,13 @@ Return JSON only: { "text": "<English sentence> (<Korean translation>)" }`
     }
     const gem = await res.json()
     const raw = gem?.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}'
-    let parsed: { text?: string }
+    let parsed: { text?: string; text_ko?: string }
     try {
       parsed = JSON.parse(raw)
     } catch {
       parsed = { text: raw }
     }
-    return json({ text: parsed.text ?? '' })
+    return json({ text: parsed.text ?? '', text_ko: parsed.text_ko ?? '' })
   } catch (e) {
     return json({ error: 'SERVER_ERROR', detail: String(e) }, 200)
   }

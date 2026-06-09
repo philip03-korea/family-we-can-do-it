@@ -5,6 +5,14 @@ import { chat } from '../lib/ai'
 import { speak, isTTSSupported } from '../lib/tts'
 import { listenOnce, isSTTSupported } from '../lib/stt'
 import { LEVELS } from '../data/family'
+import Translatable from '../components/Translatable'
+
+// 아이별 관심사 설명 (AI가 먼저 좋아하는 스타·주제를 꺼내 대화를 이끌도록)
+const INTEREST_DESC = {
+  haeum: 'Korean romance webtoons, K-dramas, and actors like Seo In-guk and Choi Hyun-wook (Weak Hero)',
+  haul: 'football — the Premier League, La Liga, FC Barcelona and Lionel Messi — and Korean hip-hop/rap',
+  haram: 'video games like Roblox, Valorant, ARK, Brawl Stars, and Pokemon',
+}
 
 // 관심사별 대화/질문 시작점 (아이들 흥미 기반)
 const INTEREST_TOPICS = {
@@ -53,7 +61,7 @@ export default function Chat() {
     setMessages((m) => [...m, { role: 'user', text: msg }])
     setBusy(true)
     try {
-      const res = await chat({ level, message: msg, history })
+      const res = await chat({ level, message: msg, history, interests: INTEREST_DESC[profile?.member_key] || '' })
       setUsage({ usageToday: res.usageToday, limit: res.limit })
       // 사용자 메시지에 교정 붙이기
       setMessages((m) => {
@@ -64,7 +72,7 @@ export default function Chat() {
             break
           }
         }
-        return [...copy, { role: 'assistant', text: res.reply, english: res.english, english_ko: res.english_ko }]
+        return [...copy, { role: 'assistant', text: res.reply, reply_ko: res.reply_ko, english: res.english, english_ko: res.english_ko }]
       })
       if (isTTSSupported()) speak(res.reply)
     } catch (e) {
@@ -146,24 +154,21 @@ export default function Chat() {
                   m.role === 'user' ? levelBg + ' text-white' : 'bg-slate-800 text-slate-100'
                 }`}
               >
-                <p>{m.text}</p>
-                {m.role === 'assistant' && m.english && (
-                  <button
-                    onClick={() => speak(m.english)}
-                    className="mt-2 block w-full text-left bg-black/25 rounded-lg px-2.5 py-1.5 text-sm"
-                    title="이 영어 문장 듣기"
-                  >
-                    🔊 영어로: <span className="font-medium">{m.english}</span>
-                    {m.english_ko && <span className="text-white/70"> ({m.english_ko})</span>}
-                  </button>
-                )}
+                {m.role === 'assistant' ? <Translatable ko={m.reply_ko}>{m.text}</Translatable> : <p>{m.text}</p>}
                 {m.role === 'assistant' && (
-                  <button
-                    onClick={() => speak(m.english || m.text)}
-                    className="text-white/60 text-xs mt-1 hover:text-white"
-                  >
-                    🔊 다시 듣기
-                  </button>
+                  <div className="mt-1.5 flex flex-col gap-1">
+                    <button onClick={() => speak(m.english || m.text)} className="text-white/60 text-xs hover:text-white self-start">
+                      🔊 듣기
+                    </button>
+                    {m.english && m.english !== m.text && (
+                      <div className="text-sm text-white/90 bg-black/20 rounded-lg px-2.5 py-1.5">
+                        💬 <Translatable ko={m.english_ko}>{m.english}</Translatable>
+                        <button onClick={() => speak(m.english)} className="ml-1 text-white/60 text-xs">
+                          🔊
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
               {/* 교정 */}

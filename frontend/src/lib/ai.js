@@ -56,5 +56,5 @@ export async function fami({ topic, recent = [], members = [] }) {
     err.code = payload.error
     throw err
   }
-  return (payload.text || '').trim()
+  return { text: (payload.text || '').trim(), text_ko: (payload.text_ko || '').trim() }
 }
