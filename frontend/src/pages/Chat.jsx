@@ -55,7 +55,7 @@ export default function Chat() {
             break
           }
         }
-        return [...copy, { role: 'assistant', text: res.reply }]
+        return [...copy, { role: 'assistant', text: res.reply, english: res.english }]
       })
       if (isTTSSupported()) speak(res.reply)
     } catch (e) {
@@ -97,8 +97,8 @@ export default function Chat() {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
           <div className="text-center text-slate-400 mt-8">
-            <p className="mb-1">영어로 자유롭게 말해보세요 🎙</p>
-            <p className="text-xs text-slate-600 mb-5">무료 Gemini Flash · 응답 캐싱·일일 한도로 비용 관리</p>
+            <p className="mb-1">영어로 말하거나, 한국어로 써도 영어로 알려줘요 🎙</p>
+            <p className="text-xs text-slate-600 mb-5">예: "도서관 가고 싶어요" · "apple이 무슨 뜻이야?" · "이거 영어로 어떻게 말해?"</p>
             <div className="flex flex-wrap gap-2 justify-center">
               {(TOPICS[level] || TOPICS.C).map((t) => (
                 <button
@@ -122,9 +122,18 @@ export default function Chat() {
                 }`}
               >
                 <p>{m.text}</p>
+                {m.role === 'assistant' && m.english && (
+                  <button
+                    onClick={() => speak(m.english)}
+                    className="mt-2 block w-full text-left bg-black/25 rounded-lg px-2.5 py-1.5 text-sm"
+                    title="이 영어 문장 듣기"
+                  >
+                    🔊 영어로: <span className="font-medium">{m.english}</span>
+                  </button>
+                )}
                 {m.role === 'assistant' && (
                   <button
-                    onClick={() => speak(m.text)}
+                    onClick={() => speak(m.english || m.text)}
                     className="text-white/60 text-xs mt-1 hover:text-white"
                   >
                     🔊 다시 듣기
@@ -165,7 +174,7 @@ export default function Chat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && send()}
-          placeholder={sttOk ? '영어로 입력하거나 🎤 눌러 말하기' : '영어로 입력하세요'}
+          placeholder={sttOk ? '영어·한국어로 말하거나 질문하기 🎤' : '영어·한국어로 입력하거나 질문하기'}
           className="flex-1 px-4 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none"
         />
         <button
