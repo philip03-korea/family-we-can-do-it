@@ -11,7 +11,8 @@ import Translatable from '../components/Translatable'
 const INTEREST_DESC = {
   haeum: 'Korean romance webtoons, K-dramas, and actors like Seo In-guk and Choi Hyun-wook (Weak Hero)',
   haul: 'football — the Premier League, La Liga, FC Barcelona and Lionel Messi — and Korean hip-hop/rap',
-  haram: 'video games like Roblox, Valorant, ARK, Brawl Stars, and Pokemon',
+  haram:
+    'video games like Roblox, Valorant, ARK, Brawl Stars, Pokemon, AND YouTube pop songs (he falls asleep to pop songs every night — proactively ask him what song he is listening to, who sings it, and what it is about)',
 }
 
 // 관심사별 대화/질문 시작점 (아이들 흥미 기반)
@@ -20,8 +21,9 @@ const INTEREST_TOPICS = {
   football: ['Why do you love Barcelona?', 'Who is the greatest football player ever?', 'Talk about the last match you watched.', 'What makes a great striker?'],
   kpop_rap: ['Who is your favorite Korean rapper?', 'What makes a good rap flow?', 'Describe a song you love right now.', 'What is your favorite punchline?'],
   games: ['What game are you playing now?', 'Describe your favorite game character.', 'How do you survive in ARK?', 'Tell me about your best match.'],
+  popsong: ['What song do you listen to before sleep?', 'Who is your favorite singer?', 'What is the song about?', 'Why do you love that song?'],
 }
-const INTEREST_BY_MEMBER = { haeum: ['webtoon'], haul: ['football', 'kpop_rap'], haram: ['games'] }
+const INTEREST_BY_MEMBER = { haeum: ['webtoon'], haul: ['football', 'kpop_rap'], haram: ['games', 'popsong'] }
 
 // 레벨별 대화 시작 주제 (무료, 정적)
 const TOPICS = {
@@ -46,6 +48,7 @@ export default function Chat() {
   const [listening, setListening] = useState(false)
   const [usage, setUsage] = useState(null) // {usageToday, limit}
   const [error, setError] = useState('')
+  const [micLang, setMicLang] = useState('en-US') // 영어 연습 기본 · 한국어로 말하려면 토글
   const endRef = useRef(null)
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function Chat() {
     if (!isSTTSupported()) return
     setListening(true)
     try {
-      const { transcript } = await listenOnce({ lang: 'en-US' })
+      const { transcript } = await listenOnce({ lang: micLang })
       await send(transcript)
     } catch (e) {
       setError(e.message)
@@ -188,33 +191,53 @@ export default function Chat() {
       </div>
 
       {/* 입력 */}
-      <div className="p-3 border-t border-slate-800 flex gap-2 sticky bottom-0 bg-slate-900">
+      <div className="border-t border-slate-800 sticky bottom-0 bg-slate-900">
         {sttOk && (
-          <button
-            onClick={speakInput}
-            disabled={listening || busy}
-            className={`w-12 h-12 rounded-full shrink-0 disabled:opacity-40 ${
-              listening ? 'bg-rose-600 relative ripple text-rose-600' : 'bg-slate-700'
-            }`}
-            aria-label="말하기"
-          >
-            <span className="relative z-10 text-white">🎤</span>
-          </button>
+          <div className="flex items-center gap-1.5 px-3 pt-2 text-xs">
+            <span className="text-slate-500">🎤 말하기 언어:</span>
+            <button
+              onClick={() => setMicLang('en-US')}
+              className={`px-2.5 py-1 rounded-full ${micLang === 'en-US' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+            >
+              English
+            </button>
+            <button
+              onClick={() => setMicLang('ko-KR')}
+              className={`px-2.5 py-1 rounded-full ${micLang === 'ko-KR' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+            >
+              한국어
+            </button>
+            {micLang === 'ko-KR' && <span className="text-slate-500">→ AI가 영어로 알려줘요</span>}
+          </div>
         )}
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && send()}
-          placeholder={sttOk ? '영어·한국어로 말하거나 질문하기 🎤' : '영어·한국어로 입력하거나 질문하기'}
-          className="flex-1 px-4 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none"
-        />
-        <button
-          onClick={() => send()}
-          disabled={busy || !input.trim()}
-          className={`${levelBg} px-5 rounded-full font-bold disabled:opacity-40`}
-        >
-          전송
-        </button>
+        <div className="p-3 flex gap-2">
+          {sttOk && (
+            <button
+              onClick={speakInput}
+              disabled={listening || busy}
+              className={`w-12 h-12 rounded-full shrink-0 disabled:opacity-40 ${
+                listening ? 'bg-rose-600 relative ripple text-rose-600' : 'bg-slate-700'
+              }`}
+              aria-label="말하기"
+            >
+              <span className="relative z-10 text-white">🎤</span>
+            </button>
+          )}
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && send()}
+            placeholder={sttOk ? '영어·한국어로 말하거나 질문하기 🎤' : '영어·한국어로 입력하거나 질문하기'}
+            className="flex-1 px-4 rounded-full bg-slate-800 border border-slate-700 focus:border-indigo-500 outline-none"
+          />
+          <button
+            onClick={() => send()}
+            disabled={busy || !input.trim()}
+            className={`${levelBg} px-5 rounded-full font-bold disabled:opacity-40`}
+          >
+            전송
+          </button>
+        </div>
       </div>
     </div>
   )

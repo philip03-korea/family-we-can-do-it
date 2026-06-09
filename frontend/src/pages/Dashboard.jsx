@@ -14,7 +14,10 @@ const INTEREST_LINKS = {
     { cat: 'football', label: '⚽ 축구 영어' },
     { cat: 'kpop_rap', label: '🎤 랩·음악 영어' },
   ],
-  haram: [{ cat: 'games', label: '🎮 게임 영어' }],
+  haram: [
+    { cat: 'games', label: '🎮 게임 영어' },
+    { cat: 'popsong', label: '🎵 팝송 영어' },
+  ],
 }
 
 export default function Dashboard() {
