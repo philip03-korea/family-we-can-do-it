@@ -7,6 +7,7 @@ import Words from './pages/Words'
 import Chat from './pages/Chat'
 import Family from './pages/Family'
 import Toefl from './pages/Toefl'
+import Guide from './pages/Guide'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -31,6 +32,8 @@ export default function App() {
 
   return (
     <Routes>
+      {/* 공개 사용설명서 — 로그인 없이 열람 (카톡 공유용) */}
+      <Route path="/guide" element={<Guide />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/"

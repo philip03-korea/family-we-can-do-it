@@ -219,7 +219,15 @@ export default function Dashboard() {
         })}
       </div>
 
-      <p className="text-center text-xs text-slate-600 mt-8">FamTalk · 우리 가족 영어 🔥</p>
+      <div className="text-center mt-8">
+        <button
+          onClick={() => navigate('/guide')}
+          className="text-sm text-slate-400 hover:text-slate-200 underline"
+        >
+          📖 사용설명서
+        </button>
+        <p className="text-xs text-slate-600 mt-3">FamTalk · 우리 가족 영어 🔥</p>
+      </div>
     </div>
   )
 }

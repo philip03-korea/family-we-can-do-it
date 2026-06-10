@@ -86,6 +86,13 @@ export default function Login() {
             {mode === 'signin' ? '처음이신가요? 가입하기' : '이미 계정이 있어요 → 로그인'}
           </button>
         </form>
+
+        <a
+          href="/guide"
+          className="block text-center mt-4 text-sm text-slate-400 hover:text-slate-200 underline"
+        >
+          📖 사용설명서 (처음이라면 여기부터)
+        </a>
       </div>
     </div>
   )
