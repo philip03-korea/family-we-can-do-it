@@ -98,6 +98,12 @@ export async function assignChore(id, assigneeKey) {
   if (error) throw error
 }
 
+/** 집안일 삭제 */
+export async function deleteChore(id) {
+  const { error } = await supabase.from('chores').delete().eq('id', id)
+  if (error) throw error
+}
+
 /** 완료 체크 토글 */
 export async function setChoreDone(id, done) {
   const { error } = await supabase

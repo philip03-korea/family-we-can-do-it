@@ -7,6 +7,7 @@ import {
   getGoals,
   generateRotation,
   assignChore,
+  deleteChore,
   setChoreDone,
   computeProgress,
   weekStartMonday,
@@ -32,6 +33,9 @@ export default function Chores() {
   const [edit, setEdit] = useState(false)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
+  const [selectedKey, setSelectedKey] = useState(null) // 이름 클릭 → 그 사람 집안일 편집
+
+  const dayIndexOf = (dueDate) => Math.round((new Date(dueDate) - new Date(week)) / 86400000)
 
   async function refresh() {
     const [c, g] = await Promise.all([listChores(week), getGoals().catch(() => DEFAULT_GOALS)])
@@ -68,15 +72,23 @@ export default function Chores() {
   // 부모용: 오늘(또는 그 이전) 미완료
   const incomplete = chores.filter((c) => !c.done && c.due_date <= today && c.assignee_key && !PARENT_KEYS.includes(c.assignee_key))
 
+  function friendlyError(e) {
+    const m = (e?.message || '') + (e?.details || '') + (e?.code || '')
+    if (/chores|relation|exist|42P01|schema cache|404/i.test(m)) {
+      return '집안일 테이블이 아직 없어요. Supabase SQL Editor에서 database/step7_chores.sql 을 먼저 실행해 주세요.'
+    }
+    return e?.message || '알 수 없는 오류'
+  }
+
   async function doRotate() {
-    if (!confirm('이번 주 당번표를 자동으로 새로 짭니다. (기존 완료 기록 초기화)')) return
     setBusy(true)
-    setMsg('')
+    setMsg('당번표 생성 중…')
     try {
-      await generateRotation(week)
+      const n = await generateRotation(week)
       await refresh()
+      setMsg(`✅ 자동 로테이션 완료 — ${n}개 집안일이 배정됐어요.`)
     } catch (e) {
-      setMsg(e.message)
+      setMsg('⚠️ ' + friendlyError(e))
     } finally {
       setBusy(false)
     }
@@ -89,7 +101,25 @@ export default function Chores() {
       await assignChore(chore.id, next)
       setChores((cs) => cs.map((c) => (c.id === chore.id ? { ...c, assignee_key: next } : c)))
     } catch (e) {
-      setMsg(e.message)
+      setMsg('⚠️ ' + friendlyError(e))
+    }
+  }
+
+  async function reassign(choreId, key) {
+    try {
+      await assignChore(choreId, key)
+      setChores((cs) => cs.map((c) => (c.id === choreId ? { ...c, assignee_key: key } : c)))
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyError(e))
+    }
+  }
+
+  async function removeChore(choreId) {
+    try {
+      await deleteChore(choreId)
+      setChores((cs) => cs.filter((c) => c.id !== choreId))
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyError(e))
     }
   }
 
@@ -150,6 +180,36 @@ export default function Chores() {
       </div>
       {edit && <p className="text-xs text-amber-300 mb-3">표의 칸을 탭하면 담당자가 순서대로 바뀝니다.</p>}
       {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
+
+      {/* 가족 칩 — 이름을 누르면 그 사람 집안일 목록/수정 */}
+      <p className="text-xs text-slate-500 mb-2">이름을 누르면 그 사람의 집안일을 보고 수정할 수 있어요</p>
+      <div className="flex gap-2 mb-4">
+        {FAMILY.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setSelectedKey(selectedKey === f.key ? null : f.key)}
+            className={`flex-1 rounded-xl py-2 text-center border ${
+              selectedKey === f.key ? 'bg-indigo-600 border-indigo-400' : 'bg-slate-800 border-slate-700'
+            }`}
+          >
+            <div className="text-lg">{f.emoji}</div>
+            <div className="text-[11px] text-slate-300">{f.name}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* 선택한 사람의 집안일 편집 패널 */}
+      {selectedKey && (
+        <MemberChores
+          memberKey={selectedKey}
+          chores={chores.filter((c) => c.assignee_key === selectedKey).sort((a, b) => a.due_date.localeCompare(b.due_date))}
+          dayIndexOf={dayIndexOf}
+          onReassign={reassign}
+          onToggle={toggle}
+          onRemove={removeChore}
+          onClose={() => setSelectedKey(null)}
+        />
+      )}
 
       {/* 주간 당번표 */}
       {grid.length === 0 ? (
@@ -285,6 +345,55 @@ export default function Chores() {
             </ul>
           )}
         </div>
+      )}
+    </div>
+  )
+}
+
+// 이름 클릭 시: 그 사람의 집안일 목록 + 담당 변경/완료/삭제
+function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onRemove, onClose }) {
+  return (
+    <div className="bg-slate-800/60 border border-indigo-500/40 rounded-2xl p-4 mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="font-bold">{emojiOf(memberKey)} {nameOf(memberKey)}의 집안일</h2>
+        <button onClick={onClose} className="text-slate-400 text-sm">닫기 ✕</button>
+      </div>
+
+      {chores.length === 0 ? (
+        <p className="text-slate-400 text-sm text-center py-3">맡은 집안일이 없어요. 아래 표/자동 로테이션으로 배정해요.</p>
+      ) : (
+        <ul className="space-y-2">
+          {chores.map((c) => (
+            <li key={c.id} className="bg-slate-900 rounded-xl p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <button
+                  onClick={() => onToggle(c)}
+                  className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${c.done ? 'bg-emerald-500' : 'border-2 border-slate-500'}`}
+                >
+                  {c.done && <span className="text-emerald-950 text-sm">✓</span>}
+                </button>
+                <span className={`flex-1 text-sm ${c.done ? 'line-through text-slate-500' : ''}`}>
+                  {DAY_LABELS[dayIndexOf(c.due_date)] || ''}요일 · {c.title}
+                </span>
+                <span className="text-xs text-slate-400">+{c.points}P</span>
+                <button onClick={() => onRemove(c.id)} className="text-slate-500 text-sm ml-1" aria-label="삭제">🗑</button>
+              </div>
+              {/* 담당 바꾸기 */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] text-slate-500 mr-1">담당 변경:</span>
+                {FAMILY.map((f) => (
+                  <button
+                    key={f.key}
+                    onClick={() => onReassign(c.id, f.key)}
+                    className={`w-7 h-7 rounded-lg text-sm ${f.key === c.assignee_key ? 'bg-indigo-600' : 'bg-slate-800'}`}
+                  >
+                    {f.emoji}
+                  </button>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   )
