@@ -46,17 +46,17 @@ export default function Chores() {
   const today = todayYmd()
   const progress = useMemo(() => computeProgress(chores), [chores])
 
-  // 제목별 × 요일별 그리드
+  // 제목별 × 요일별 그리드 (한 칸에 여러 명 가능: 방 청소·신발 빨래)
   const grid = useMemo(() => {
     const titles = []
     const map = {}
     for (const c of chores) {
       if (!map[c.title]) {
-        map[c.title] = { title: c.title, points: c.points, days: {} }
+        map[c.title] = { title: c.title, days: {} }
         titles.push(c.title)
       }
       const di = Math.round((new Date(c.due_date) - new Date(week)) / 86400000)
-      map[c.title].days[di] = c
+      ;(map[c.title].days[di] ||= []).push(c)
     }
     return titles.map((t) => map[t])
   }, [chores, week])
@@ -172,19 +172,28 @@ export default function Chores() {
                 <tr key={row.title} className="border-t border-slate-700">
                   <td className="p-1.5 text-[11px] text-slate-300">{row.title}</td>
                   {DAY_LABELS.map((_, di) => {
-                    const c = row.days[di]
-                    return (
-                      <td key={di} className="text-center p-0.5">
-                        {c ? (
+                    const cs = row.days[di]
+                    if (!cs || cs.length === 0) return <td key={di} className="text-center p-0.5"><span className="text-slate-700">·</span></td>
+                    if (cs.length === 1) {
+                      const c = cs[0]
+                      return (
+                        <td key={di} className="text-center p-0.5">
                           <button
                             onClick={() => edit && cycleAssign(c)}
                             className={`w-7 h-7 rounded-lg ${edit ? 'bg-slate-700' : ''} ${c.done ? 'opacity-40' : ''}`}
                           >
                             {emojiOf(c.assignee_key)}
                           </button>
-                        ) : (
-                          <span className="text-slate-700">·</span>
-                        )}
+                        </td>
+                      )
+                    }
+                    return (
+                      <td key={di} className="text-center p-0.5">
+                        <div className="flex flex-wrap justify-center gap-0.5 text-[10px] leading-none">
+                          {cs.map((c) => (
+                            <span key={c.id} className={c.done ? 'opacity-40' : ''}>{emojiOf(c.assignee_key)}</span>
+                          ))}
+                        </div>
                       </td>
                     )
                   })}

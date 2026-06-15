@@ -49,26 +49,43 @@ export async function getGoals() {
   return map
 }
 
+// 기준 월요일(2026-01-05)로부터의 주차 인덱스 — 로테이션 시프트/격주 판단용
+function weekIndex(weekStart) {
+  const ref = new Date('2026-01-05T00:00:00')
+  return Math.round((new Date(weekStart + 'T00:00:00') - ref) / (7 * 86400000))
+}
+
 /**
  * 자동 로테이션 — 그 주 집안일을 템플릿으로 새로 생성.
+ * - rotate: pool 을 (요일순서 + 주차)에 따라 순환해 매주 담당이 바뀜
+ * - perMember: members 각자 본인 몫(같은 날 여러 명)
+ * - biweekly: 2주에 1번만 생성
  * 기존 그 주 데이터는 지우고 다시 만든다(완료 기록도 초기화).
  */
 export async function generateRotation(weekStart) {
   await supabase.from('chores').delete().eq('week_start', weekStart)
+  const wIdx = weekIndex(weekStart)
+  const mk = (dayIdx, c, assignee) => ({
+    week_start: weekStart,
+    due_date: addDays(weekStart, dayIdx),
+    title: c.title,
+    category: c.category,
+    points: c.points,
+    assignee_key: assignee,
+    done: false,
+  })
+
   const rows = []
   for (const c of ROTATION) {
-    c.days.forEach((dayIdx, occurrence) => {
-      const assignee = c.pool[occurrence % c.pool.length]
-      rows.push({
-        week_start: weekStart,
-        due_date: addDays(weekStart, dayIdx),
-        title: c.title,
-        category: c.category,
-        points: c.points,
-        assignee_key: assignee,
-        done: false,
+    if (c.biweekly && wIdx % 2 !== 0) continue
+    if (c.type === 'perMember') {
+      for (const dayIdx of c.days) for (const m of c.members) rows.push(mk(dayIdx, c, m))
+    } else {
+      c.days.forEach((dayIdx, occ) => {
+        const assignee = c.pool[(occ + wIdx) % c.pool.length]
+        rows.push(mk(dayIdx, c, assignee))
       })
-    })
+    }
   }
   const { error } = await supabase.from('chores').insert(rows)
   if (error) throw error

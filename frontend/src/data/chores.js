@@ -6,14 +6,18 @@
 
 export const DAY_LABELS = ['월', '화', '수', '목', '금', '토', '일']
 
+export const ALL_MEMBERS = ['mom', 'dad', 'haeum', 'haul', 'haram']
+
+// type: 'rotate' = pool을 요일·주차에 따라 순환 / 'perMember' = members 각자 본인 몫
+// days: 0=월 … 6=일 / biweekly: 2주에 1번
 export const ROTATION = [
-  { title: '설거지(저녁)', category: '주방', points: 10, days: [0, 1, 2, 3, 4, 5, 6], pool: ['haul', 'haram'] },
-  { title: '분리수거', category: '쓰레기', points: 15, days: [0, 2, 4], pool: ['dad', 'haul'] },
-  { title: '음식물 쓰레기', category: '주방', points: 10, days: [1, 4, 6], pool: ['dad'] },
-  { title: '거실 정리', category: '청소', points: 10, days: [0, 1, 2, 3, 4], pool: ['haram', 'haeum'] },
-  { title: '빨래 개기', category: '빨래', points: 15, days: [1, 3, 5], pool: ['haul', 'mom'] },
-  { title: '화장실 청소', category: '청소', points: 20, days: [2, 6], pool: ['mom', 'dad'] },
-  { title: '화분 물주기', category: '기타', points: 10, days: [0, 3, 6], pool: ['haram'] },
+  { title: '설거지', category: '주방', points: 10, type: 'rotate', days: [0, 1, 2, 3, 4, 5, 6], pool: ['dad', 'mom', 'haul', 'haram', 'haeum'] },
+  { title: '빨래', category: '빨래', points: 15, type: 'rotate', days: [1, 3, 5], pool: ['mom', 'dad', 'haul', 'haram', 'haeum'] },
+  { title: '분리수거', category: '쓰레기', points: 15, type: 'rotate', days: [2, 6], pool: ['haul', 'haram'] },
+  { title: '거실·화장실 청소', category: '청소', points: 20, type: 'rotate', days: [3, 6], pool: ['haeum', 'haul', 'haram'] },
+  { title: '안방 화장실 청소', category: '청소', points: 20, type: 'rotate', days: [6], pool: ['dad'] },
+  { title: '방 청소(내 방)', category: '청소', points: 10, type: 'perMember', days: [5], members: ALL_MEMBERS },
+  { title: '신발 빨래(내 신발)', category: '기타', points: 15, type: 'perMember', days: [5], members: ALL_MEMBERS, biweekly: true },
 ]
 
 // 가족별 주간 목표 포인트 (DB chore_goals 의 기본값과 동일)
