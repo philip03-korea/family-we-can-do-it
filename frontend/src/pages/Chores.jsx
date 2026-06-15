@@ -43,7 +43,7 @@ export default function Chores() {
     if (g && Object.keys(g).length) setGoals(g)
   }
   useEffect(() => {
-    refresh().catch((e) => setMsg(e.message))
+    refresh().catch((e) => setMsg('⚠️ ' + friendlyError(e)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week])
 
