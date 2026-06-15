@@ -8,6 +8,7 @@ import Chat from './pages/Chat'
 import Family from './pages/Family'
 import Toefl from './pages/Toefl'
 import Guide from './pages/Guide'
+import Chores from './pages/Chores'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -80,6 +81,14 @@ export default function App() {
         element={
           <Protected>
             <Toefl />
+          </Protected>
+        }
+      />
+      <Route
+        path="/chores"
+        element={
+          <Protected>
+            <Chores />
           </Protected>
         }
       />

@@ -126,6 +126,9 @@ export default function Dashboard() {
         <button onClick={() => navigate('/family')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
           👨‍👩‍👧‍👦 가족
         </button>
+        <button onClick={() => navigate('/chores')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
+          🧹 집안일
+        </button>
       </div>
 
       {/* 하울 전용 TOEFL 트랙 */}
