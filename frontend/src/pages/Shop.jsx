@@ -14,6 +14,10 @@ import {
   listPendingWishes,
   approveWish,
   rejectWish,
+  listAllRewardItems,
+  createRewardItem,
+  updateRewardItem,
+  deleteRewardItem,
   STATUS_LABEL,
 } from '../lib/rewards'
 import { FAMILY } from '../data/family'
@@ -38,6 +42,7 @@ export default function Shop() {
   const [myWishes, setMyWishes] = useState([])
   const [pendingWishes, setPendingWishes] = useState([])
   const [wishForm, setWishForm] = useState(null) // {title, note, cost} or null
+  const [allItems, setAllItems] = useState([]) // 관리용(비활성 포함)
 
   async function refresh() {
     const [it, bal, my, mw] = await Promise.all([
@@ -53,6 +58,7 @@ export default function Shop() {
     if (isParent) {
       setPending(await listPendingPurchases().catch(() => []))
       setPendingWishes(await listPendingWishes().catch(() => []))
+      setAllItems(await listAllRewardItems().catch(() => []))
     }
   }
   useEffect(() => {
@@ -144,6 +150,7 @@ export default function Shop() {
         <TabBtn on={tab === 'shop'} onClick={() => setTab('shop')}>상점</TabBtn>
         <TabBtn on={tab === 'mine'} onClick={() => setTab('mine')}>내 쿠폰함</TabBtn>
         {isParent && <TabBtn on={tab === 'approve'} onClick={() => setTab('approve')}>승인 {pending.length + pendingWishes.length ? `(${pending.length + pendingWishes.length})` : ''}</TabBtn>}
+        {isParent && <TabBtn on={tab === 'admin'} onClick={() => setTab('admin')}>상품관리</TabBtn>}
       </div>
 
       {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
@@ -312,6 +319,111 @@ export default function Shop() {
           </div>
         </div>
       )}
+
+      {/* 상품 관리 (부모) */}
+      {tab === 'admin' && isParent && (
+        <RewardAdmin items={allItems} onChanged={refresh} onError={(m) => setMsg('⚠️ ' + friendly({ message: m }))} />
+      )}
+    </div>
+  )
+}
+
+// 부모: 보상 상품 추가/수정/삭제
+function RewardAdmin({ items, onChanged, onError }) {
+  const [form, setForm] = useState({ icon: '🎁', title: '', description: '', cost: '', category: '' })
+
+  async function add() {
+    if (!form.title.trim() || !form.cost) return
+    try {
+      await createRewardItem(form)
+      setForm({ icon: '🎁', title: '', description: '', cost: '', category: '' })
+      await onChanged()
+    } catch (e) {
+      onError(e.message)
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* 새 상품 추가 */}
+      <div className="bg-slate-800/60 border border-emerald-500/30 rounded-2xl p-4 space-y-2">
+        <p className="text-sm font-bold">➕ 새 보상 추가</p>
+        <div className="flex gap-2">
+          <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🎁"
+            className="w-12 text-center px-2 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none" />
+          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="보상 이름"
+            className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm" />
+        </div>
+        <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="설명 (선택)"
+          className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm" />
+        <div className="flex gap-2">
+          <input type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} placeholder="포인트"
+            className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm" />
+          <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="분류 (예: 특권)"
+            className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm" />
+        </div>
+        <button onClick={add} className="w-full py-2 rounded-lg bg-emerald-600 text-sm font-bold">추가하기</button>
+      </div>
+
+      {/* 기존 상품 수정/삭제 */}
+      <div>
+        <p className="text-sm font-bold text-slate-400 mb-2">기존 보상 ({items.length})</p>
+        <div className="space-y-2">
+          {items.map((it) => (
+            <AdminItemRow key={it.id} item={it} onChanged={onChanged} onError={onError} />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AdminItemRow({ item, onChanged, onError }) {
+  const [title, setTitle] = useState(item.title)
+  const [cost, setCost] = useState(item.cost)
+  const dirty = title !== item.title || Number(cost) !== item.cost
+
+  async function save() {
+    try {
+      await updateRewardItem(item.id, { title, cost })
+      await onChanged()
+    } catch (e) {
+      onError(e.message)
+    }
+  }
+  async function toggle() {
+    try {
+      await updateRewardItem(item.id, { active: !item.active })
+      await onChanged()
+    } catch (e) {
+      onError(e.message)
+    }
+  }
+  async function remove() {
+    if (!confirm(`"${item.title}" 삭제할까요?`)) return
+    try {
+      await deleteRewardItem(item.id)
+      await onChanged()
+    } catch (e) {
+      onError(e.message)
+    }
+  }
+
+  return (
+    <div className={`bg-slate-800/60 border border-slate-700 rounded-2xl p-3 ${item.active ? '' : 'opacity-50'}`}>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-xl">{item.icon}</span>
+        <input value={title} onChange={(e) => setTitle(e.target.value)}
+          className="flex-1 px-2 py-1.5 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm" />
+        <input type="number" value={cost} onChange={(e) => setCost(e.target.value)}
+          className="w-20 px-2 py-1.5 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm" />
+        <span className="text-xs text-slate-500">P</span>
+      </div>
+      <div className="flex gap-2">
+        <button onClick={save} disabled={!dirty} className="flex-1 py-1.5 rounded-lg bg-indigo-600 text-xs font-medium disabled:opacity-40">저장</button>
+        <button onClick={toggle} className="flex-1 py-1.5 rounded-lg bg-slate-600 text-xs font-medium">{item.active ? '숨기기' : '보이기'}</button>
+        <button onClick={remove} className="flex-1 py-1.5 rounded-lg bg-rose-600/80 text-xs font-medium">삭제</button>
+      </div>
     </div>
   )
 }

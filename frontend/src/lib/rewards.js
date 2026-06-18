@@ -46,6 +46,38 @@ export async function listRewardItems() {
   return data || []
 }
 
+// ---- 상품 관리 (부모 전용) ----
+export async function listAllRewardItems() {
+  const { data, error } = await supabase.from('reward_items').select('*').order('sort')
+  if (error) throw error
+  return data || []
+}
+
+export async function createRewardItem({ title, description, cost, category, icon }) {
+  const { error } = await supabase.from('reward_items').insert({
+    title: title.trim(),
+    description: description?.trim() || null,
+    cost: Number(cost),
+    category: category?.trim() || '기타',
+    icon: icon?.trim() || '🎁',
+    active: true,
+    sort: 150,
+  })
+  if (error) throw error
+}
+
+export async function updateRewardItem(id, patch) {
+  const clean = { ...patch }
+  if (clean.cost != null) clean.cost = Number(clean.cost)
+  const { error } = await supabase.from('reward_items').update(clean).eq('id', id)
+  if (error) throw error
+}
+
+export async function deleteRewardItem(id) {
+  const { error } = await supabase.from('reward_items').delete().eq('id', id)
+  if (error) throw error
+}
+
 /** 구매(교환): 잔액 확인 → 구매내역 생성 → 포인트 차감 */
 export async function purchaseItem(memberKey, item) {
   const balance = await getBalance(memberKey)
