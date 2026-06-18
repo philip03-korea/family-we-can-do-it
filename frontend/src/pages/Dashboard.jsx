@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
 import { getStudyStats, getStreak, getLifetimeReviews } from '../lib/db'
+import { getBalance } from '../lib/rewards'
 import { computeXP, computeBadges } from '../lib/gamify'
 import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
@@ -27,6 +28,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null)
   const [streak, setStreak] = useState(null)
   const [game, setGame] = useState(null)
+  const [points, setPoints] = useState(null)
 
   useEffect(() => {
     if (!profile) return
@@ -34,10 +36,12 @@ export default function Dashboard() {
       getStudyStats(user.id, profile.level),
       getStreak(user.id),
       getLifetimeReviews(user.id),
+      getBalance(profile.member_key).catch(() => 0),
     ])
-      .then(([st, sk, totalReviews]) => {
+      .then(([st, sk, totalReviews, bal]) => {
         setStats(st)
         setStreak(sk)
+        setPoints(bal)
         const merged = { totalReviews, learned: st.learned, total: st.total, streak: sk.streak }
         setGame({ xp: computeXP(merged), badges: computeBadges(merged) })
       })
@@ -61,7 +65,16 @@ export default function Dashboard() {
             {member.emoji} {member.name}
           </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {points != null && (
+            <button
+              onClick={() => navigate('/shop')}
+              className="text-sm font-bold bg-slate-800 px-3 py-1.5 rounded-full"
+              title="보유 포인트 (상점)"
+            >
+              🛒 {points}P
+            </button>
+          )}
           {streak && (
             <span className="text-sm font-bold bg-slate-800 px-3 py-1.5 rounded-full" title="연속 학습일">
               🔥 {streak.streak}일
