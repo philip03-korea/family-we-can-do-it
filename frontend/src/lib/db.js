@@ -9,10 +9,14 @@ import { supabase } from './supabase'
  * - category === 'general'(기본): 해당 레벨의 일반 단어
  * - 관심사 카테고리(webtoon/football/kpop_rap/games): 레벨 무관, 그 카테고리 전부
  */
-export async function getWords({ level, category = 'general' }) {
+export async function getWords({ level, category = 'general', subcategory = '' }) {
   let q = supabase.from('words').select('*')
-  if (category && category !== 'general') q = q.eq('category', category)
-  else q = q.eq('category', 'general').eq('level', level)
+  if (category && category !== 'general') {
+    q = q.eq('category', category)
+    if (subcategory) q = q.eq('subcategory', subcategory)
+  } else {
+    q = q.eq('category', 'general').eq('level', level)
+  }
   const { data, error } = await q.order('id')
   if (error) throw error
   return data || []
@@ -30,8 +34,8 @@ export async function getWordsByLevel(level) {
  * @param {string} level
  * @param {number} newLimit 하루 새 단어 상한
  */
-export async function getStudyQueue(userId, level, newLimit = 10, category = 'general') {
-  const words = await getWords({ level, category })
+export async function getStudyQueue(userId, level, newLimit = 10, category = 'general', subcategory = '') {
+  const words = await getWords({ level, category, subcategory })
   if (!words.length) return { due: [], fresh: [], words: [], progressById: {} }
 
   const ids = words.map((w) => w.id)
@@ -62,8 +66,8 @@ export async function getStudyQueue(userId, level, newLimit = 10, category = 'ge
 }
 
 /** 이미 학습한(진행도가 있는) 단어 목록 — 복습 모드용 (기한 무관) */
-export async function getLearnedWords(userId, level, category = 'general') {
-  const words = await getWords({ level, category })
+export async function getLearnedWords(userId, level, category = 'general', subcategory = '') {
+  const words = await getWords({ level, category, subcategory })
   if (!words.length) return { words: [], progressById: {} }
   const ids = words.map((w) => w.id)
   const { data: progress, error } = await supabase
@@ -265,8 +269,8 @@ export function subscribeFamilyMessages(onInsert) {
 }
 
 /** 대시보드용 요약: 오늘 복습 대기 수, 학습한 단어 수 */
-export async function getStudyStats(userId, level, category = 'general') {
-  const { due, fresh, words, progressById } = await getStudyQueue(userId, level, 9999, category)
+export async function getStudyStats(userId, level, category = 'general', subcategory = '') {
+  const { due, fresh, words, progressById } = await getStudyQueue(userId, level, 9999, category, subcategory)
   const learned = Object.keys(progressById).length
   return {
     dueCount: due.length,
