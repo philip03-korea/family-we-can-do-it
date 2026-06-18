@@ -132,6 +132,9 @@ export default function Dashboard() {
         <button onClick={() => navigate('/shop')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
           🛒 보상 상점
         </button>
+        <button onClick={() => navigate('/math')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
+          📐 수학
+        </button>
       </div>
 
       {/* 하울 전용 TOEFL 트랙 */}

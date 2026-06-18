@@ -9,6 +9,11 @@ import {
   listPendingPurchases,
   updatePurchaseStatus,
   cancelPurchase,
+  addWish,
+  listMyWishes,
+  listPendingWishes,
+  approveWish,
+  rejectWish,
   STATUS_LABEL,
 } from '../lib/rewards'
 import { FAMILY } from '../data/family'
@@ -30,17 +35,25 @@ export default function Shop() {
   const [tab, setTab] = useState('shop') // shop | mine | approve
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
+  const [myWishes, setMyWishes] = useState([])
+  const [pendingWishes, setPendingWishes] = useState([])
+  const [wishForm, setWishForm] = useState(null) // {title, note, cost} or null
 
   async function refresh() {
-    const [it, bal, my] = await Promise.all([
+    const [it, bal, my, mw] = await Promise.all([
       listRewardItems(),
       getBalance(myKey).catch(() => 0),
       listMyPurchases(myKey).catch(() => []),
+      listMyWishes(myKey).catch(() => []),
     ])
     setItems(it)
     setBalance(bal)
     setMine(my)
-    if (isParent) setPending(await listPendingPurchases().catch(() => []))
+    setMyWishes(mw)
+    if (isParent) {
+      setPending(await listPendingPurchases().catch(() => []))
+      setPendingWishes(await listPendingWishes().catch(() => []))
+    }
   }
   useEffect(() => {
     refresh().catch((e) => setMsg(friendly(e)))
@@ -79,6 +92,37 @@ export default function Shop() {
     }
   }
 
+  async function submitWish() {
+    if (!wishForm?.title?.trim()) return
+    try {
+      await addWish(myKey, { title: wishForm.title.trim(), note: wishForm.note, suggestedCost: wishForm.cost })
+      setWishForm(null)
+      await refresh()
+      setMsg('✨ 소원을 보냈어요! 부모님이 승인하면 상점에 추가돼요.')
+    } catch (e) {
+      setMsg('⚠️ ' + friendly(e))
+    }
+  }
+
+  async function okWish(w) {
+    const cost = prompt(`"${w.title}" 를 몇 포인트로 상점에 올릴까요?`, w.suggested_cost || 100)
+    if (cost == null) return
+    try {
+      await approveWish(w, cost)
+      await refresh()
+    } catch (e) {
+      setMsg('⚠️ ' + friendly(e))
+    }
+  }
+  async function noWish(id) {
+    try {
+      await rejectWish(id)
+      await refresh()
+    } catch (e) {
+      setMsg('⚠️ ' + friendly(e))
+    }
+  }
+
   const categories = [...new Set(items.map((i) => i.category))]
 
   return (
@@ -99,10 +143,51 @@ export default function Shop() {
       <div className="flex gap-2 mb-4">
         <TabBtn on={tab === 'shop'} onClick={() => setTab('shop')}>상점</TabBtn>
         <TabBtn on={tab === 'mine'} onClick={() => setTab('mine')}>내 쿠폰함</TabBtn>
-        {isParent && <TabBtn on={tab === 'approve'} onClick={() => setTab('approve')}>승인 {pending.length ? `(${pending.length})` : ''}</TabBtn>}
+        {isParent && <TabBtn on={tab === 'approve'} onClick={() => setTab('approve')}>승인 {pending.length + pendingWishes.length ? `(${pending.length + pendingWishes.length})` : ''}</TabBtn>}
       </div>
 
       {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
+
+      {/* 소원 추가 */}
+      {tab === 'shop' && (
+        <div className="mb-4">
+          {!wishForm ? (
+            <button
+              onClick={() => setWishForm({ title: '', note: '', cost: '' })}
+              className="w-full py-3 rounded-2xl border border-dashed border-indigo-400/60 text-indigo-300 text-sm font-medium"
+            >
+              ✨ 소원 추가하기 (원하는 보상 직접 요청)
+            </button>
+          ) : (
+            <div className="bg-slate-800/60 border border-indigo-500/40 rounded-2xl p-4 space-y-2">
+              <p className="text-sm font-bold">✨ 내 소원 보내기</p>
+              <input
+                value={wishForm.title}
+                onChange={(e) => setWishForm({ ...wishForm, title: e.target.value })}
+                placeholder="원하는 보상 (예: 친구랑 PC방 2시간)"
+                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm"
+              />
+              <input
+                value={wishForm.note}
+                onChange={(e) => setWishForm({ ...wishForm, note: e.target.value })}
+                placeholder="설명 (선택)"
+                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm"
+              />
+              <input
+                type="number"
+                value={wishForm.cost}
+                onChange={(e) => setWishForm({ ...wishForm, cost: e.target.value })}
+                placeholder="희망 포인트 (선택, 부모님이 최종 결정)"
+                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm"
+              />
+              <div className="flex gap-2">
+                <button onClick={submitWish} className="flex-1 py-2 rounded-lg bg-indigo-600 text-sm font-bold">보내기</button>
+                <button onClick={() => setWishForm(null)} className="px-4 py-2 rounded-lg bg-slate-700 text-sm">취소</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 상점 */}
       {tab === 'shop' && (
@@ -138,29 +223,75 @@ export default function Shop() {
         )
       )}
 
-      {/* 내 쿠폰함 */}
+      {/* 내 쿠폰함 + 내 소원 */}
       {tab === 'mine' && (
-        mine.length === 0 ? (
-          <p className="text-slate-400 text-sm text-center py-8">아직 교환한 보상이 없어요.</p>
-        ) : (
-          <ul className="space-y-2">
-            {mine.map((p) => (
-              <li key={p.id} className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-sm">{p.item_title}</div>
-                  <div className="text-xs text-slate-500">{p.created_at.slice(5, 10)} · -{p.cost}P</div>
-                </div>
-                <StatusBadge status={p.status} />
-              </li>
-            ))}
-          </ul>
-        )
+        <div className="space-y-5">
+          <div>
+            <h2 className="text-sm font-bold text-slate-400 mb-2">교환한 보상</h2>
+            {mine.length === 0 ? (
+              <p className="text-slate-500 text-sm">아직 교환한 보상이 없어요.</p>
+            ) : (
+              <ul className="space-y-2">
+                {mine.map((p) => (
+                  <li key={p.id} className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3 flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-sm">{p.item_title}</div>
+                      <div className="text-xs text-slate-500">{p.created_at.slice(5, 10)} · -{p.cost}P</div>
+                    </div>
+                    <StatusBadge status={p.status} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-slate-400 mb-2">내 소원 ✨</h2>
+            {myWishes.length === 0 ? (
+              <p className="text-slate-500 text-sm">보낸 소원이 없어요. 상점에서 "소원 추가하기"로 요청해요.</p>
+            ) : (
+              <ul className="space-y-2">
+                {myWishes.map((w) => (
+                  <li key={w.id} className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3 flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-sm">{w.title}</div>
+                      <div className="text-xs text-slate-500">{w.suggested_cost ? `희망 ${w.suggested_cost}P` : '포인트 미정'}</div>
+                    </div>
+                    <StatusBadge status={w.status} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       )}
 
-      {/* 부모 승인 */}
+      {/* 부모 승인 — 소원 + 교환 */}
       {tab === 'approve' && isParent && (
-        pending.length === 0 ? (
-          <p className="text-slate-400 text-sm text-center py-8">승인 대기 중인 교환이 없어요.</p>
+        <div className="space-y-5">
+          <div>
+            <h2 className="text-sm font-bold text-slate-400 mb-2">소원 승인 ✨</h2>
+            {pendingWishes.length === 0 ? (
+              <p className="text-slate-500 text-sm">대기 중인 소원이 없어요.</p>
+            ) : (
+              <ul className="space-y-2">
+                {pendingWishes.map((w) => (
+                  <li key={w.id} className="bg-slate-800/60 border border-indigo-500/30 rounded-2xl p-3">
+                    <div className="font-bold text-sm mb-0.5">{emojiOf(w.member_key)} {nameOf(w.member_key)} · {w.title}</div>
+                    {w.note && <div className="text-xs text-slate-400 mb-1">{w.note}</div>}
+                    <div className="text-xs text-slate-500 mb-2">{w.suggested_cost ? `희망 ${w.suggested_cost}P` : '포인트 미정'}</div>
+                    <div className="flex gap-2">
+                      <button onClick={() => okWish(w)} className="flex-1 py-2 rounded-lg bg-emerald-600 text-sm font-medium">상점에 추가</button>
+                      <button onClick={() => noWish(w.id)} className="flex-1 py-2 rounded-lg bg-rose-600/80 text-sm font-medium">거절</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div>
+          <h2 className="text-sm font-bold text-slate-400 mb-2">교환 승인</h2>
+          {pending.length === 0 ? (
+          <p className="text-slate-500 text-sm">승인 대기 중인 교환이 없어요.</p>
         ) : (
           <ul className="space-y-2">
             {pending.map((p) => (
@@ -177,7 +308,9 @@ export default function Shop() {
               </li>
             ))}
           </ul>
-        )
+            )}
+          </div>
+        </div>
       )}
     </div>
   )

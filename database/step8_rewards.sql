@@ -61,6 +61,25 @@ create policy "purchases select authed" on public.reward_purchases
 create policy "purchases write authed" on public.reward_purchases
   for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
+-- 3-1) 소원 (각자 직접 원하는 보상 요청 → 부모 승인 시 상점에 추가)
+create table if not exists public.reward_wishes (
+  id            bigint generated always as identity primary key,
+  member_key    text not null,
+  title         text not null,
+  note          text,
+  suggested_cost int,
+  status        text not null default 'requested', -- requested/approved/rejected
+  created_at    timestamptz not null default now()
+);
+create index if not exists wishes_status_idx on public.reward_wishes(status);
+alter table public.reward_wishes enable row level security;
+drop policy if exists "wishes select authed" on public.reward_wishes;
+drop policy if exists "wishes write authed" on public.reward_wishes;
+create policy "wishes select authed" on public.reward_wishes
+  for select using (auth.role() = 'authenticated');
+create policy "wishes write authed" on public.reward_wishes
+  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+
 -- 4) 상품 시드 (앞서 정리한 보상 아이디어 전부)
 insert into public.reward_items (title, description, cost, category, icon, sort) values
   ('용돈 5,000원', '포인트를 용돈으로 교환', 100, '용돈', '💰', 10),

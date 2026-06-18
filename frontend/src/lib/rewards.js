@@ -110,6 +110,54 @@ export async function cancelPurchase(purchase) {
   if (error && !/duplicate|unique/i.test(error.message || '')) throw error
 }
 
+// ---- 소원 (직접 보상 요청) ----
+export async function addWish(memberKey, { title, note, suggestedCost }) {
+  const { error } = await supabase.from('reward_wishes').insert({
+    member_key: memberKey,
+    title,
+    note: note || null,
+    suggested_cost: suggestedCost ? Number(suggestedCost) : null,
+    status: 'requested',
+  })
+  if (error) throw error
+}
+
+export async function listMyWishes(memberKey) {
+  const { data, error } = await supabase
+    .from('reward_wishes')
+    .select('*')
+    .eq('member_key', memberKey)
+    .order('created_at', { ascending: false })
+    .limit(20)
+  if (error) throw error
+  return data || []
+}
+
+export async function listPendingWishes() {
+  const { data, error } = await supabase
+    .from('reward_wishes')
+    .select('*')
+    .eq('status', 'requested')
+    .order('created_at')
+  if (error) throw error
+  return data || []
+}
+
+/** 소원 승인 → 상점 상품으로 추가 */
+export async function approveWish(wish, cost) {
+  const { error: iErr } = await supabase
+    .from('reward_items')
+    .insert({ title: wish.title, description: wish.note || '소원 보상', cost: Number(cost), category: '소원', icon: '⭐', sort: 200 })
+  if (iErr && !/duplicate|unique/i.test(iErr.message || '')) throw iErr
+  const { error } = await supabase.from('reward_wishes').update({ status: 'approved' }).eq('id', wish.id)
+  if (error) throw error
+}
+
+export async function rejectWish(id) {
+  const { error } = await supabase.from('reward_wishes').update({ status: 'rejected' }).eq('id', id)
+  if (error) throw error
+}
+
 export const STATUS_LABEL = {
   requested: '신청됨',
   approved: '승인됨',
