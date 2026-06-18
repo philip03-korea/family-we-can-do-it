@@ -326,6 +326,31 @@ export default function Guide() {
         <p className="text-slate-500 text-xs mt-2 break-all">{APP_URL}</p>
       </div>
 
+      {/* 기능 한눈에 보기 */}
+      <div className="bg-slate-800/40 border border-slate-700 rounded-2xl p-4 mb-5">
+        <p className="text-sm font-bold mb-3">이 앱으로 할 수 있는 것</p>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            ['📚', '단어 학습', '레벨별 단어·복습'],
+            ['💬', 'AI 회화', '영어 대화·교정'],
+            ['🎯', '관심사 영어', '웹툰·축구·게임'],
+            ['👨‍👩‍👧‍👦', '가족 채팅', '주간 주제·번역'],
+            ['🎓', 'TOEFL', '하울 전용 채점'],
+            ['🧹', '집안일', '당번표·포인트'],
+            ['🛒', '보상 상점', '포인트로 교환'],
+            ['🔥', '게임화', '스트릭·배지'],
+          ].map(([ic, t, d]) => (
+            <div key={t} className="bg-slate-900 rounded-xl p-2.5">
+              <div className="text-lg">{ic}</div>
+              <div className="text-xs font-bold mt-0.5">{t}</div>
+              <div className="text-[11px] text-slate-500">{d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p className="text-xs text-slate-500 mb-2">아래 탭을 고르고, 방법을 눌러 펼쳐보세요 👇</p>
+
       {/* 탭 */}
       <div className="flex gap-1.5 overflow-x-auto mb-4 -mx-1 px-1">
         {TABS.map((t) => (
