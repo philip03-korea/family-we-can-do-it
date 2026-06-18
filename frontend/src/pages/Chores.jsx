@@ -14,6 +14,7 @@ import {
   addDays,
   todayYmd,
 } from '../lib/chores'
+import { addChorePoints, removeChorePoints } from '../lib/rewards'
 import { FAMILY } from '../data/family'
 import { DAY_LABELS, DEFAULT_GOALS, REWARD_TEXT, STREAK_BONUS_TEXT, PARENT_KEYS } from '../data/chores'
 
@@ -124,13 +125,17 @@ export default function Chores() {
   }
 
   async function toggle(chore) {
+    const next = !chore.done
     try {
-      await setChoreDone(chore.id, !chore.done)
+      await setChoreDone(chore.id, next)
+      // 포인트 지갑 적립/취소
+      if (next) await addChorePoints(chore)
+      else await removeChorePoints(chore.id)
       setChores((cs) =>
-        cs.map((c) => (c.id === chore.id ? { ...c, done: !c.done, completed_at: !c.done ? new Date().toISOString() : null } : c)),
+        cs.map((c) => (c.id === chore.id ? { ...c, done: next, completed_at: next ? new Date().toISOString() : null } : c)),
       )
     } catch (e) {
-      setMsg(e.message)
+      setMsg('⚠️ ' + friendlyError(e))
     }
   }
 

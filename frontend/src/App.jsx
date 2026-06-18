@@ -9,6 +9,7 @@ import Family from './pages/Family'
 import Toefl from './pages/Toefl'
 import Guide from './pages/Guide'
 import Chores from './pages/Chores'
+import Shop from './pages/Shop'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -89,6 +90,14 @@ export default function App() {
         element={
           <Protected>
             <Chores />
+          </Protected>
+        }
+      />
+      <Route
+        path="/shop"
+        element={
+          <Protected>
+            <Shop />
           </Protected>
         }
       />
