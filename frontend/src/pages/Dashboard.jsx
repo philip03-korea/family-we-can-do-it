@@ -12,6 +12,9 @@ import VoiceDemo from '../components/VoiceDemo'
 const INTEREST_LINKS = {
   haeum: [{ cat: 'webtoon', label: '🎬 웹툰·배우 영어' }],
   haul: [
+    { cat: 'sat', label: '📖 SAT 단어' },
+    { cat: 'math_en', label: '➗ 수학 영어' },
+    { cat: 'science_en', label: '🔬 과학 영어' },
     { cat: 'football', label: '⚽ 축구 영어' },
     { cat: 'kpop_rap', label: '🎤 랩·음악 영어' },
   ],

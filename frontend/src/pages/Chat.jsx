@@ -10,7 +10,7 @@ import Translatable from '../components/Translatable'
 // 아이별 관심사 설명 (AI가 먼저 좋아하는 스타·주제를 꺼내 대화를 이끌도록)
 const INTEREST_DESC = {
   haeum: 'Korean romance webtoons, K-dramas, and actors like Seo In-guk and Choi Hyun-wook (Weak Hero)',
-  haul: 'football — the Premier League, La Liga, FC Barcelona and Lionel Messi — and Korean hip-hop/rap',
+  haul: 'football (Premier League, La Liga, FC Barcelona, Messi) and Korean hip-hop/rap. He is also preparing for the SAT and studies math & science in English — sometimes quiz him on an SAT word or a math/science term and explain it simply.',
   haram:
     'video games like Roblox, Valorant, ARK, Brawl Stars, Pokemon, AND YouTube pop songs (he falls asleep to pop songs every night — proactively ask him what song he is listening to, who sings it, and what it is about)',
 }
@@ -22,8 +22,15 @@ const INTEREST_TOPICS = {
   kpop_rap: ['Who is your favorite Korean rapper?', 'What makes a good rap flow?', 'Describe a song you love right now.', 'What is your favorite punchline?'],
   games: ['What game are you playing now?', 'Describe your favorite game character.', 'How do you survive in ARK?', 'Tell me about your best match.'],
   popsong: ['What song do you listen to before sleep?', 'Who is your favorite singer?', 'What is the song about?', 'Why do you love that song?'],
+  sat: ['Quiz me on an SAT word.', 'Use "pragmatic" in a sentence.', 'Explain a tricky SAT word simply.'],
+  math_en: ['Explain "denominator" in English.', 'How do you say this math problem in English?', 'Quiz me on a math term.'],
+  science_en: ['Explain "hypothesis" in English.', 'Quiz me on a science word.', 'Describe an experiment in English.'],
 }
-const INTEREST_BY_MEMBER = { haeum: ['webtoon'], haul: ['football', 'kpop_rap'], haram: ['games', 'popsong'] }
+const INTEREST_BY_MEMBER = {
+  haeum: ['webtoon'],
+  haul: ['sat', 'math_en', 'science_en', 'football', 'kpop_rap'],
+  haram: ['games', 'popsong'],
+}
 
 // 레벨별 대화 시작 주제 (무료, 정적)
 const TOPICS = {
