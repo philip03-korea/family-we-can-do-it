@@ -23,6 +23,27 @@ const CATEGORIES = [
 ]
 const catLabel = (k) => CATEGORIES.find((c) => c.key === k)?.label || '일반'
 
+// 세부 단원(2단계) — 대분류 안에서 난이도/단원 선택
+const SUBCATS = {
+  sat: [
+    { key: 'easy', label: '기초' },
+    { key: 'medium', label: '중급' },
+    { key: 'hard', label: '고급' },
+  ],
+  math_en: [
+    { key: 'algebra', label: '대수' },
+    { key: 'geometry', label: '기하' },
+    { key: 'stats', label: '통계·확률' },
+    { key: 'calculus', label: '미적분' },
+  ],
+  science_en: [
+    { key: 'physics', label: '물리' },
+    { key: 'chemistry', label: '화학' },
+    { key: 'biology', label: '생물' },
+    { key: 'earth', label: '지구과학' },
+  ],
+}
+
 export default function Study() {
   const { user, profile } = useAuth()
   const navigate = useNavigate()
@@ -33,6 +54,7 @@ export default function Study() {
   const level = (params.get('level') || profile?.level || 'B').toUpperCase()
   const mode = params.get('mode') === 'review' ? 'review' : 'learn'
   const category = params.get('cat') || 'general'
+  const subcat = params.get('sub') || ''
   const levelBg = LEVELS[level]?.bg || 'bg-level-b'
 
   const [loading, setLoading] = useState(true)
@@ -69,13 +91,13 @@ export default function Study() {
     ;(async () => {
       try {
         if (mode === 'review') {
-          const { words, progressById } = await getLearnedWords(user.id, level, category)
+          const { words, progressById } = await getLearnedWords(user.id, level, category, subcat)
           const items = words.map((w) => ({ word: w, progress: progressById[w.id] || null }))
           if (!alive) return
           setAllLearned(items)
           setQueue(items.slice(0, PAGE))
         } else {
-          const { due, fresh, progressById } = await getStudyQueue(user.id, level, 10, category)
+          const { due, fresh, progressById } = await getStudyQueue(user.id, level, 10, category, subcat)
           const items = [...due, ...fresh].map((w) => ({ word: w, progress: progressById[w.id] || null }))
           if (!alive) return
           setAllLearned([])
@@ -90,7 +112,7 @@ export default function Study() {
     return () => {
       alive = false
     }
-  }, [user.id, level, mode, category])
+  }, [user.id, level, mode, category, subcat])
 
   const current = queue[idx]
 
@@ -188,13 +210,16 @@ export default function Study() {
   }
 
   function setLevel(lv) {
-    setParams({ level: lv, mode, cat: category })
+    setParams({ level: lv, mode, cat: category, sub: subcat })
   }
   function setMode(m) {
-    setParams({ level, mode: m, cat: category })
+    setParams({ level, mode: m, cat: category, sub: subcat })
   }
   function setCat(c) {
-    setParams({ level, mode, cat: c })
+    setParams({ level, mode, cat: c }) // 대분류 바꾸면 세부단원 초기화
+  }
+  function setSub(s) {
+    setParams({ level, mode, cat: category, sub: s })
   }
 
   if (loading) return <Center>단어 불러오는 중…</Center>
@@ -206,7 +231,7 @@ export default function Study() {
     const hasMorePages = mode === 'review' && allLearned.length > (page + 1) * PAGE
     return (
       <div className="min-h-screen max-w-md mx-auto p-5 flex flex-col">
-        <TopBar level={level} mode={mode} category={category} setLevel={setLevel} setMode={setMode} setCat={setCat} onExit={() => navigate('/')} />
+        <TopBar level={level} mode={mode} category={category} subcat={subcat} setLevel={setLevel} setMode={setMode} setCat={setCat} setSub={setSub} onExit={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center w-full">
             <div className="text-6xl mb-4">{emptyReview ? '🌱' : queue.length || finished ? '🎉' : '☕'}</div>
@@ -398,8 +423,9 @@ export default function Study() {
   )
 }
 
-// 상단: 나가기 + 학습/복습 토글 + 관심사 카테고리 + (일반일 때) 레벨 선택
-function TopBar({ level, mode, category, setLevel, setMode, setCat, onExit }) {
+// 상단: 나가기 + 학습/복습 토글 + 관심사 카테고리 + 세부단원 + (일반일 때) 레벨 선택
+function TopBar({ level, mode, category, subcat, setLevel, setMode, setCat, setSub, onExit }) {
+  const subs = SUBCATS[category]
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between mb-3">
@@ -430,6 +456,27 @@ function TopBar({ level, mode, category, setLevel, setMode, setCat, onExit }) {
           </button>
         ))}
       </div>
+
+      {/* 세부 단원 (SAT 난이도 / 수학·과학 단원) */}
+      {subs && (
+        <div className="flex gap-1.5 mb-2 overflow-x-auto">
+          <button
+            onClick={() => setSub('')}
+            className={`shrink-0 px-3 py-1 rounded-full text-xs ${!subcat ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+          >
+            전체
+          </button>
+          {subs.map((s) => (
+            <button
+              key={s.key}
+              onClick={() => setSub(s.key)}
+              className={`shrink-0 px-3 py-1 rounded-full text-xs ${subcat === s.key ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* 레벨 선택 (일반 단어일 때만) */}
       {category === 'general' && (
