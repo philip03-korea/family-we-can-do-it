@@ -12,6 +12,9 @@ const PAGE = 10
 
 const CATEGORIES = [
   { key: 'general', label: '일반' },
+  { key: 'sat', label: 'SAT' },
+  { key: 'math_en', label: '수학영어' },
+  { key: 'science_en', label: '과학영어' },
   { key: 'webtoon', label: '웹툰·배우' },
   { key: 'football', label: '축구' },
   { key: 'kpop_rap', label: '랩·음악' },
