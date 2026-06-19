@@ -5,6 +5,8 @@ import { supabase } from '../lib/supabase'
 import { getStudyStats, getStreak, getLifetimeReviews } from '../lib/db'
 import { getBalance } from '../lib/rewards'
 import { computeXP, computeBadges } from '../lib/gamify'
+import { isPushSupported, getPushEnabled, enablePush, disablePush, sendTestPush } from '../lib/push'
+import { isSoundOn, setSoundOn, playSuccess } from '../lib/sound'
 import { FAMILY, LEVELS, LEVEL_ORDER, colorOf, textOnColor } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
 import BottomNav from '../components/BottomNav'
@@ -34,6 +36,38 @@ export default function Dashboard() {
   const [streak, setStreak] = useState(null)
   const [game, setGame] = useState(null)
   const [points, setPoints] = useState(null)
+  const [pushOn, setPushOn] = useState(false)
+  const [soundOnState, setSoundOnState] = useState(isSoundOn())
+  const [pushMsg, setPushMsg] = useState('')
+
+  useEffect(() => {
+    getPushEnabled().then(setPushOn).catch(() => {})
+  }, [])
+
+  async function togglePush() {
+    setPushMsg('')
+    try {
+      if (pushOn) {
+        await disablePush()
+        setPushOn(false)
+      } else {
+        await enablePush({ userId: user.id, memberKey: ownProfile?.member_key })
+        setPushOn(true)
+        setPushMsg('알림이 켜졌어요! 🔔')
+      }
+    } catch (e) {
+      setPushMsg('⚠️ ' + e.message)
+    }
+  }
+  async function testPush() {
+    setPushMsg('보내는 중…')
+    try {
+      const r = await sendTestPush()
+      setPushMsg(r?.sent ? '테스트 알림을 보냈어요! 📩' : '구독이 없어요. 먼저 알림을 켜주세요.')
+    } catch (e) {
+      setPushMsg('⚠️ ' + e.message)
+    }
+  }
 
   useEffect(() => {
     if (!profile) return
@@ -293,6 +327,41 @@ export default function Dashboard() {
             </button>
           )
         })}
+      </div>
+
+      {/* 알림 · 효과음 설정 */}
+      <div className="bg-slate-800/60 border border-slate-700 rounded-3xl p-5 mt-8">
+        <h2 className="text-lg font-bold mb-3">⚙️ 설정</h2>
+        <div className="flex items-center justify-between py-2">
+          <div>
+            <p className="font-medium">🔔 푸시 알림</p>
+            <p className="text-xs text-slate-400">매일 아침 알림 · 가족 소식 (아이폰은 홈 화면 추가 후)</p>
+          </div>
+          <button
+            onClick={togglePush}
+            disabled={!isPushSupported()}
+            className={`w-14 h-8 rounded-full relative transition ${pushOn ? 'bg-emerald-500' : 'bg-slate-600'} disabled:opacity-40`}
+          >
+            <span className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${pushOn ? 'left-7' : 'left-1'}`} />
+          </button>
+        </div>
+        {pushOn && (
+          <button onClick={testPush} className="text-xs text-indigo-300 underline mb-1">테스트 알림 보내기</button>
+        )}
+        <div className="flex items-center justify-between py-2 border-t border-slate-700 mt-1">
+          <div>
+            <p className="font-medium">🔊 버튼 효과음</p>
+            <p className="text-xs text-slate-400">버튼 누를 때 소리</p>
+          </div>
+          <button
+            onClick={() => { const n = !soundOnState; setSoundOn(n); setSoundOnState(n); if (n) playSuccess() }}
+            className={`w-14 h-8 rounded-full relative transition ${soundOnState ? 'bg-emerald-500' : 'bg-slate-600'}`}
+          >
+            <span className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${soundOnState ? 'left-7' : 'left-1'}`} />
+          </button>
+        </div>
+        {pushMsg && <p className="text-xs text-slate-300 mt-2">{pushMsg}</p>}
+        {!isPushSupported() && <p className="text-xs text-amber-300 mt-2">이 기기는 푸시를 지원하지 않아요. (아이폰: 홈 화면에 추가 후 가능)</p>}
       </div>
 
       <div className="text-center mt-8">

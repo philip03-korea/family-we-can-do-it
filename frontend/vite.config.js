@@ -25,6 +25,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // 생성된 서비스워커가 푸시 핸들러(public/push-sw.js)를 불러옴
+        importScripts: ['push-sw.js'],
         // 한 번 받은 음성 파일은 브라우저에 캐싱 → 서버/네트워크 비용 0
         runtimeCaching: [
           {

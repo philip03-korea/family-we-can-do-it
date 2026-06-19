@@ -4,7 +4,11 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { primeTTS } from './lib/tts'
+import { initButtonSound } from './lib/sound'
 import './index.css'
+
+// 버튼 클릭 효과음 전역 연결 (설정에서 끌 수 있음)
+initButtonSound()
 
 // iOS는 첫 사용자 제스처 안에서 음성을 한 번 깨워야 이후 자동 재생(예: AI 답변
 // 읽어주기)이 무음이 되지 않는다. 첫 탭에서 1회만 실행.
