@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getMonthMeals, listMealWishes, addMealWish, toggleMealVote } from '../lib/meals'
+import { getMonthMeals, saveMeal, listMealWishes, addMealWish, toggleMealVote } from '../lib/meals'
 import { FAMILY, colorOf, textOnColor } from '../data/family'
 import BottomNav from '../components/BottomNav'
 
@@ -30,6 +30,22 @@ export default function Meals() {
   const [wishes, setWishes] = useState([])
   const [form, setForm] = useState(null) // {title, note}
   const [msg, setMsg] = useState('')
+  const [editDay, setEditDay] = useState(null)
+  const [ef, setEf] = useState({ breakfast: '', lunch: '', dinner: '', note: '' })
+
+  function openEdit(d) {
+    setEditDay(d.day)
+    setEf({ breakfast: d.breakfast || '', lunch: d.lunch || '', dinner: d.dinner || '', note: d.note || '' })
+  }
+  async function saveEdit() {
+    try {
+      await saveMeal(editDay, ef)
+      setMeals((ms) => ms.map((m) => (m.day === editDay ? { ...m, ...ef } : m)))
+      setEditDay(null)
+    } catch (e) {
+      setMsg(friendly(e))
+    }
+  }
 
   async function refreshWishes() {
     setWishes(await listMealWishes(myKey).catch(() => []))
@@ -129,13 +145,37 @@ export default function Meals() {
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="font-bold">{Number(d.day.slice(8))}일 ({DOW[dt.getDay()]})</span>
                 {isToday && <span className="text-[11px] bg-indigo-600 px-2 py-0.5 rounded-full">오늘</span>}
+                <button onClick={() => (editDay === d.day ? setEditDay(null) : openEdit(d))} className="ml-auto text-xs text-slate-400">
+                  {editDay === d.day ? '닫기' : '✏️ 수정'}
+                </button>
               </div>
-              <div className="grid grid-cols-[40px_1fr] gap-x-2 gap-y-1 text-sm">
-                <span className="text-amber-300">아침</span><span className="text-slate-200">{d.breakfast || '—'}</span>
-                {d.lunch ? (<><span className="text-emerald-300">점심</span><span className="text-slate-200">{d.lunch}</span></>) : null}
-                <span className="text-sky-300">저녁</span><span className="text-slate-200">{d.dinner || '—'}</span>
-              </div>
-              {d.note && <p className="text-[11px] text-emerald-300/90 mt-1.5">🥗 {d.note}</p>}
+              {editDay === d.day ? (
+                <div className="space-y-1.5">
+                  {[['breakfast', '아침'], ['lunch', '점심'], ['dinner', '저녁'], ['note', '메모']].map(([k, lab]) => (
+                    <div key={k} className="flex items-center gap-2">
+                      <span className="w-9 text-xs text-slate-400 shrink-0">{lab}</span>
+                      <input
+                        value={ef[k]}
+                        onChange={(e) => setEf({ ...ef, [k]: e.target.value })}
+                        className="flex-1 px-2 py-1.5 rounded-lg bg-slate-900 border border-slate-700 outline-none text-sm"
+                      />
+                    </div>
+                  ))}
+                  <div className="flex gap-2 pt-1">
+                    <button onClick={saveEdit} className="flex-1 py-1.5 rounded-lg bg-indigo-600 text-sm font-bold">저장</button>
+                    <button onClick={() => setEditDay(null)} className="px-4 py-1.5 rounded-lg bg-slate-700 text-sm">취소</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-[40px_1fr] gap-x-2 gap-y-1 text-sm">
+                    <span className="text-amber-300">아침</span><span className="text-slate-200">{d.breakfast || '—'}</span>
+                    {d.lunch ? (<><span className="text-emerald-300">점심</span><span className="text-slate-200">{d.lunch}</span></>) : null}
+                    <span className="text-sky-300">저녁</span><span className="text-slate-200">{d.dinner || '—'}</span>
+                  </div>
+                  {d.note && <p className="text-[11px] text-emerald-300/90 mt-1.5">🥗 {d.note}</p>}
+                </>
+              )}
             </div>
           )
         })}

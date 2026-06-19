@@ -22,6 +22,7 @@ import {
 } from '../lib/rewards'
 import { FAMILY } from '../data/family'
 import { PARENT_KEYS } from '../data/chores'
+import BottomNav from '../components/BottomNav'
 
 const nameOf = (key) => FAMILY.find((f) => f.key === key)?.name || key
 const emojiOf = (key) => FAMILY.find((f) => f.key === key)?.emoji || '🙂'
@@ -132,7 +133,7 @@ export default function Shop() {
   const categories = [...new Set(items.map((i) => i.category))]
 
   return (
-    <div className="min-h-screen max-w-md mx-auto p-5 pb-24">
+    <div className="min-h-screen max-w-md mx-auto p-5 pb-28">
       <header className="flex items-center gap-3 mb-4">
         <button onClick={() => navigate('/')} className="text-slate-400 text-sm">← 대시보드</button>
         <h1 className="text-xl font-bold">🛒 보상 상점</h1>
@@ -324,6 +325,8 @@ export default function Shop() {
       {tab === 'admin' && isParent && (
         <RewardAdmin items={allItems} onChanged={refresh} onError={(m) => setMsg('⚠️ ' + friendly({ message: m }))} />
       )}
+
+      <BottomNav />
     </div>
   )
 }

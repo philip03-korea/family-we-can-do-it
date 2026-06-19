@@ -17,6 +17,7 @@ import { scoreFeedback } from '../lib/feedback'
 import { chat, fami } from '../lib/ai'
 import { FAMILY, LEVELS } from '../data/family'
 import Translatable from '../components/Translatable'
+import BottomNav from '../components/BottomNav'
 
 const emojiOf = (key) => (key === 'ai' ? '🤖' : FAMILY.find((f) => f.key === key)?.emoji || '🙂')
 
@@ -238,7 +239,7 @@ export default function Family() {
   }
 
   return (
-    <div className="min-h-screen max-w-md mx-auto p-5 pb-4 flex flex-col">
+    <div className="min-h-screen max-w-md mx-auto p-5 pb-28 flex flex-col">
       <header className="flex items-center gap-3 mb-5">
         <button onClick={() => navigate('/')} className="text-slate-400 text-sm">
           ← 대시보드
@@ -462,6 +463,8 @@ export default function Family() {
       <p className="text-slate-500 text-[11px] mt-2 text-center">
         한국어로 써도 ✨AI 가 영어로 바꿔줘요 · @이름 으로 가족을 부르고 · 🤖패미가 대화를 이어줘요
       </p>
+
+      <BottomNav />
     </div>
   )
 }

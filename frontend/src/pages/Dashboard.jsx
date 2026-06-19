@@ -209,6 +209,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-3 gap-2 mb-6">
         {[
           ['/words', '📒 단어장'],
+          ['/sentences', '📖 문장읽기'],
           ['/math', '📐 수학'],
           ['/chat', '💬 AI 회화'],
           ['/family', '👨‍👩‍👧‍👦 가족'],
