@@ -186,11 +186,27 @@ export default function Dashboard() {
             ? '오늘 학습 완료 ☕'
             : '학습 시작 →'}
         </button>
+        {/* 복습 — 퀴즈로 */}
+        <p className="text-xs text-slate-500 mt-3 mb-1.5">📚 복습 (학습한 단어로 퀴즈)</p>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => navigate('/quiz?mode=solo')}
+            className="py-3 rounded-2xl font-medium bg-slate-900 border border-slate-700 text-slate-200 text-sm"
+          >
+            🧑 혼자 풀기
+          </button>
+          <button
+            onClick={() => navigate('/quiz?mode=examiner')}
+            className="py-3 rounded-2xl font-medium bg-slate-900 border border-slate-700 text-slate-200 text-sm"
+          >
+            👥 퀴즈로 하기
+          </button>
+        </div>
         <button
           onClick={() => navigate('/study?mode=review')}
-          className="w-full py-3 mt-2 rounded-2xl font-medium bg-slate-900 border border-slate-700 text-slate-200"
+          className="w-full py-2.5 mt-2 rounded-2xl font-medium bg-slate-900/60 border border-slate-800 text-slate-400 text-sm"
         >
-          📚 학습한 단어 복습하기
+          🃏 플래시카드로 복습
         </button>
       </div>
 
