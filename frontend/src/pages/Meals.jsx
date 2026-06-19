@@ -87,6 +87,7 @@ export default function Meals() {
         <button onClick={() => navigate('/')} className="text-slate-400 text-sm">← 대시보드</button>
         <h1 className="text-xl font-bold">🍚 식단표</h1>
       </header>
+      <p className="text-xs text-emerald-300/90 mb-3">🥗 5인 가족 건강식단 — 잡곡·채소·단백질 중심, 저당/당뇨친화 (1인 약 1,800kcal)</p>
 
       {/* 월 선택 */}
       <div className="flex gap-2 mb-3">
@@ -134,6 +135,7 @@ export default function Meals() {
                 {d.lunch ? (<><span className="text-emerald-300">점심</span><span className="text-slate-200">{d.lunch}</span></>) : null}
                 <span className="text-sky-300">저녁</span><span className="text-slate-200">{d.dinner || '—'}</span>
               </div>
+              {d.note && <p className="text-[11px] text-emerald-300/90 mt-1.5">🥗 {d.note}</p>}
             </div>
           )
         })}
