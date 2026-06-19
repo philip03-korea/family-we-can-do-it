@@ -7,6 +7,7 @@ import { getBalance } from '../lib/rewards'
 import { computeXP, computeBadges } from '../lib/gamify'
 import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
+import BottomNav from '../components/BottomNav'
 
 // 아이별 관심사 → 학습 카테고리 바로가기
 const INTEREST_LINKS = {
@@ -25,7 +26,8 @@ const INTEREST_LINKS = {
 }
 
 export default function Dashboard() {
-  const { user, profile, signOut, refreshProfile } = useAuth()
+  const { user, profile, ownProfile, signOut, refreshProfile, isParent, allProfiles, isViewing, viewKey, setViewAs, viewUserId } = useAuth()
+  const ownKey = ownProfile?.member_key
   const navigate = useNavigate()
   const [saving, setSaving] = useState(false)
   const [stats, setStats] = useState(null)
@@ -35,10 +37,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!profile) return
+    const uid = viewUserId || user.id
     Promise.all([
-      getStudyStats(user.id, profile.level),
-      getStreak(user.id),
-      getLifetimeReviews(user.id),
+      getStudyStats(uid, profile.level),
+      getStreak(uid),
+      getLifetimeReviews(uid),
       getBalance(profile.member_key).catch(() => 0),
     ])
       .then(([st, sk, totalReviews, bal]) => {
@@ -49,7 +52,7 @@ export default function Dashboard() {
         setGame({ xp: computeXP(merged), badges: computeBadges(merged) })
       })
       .catch(() => {})
-  }, [user?.id, profile])
+  }, [viewUserId, user?.id, profile])
 
   // 프로필이 없으면: 내가 어떤 가족 구성원인지 선택
   if (!profile) {
@@ -60,10 +63,42 @@ export default function Dashboard() {
   const level = LEVELS[profile.level] || LEVELS.B
 
   return (
-    <div className="min-h-screen max-w-md mx-auto p-5 pb-24">
+    <div className="min-h-screen max-w-md mx-auto p-5 pb-28">
+      {/* 부모: 가족 구성원 미리보기 전환 */}
+      {isParent && (
+        <div className="mb-4">
+          <p className="text-xs text-slate-400 mb-1.5">👀 화면 미리보기 (가족을 눌러 그 화면을 확인)</p>
+          <div className="flex gap-1.5">
+            {allProfiles
+              .slice()
+              .sort((a, b) => FAMILY.findIndex((f) => f.key === a.member_key) - FAMILY.findIndex((f) => f.key === b.member_key))
+              .map((p) => {
+                const f = FAMILY.find((x) => x.key === p.member_key) || {}
+                const active = isViewing ? viewKey === p.member_key : p.member_key === ownKey
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => setViewAs(p.member_key === ownKey ? null : p.member_key)}
+                    className={`flex-1 rounded-xl py-1.5 text-center border ${active ? 'bg-indigo-600 border-indigo-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300'}`}
+                  >
+                    <div className="text-base leading-none">{f.emoji}</div>
+                    <div className="text-[11px] mt-0.5">{p.display_name}</div>
+                  </button>
+                )
+              })}
+          </div>
+          {isViewing && (
+            <div className="flex items-center justify-between bg-indigo-500/15 border border-indigo-500/40 rounded-xl px-3 py-2 mt-2">
+              <span className="text-sm text-indigo-200">👀 {member.name} 화면 보는 중 (미리보기)</span>
+              <button onClick={() => setViewAs(null)} className="text-xs bg-indigo-600 px-2.5 py-1 rounded-full">내 화면</button>
+            </div>
+          )}
+        </div>
+      )}
+
       <header className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-slate-400 text-sm">안녕하세요 👋</p>
+          <p className="text-slate-400 text-sm">{isViewing ? '미리보기 👀' : '안녕하세요 👋'}</p>
           <h1 className="text-2xl font-bold">
             {member.emoji} {member.name}
           </h1>
@@ -83,9 +118,11 @@ export default function Dashboard() {
               🔥 {streak.streak}일
             </span>
           )}
-          <button onClick={signOut} className="text-sm text-slate-400 hover:text-slate-200">
-            로그아웃
-          </button>
+          {!isViewing && (
+            <button onClick={signOut} className="text-sm text-slate-400 hover:text-slate-200">
+              로그아웃
+            </button>
+          )}
         </div>
       </header>
 
@@ -269,6 +306,8 @@ export default function Dashboard() {
         </button>
         <p className="text-xs text-slate-600 mt-3">FamTalk · 우리 가족 영어 🔥</p>
       </div>
+
+      <BottomNav />
     </div>
   )
 }

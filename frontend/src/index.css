@@ -16,9 +16,24 @@ body {
   margin: 0;
   background: #0f172a;
   color: #f8fafc;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
   overscroll-behavior-y: none;
 }
+
+/* ── 가독성: 흐릿한 회색 글자를 전체적으로 더 선명하게 ──
+   (slate-400/500/600 톤을 한 단계씩 밝게 올림) */
+.text-slate-600 { color: #94a3b8 !important; }
+.text-slate-500 { color: #a8b4c4 !important; }
+.text-slate-400 { color: #cbd5e1 !important; }
+.text-slate-300 { color: #e2e8f0 !important; }
+/* 아주 작은 글씨는 최소 크기 보장 */
+.text-\[10px\] { font-size: 11.5px !important; }
+.text-\[11px\] { font-size: 12px !important; }
+.text-xs { font-size: 12.5px !important; }
 
 /* 라디얼 리플 (VOICE 버튼 UI 패턴) */
 @keyframes ripple {
