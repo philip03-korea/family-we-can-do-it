@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 import { getStudyStats, getStreak, getLifetimeReviews } from '../lib/db'
 import { getBalance } from '../lib/rewards'
 import { computeXP, computeBadges } from '../lib/gamify'
-import { FAMILY, LEVELS, LEVEL_ORDER } from '../data/family'
+import { FAMILY, LEVELS, LEVEL_ORDER, colorOf, textOnColor } from '../data/family'
 import VoiceDemo from '../components/VoiceDemo'
 import BottomNav from '../components/BottomNav'
 
@@ -79,10 +79,13 @@ export default function Dashboard() {
                   <button
                     key={p.id}
                     onClick={() => setViewAs(p.member_key === ownKey ? null : p.member_key)}
-                    className={`flex-1 rounded-xl py-1.5 text-center border ${active ? 'bg-indigo-600 border-indigo-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300'}`}
+                    className={`flex-1 rounded-xl py-1.5 text-center border ${active ? 'border-white' : 'border-slate-700'}`}
+                    style={{ background: active ? colorOf(p.member_key) : '#1e293b', color: active ? textOnColor(p.member_key) : '#cbd5e1' }}
                   >
-                    <div className="text-base leading-none">{f.emoji}</div>
-                    <div className="text-[11px] mt-0.5">{p.display_name}</div>
+                    <div className="w-7 h-7 mx-auto rounded-full flex items-center justify-center text-base" style={{ background: colorOf(p.member_key) }}>
+                      {f.emoji}
+                    </div>
+                    <div className="text-[11px] mt-0.5 font-bold">{p.display_name}</div>
                   </button>
                 )
               })}
@@ -170,24 +173,19 @@ export default function Dashboard() {
 
       {/* 바로가기 */}
       <div className="grid grid-cols-3 gap-2 mb-6">
-        <button onClick={() => navigate('/words')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-          📒 단어장
-        </button>
-        <button onClick={() => navigate('/chat')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-          💬 AI 회화
-        </button>
-        <button onClick={() => navigate('/family')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-          👨‍👩‍👧‍👦 가족
-        </button>
-        <button onClick={() => navigate('/chores')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-          🧹 집안일
-        </button>
-        <button onClick={() => navigate('/shop')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-          🛒 보상 상점
-        </button>
-        <button onClick={() => navigate('/math')} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-          📐 수학
-        </button>
+        {[
+          ['/words', '📒 단어장'],
+          ['/math', '📐 수학'],
+          ['/chat', '💬 AI 회화'],
+          ['/family', '👨‍👩‍👧‍👦 가족'],
+          ['/chores', '🧹 집안일'],
+          ['/shop', '🛒 보상 상점'],
+          ['/meals', '🍚 식단표'],
+        ].map(([to, label]) => (
+          <button key={to} onClick={() => navigate(to)} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* 하울 전용 TOEFL 트랙 */}

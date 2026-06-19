@@ -15,11 +15,26 @@ import {
   todayYmd,
 } from '../lib/chores'
 import { addChorePoints, removeChorePoints } from '../lib/rewards'
-import { FAMILY } from '../data/family'
+import { FAMILY, colorOf, textOnColor } from '../data/family'
 import { DAY_LABELS, DEFAULT_GOALS, REWARD_TEXT, STREAK_BONUS_TEXT, PARENT_KEYS } from '../data/chores'
+import BottomNav from '../components/BottomNav'
 
 const emojiOf = (key) => FAMILY.find((f) => f.key === key)?.emoji || '·'
 const nameOf = (key) => FAMILY.find((f) => f.key === key)?.name || '미지정'
+
+// 색상 아바타 (구성원 구분용)
+function Avatar({ k, size = 28, dim = false }) {
+  if (!k) return <span className="text-slate-600">·</span>
+  return (
+    <span
+      className="inline-flex items-center justify-center rounded-full font-bold"
+      style={{ width: size, height: size, background: colorOf(k), color: textOnColor(k), opacity: dim ? 0.45 : 1, fontSize: size * 0.5 }}
+      title={nameOf(k)}
+    >
+      {emojiOf(k)}
+    </span>
+  )
+}
 const CYCLE = [...FAMILY.map((f) => f.key), null] // 수동 지정 시 순환 + 미지정
 
 export default function Chores() {
@@ -154,7 +169,7 @@ export default function Chores() {
   }
 
   return (
-    <div className="min-h-screen max-w-md mx-auto p-5 pb-24">
+    <div className="min-h-screen max-w-md mx-auto p-5 pb-28">
       <header className="flex items-center gap-3 mb-4">
         <button onClick={() => navigate('/')} className="text-slate-400 text-sm">← 대시보드</button>
         <h1 className="text-xl font-bold">🧹 집안일</h1>
@@ -193,12 +208,11 @@ export default function Chores() {
           <button
             key={f.key}
             onClick={() => setSelectedKey(selectedKey === f.key ? null : f.key)}
-            className={`flex-1 rounded-xl py-2 text-center border ${
-              selectedKey === f.key ? 'bg-indigo-600 border-indigo-400' : 'bg-slate-800 border-slate-700'
-            }`}
+            className={`flex-1 rounded-xl py-2 text-center border-2`}
+            style={{ borderColor: selectedKey === f.key ? f.color : 'transparent', background: '#1e293b' }}
           >
-            <div className="text-lg">{f.emoji}</div>
-            <div className="text-[11px] text-slate-300">{f.name}</div>
+            <div className="mx-auto"><Avatar k={f.key} size={30} /></div>
+            <div className="text-[11px] font-bold mt-1" style={{ color: f.color }}>{f.name}</div>
           </button>
         ))}
       </div>
@@ -243,20 +257,17 @@ export default function Chores() {
                       const c = cs[0]
                       return (
                         <td key={di} className="text-center p-0.5">
-                          <button
-                            onClick={() => edit && cycleAssign(c)}
-                            className={`w-7 h-7 rounded-lg ${edit ? 'bg-slate-700' : ''} ${c.done ? 'opacity-40' : ''}`}
-                          >
-                            {emojiOf(c.assignee_key)}
+                          <button onClick={() => edit && cycleAssign(c)} className={edit ? 'ring-2 ring-white/40 rounded-full' : ''}>
+                            <Avatar k={c.assignee_key} size={26} dim={c.done} />
                           </button>
                         </td>
                       )
                     }
                     return (
                       <td key={di} className="text-center p-0.5">
-                        <div className="flex flex-wrap justify-center gap-0.5 text-[10px] leading-none">
+                        <div className="flex flex-wrap justify-center gap-0.5">
                           {cs.map((c) => (
-                            <span key={c.id} className={c.done ? 'opacity-40' : ''}>{emojiOf(c.assignee_key)}</span>
+                            <Avatar key={c.id} k={c.assignee_key} size={16} dim={c.done} />
                           ))}
                         </div>
                       </td>
@@ -271,7 +282,7 @@ export default function Chores() {
 
       {/* 오늘 내 할 일 */}
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-bold">오늘 내 할 일 {emojiOf(myKey)}</h2>
+        <h2 className="text-lg font-bold flex items-center gap-2">오늘 내 할 일 <Avatar k={myKey} size={24} /></h2>
         <span className="text-sm text-violet-300">{myDonePts} / {myGoal}P</span>
       </div>
       <div className="bg-slate-800/60 rounded-2xl p-3 mb-2">
@@ -317,7 +328,7 @@ export default function Chores() {
           return (
             <div key={f.key}>
               <div className="flex justify-between text-xs mb-1">
-                <span>{f.emoji} {f.name}</span>
+                <span className="flex items-center gap-1.5"><Avatar k={f.key} size={18} /><span className="font-bold" style={{ color: f.color }}>{f.name}</span></span>
                 <span className="text-slate-400">{p.doneCount}/{p.totalCount}개 · {pct}%</span>
               </div>
               <div className="h-1.5 bg-slate-900 rounded-full overflow-hidden">
@@ -338,8 +349,8 @@ export default function Chores() {
             <ul className="space-y-2">
               {incomplete.map((c) => (
                 <li key={c.id} className="flex items-center justify-between gap-2 text-sm">
-                  <span>
-                    {emojiOf(c.assignee_key)} {nameOf(c.assignee_key)} · {c.title}
+                  <span className="flex items-center gap-1.5">
+                    <Avatar k={c.assignee_key} size={18} /> {nameOf(c.assignee_key)} · {c.title}
                     <span className="text-slate-500 text-xs"> ({c.due_date.slice(5)})</span>
                   </span>
                   <button onClick={() => nudge(c)} className="text-xs bg-rose-600 px-2.5 py-1 rounded-full shrink-0">
@@ -351,6 +362,8 @@ export default function Chores() {
           )}
         </div>
       )}
+
+      <BottomNav />
     </div>
   )
 }
@@ -360,7 +373,7 @@ function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onR
   return (
     <div className="bg-slate-800/60 border border-indigo-500/40 rounded-2xl p-4 mb-6">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-bold">{emojiOf(memberKey)} {nameOf(memberKey)}의 집안일</h2>
+        <h2 className="font-bold flex items-center gap-2"><Avatar k={memberKey} size={22} /> {nameOf(memberKey)}의 집안일</h2>
         <button onClick={onClose} className="text-slate-400 text-sm">닫기 ✕</button>
       </div>
 
@@ -390,9 +403,9 @@ function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onR
                   <button
                     key={f.key}
                     onClick={() => onReassign(c.id, f.key)}
-                    className={`w-7 h-7 rounded-lg text-sm ${f.key === c.assignee_key ? 'bg-indigo-600' : 'bg-slate-800'}`}
+                    className={`rounded-full ${f.key === c.assignee_key ? 'ring-2 ring-white' : 'opacity-60'}`}
                   >
-                    {f.emoji}
+                    <Avatar k={f.key} size={26} />
                   </button>
                 ))}
               </div>

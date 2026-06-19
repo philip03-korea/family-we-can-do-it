@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 // 하단 고정 네비게이션 (모바일 앱 느낌 — 아래 공간 활용)
 const ITEMS = [
   { to: '/', icon: '🏠', label: '홈' },
-  { to: '/study', icon: '📚', label: '학습' },
-  { to: '/quiz', icon: '🧠', label: '퀴즈' },
+  { to: '/chores', icon: '🧹', label: '집안일' },
+  { to: '/meals', icon: '🍚', label: '식단표' },
   { to: '/family', icon: '👨‍👩‍👧‍👦', label: '가족' },
   { to: '/shop', icon: '🛒', label: '상점' },
 ]

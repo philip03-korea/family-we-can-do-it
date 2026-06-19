@@ -12,6 +12,7 @@ import Chores from './pages/Chores'
 import Shop from './pages/Shop'
 import MathPractice from './pages/Math'
 import Quiz from './pages/Quiz'
+import Meals from './pages/Meals'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -116,6 +117,14 @@ export default function App() {
         element={
           <Protected>
             <Quiz />
+          </Protected>
+        }
+      />
+      <Route
+        path="/meals"
+        element={
+          <Protected>
+            <Meals />
           </Protected>
         }
       />
