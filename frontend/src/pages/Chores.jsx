@@ -172,6 +172,7 @@ export default function Chores() {
   }
 
   async function nudge(c) {
+    if (!user?.id) { setMsg('⚠️ 로그인이 필요해요.'); return }
     try {
       await sendFamilyMessage({
         userId: user.id,
@@ -179,9 +180,14 @@ export default function Chores() {
         memberKey: myKey,
         text: `🧹 @${nameOf(c.assignee_key)} "${c.title}" 아직 안 했어요! 부탁해요 🙏`,
       })
-      setMsg('가족 채팅으로 알림을 보냈어요.')
+      setUndo({ label: `✅ ${nameOf(c.assignee_key)}에게 콕 찔렀어요!`, action: null })
     } catch (e) {
-      setMsg(e.message)
+      const em = e?.message || ''
+      if (/row-level security|policy|permission|RLS/i.test(em)) {
+        setMsg('⚠️ 메시지 권한 오류 — Supabase RLS 정책을 확인해 주세요.')
+      } else {
+        setMsg('⚠️ 콕 찌르기 실패: ' + em)
+      }
     }
   }
 
@@ -461,12 +467,14 @@ export default function Chores() {
       {undo && (
         <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-700 border border-slate-500 rounded-2xl px-5 py-3 flex items-center gap-3 shadow-xl animate-pulse-once max-w-sm">
           <span className="text-sm flex-1">{undo.label}</span>
-          <button
-            onClick={async () => { try { await undo.action() } catch {} setUndo(null) }}
-            className="text-sm font-bold text-amber-300 bg-slate-600 px-3 py-1.5 rounded-lg"
-          >
-            ↩ 되돌리기
-          </button>
+          {undo.action && (
+            <button
+              onClick={async () => { try { await undo.action() } catch {} setUndo(null) }}
+              className="text-sm font-bold text-amber-300 bg-slate-600 px-3 py-1.5 rounded-lg"
+            >
+              ↩ 되돌리기
+            </button>
+          )}
           <button onClick={() => setUndo(null)} className="text-slate-400 text-xs">✕</button>
         </div>
       )}
