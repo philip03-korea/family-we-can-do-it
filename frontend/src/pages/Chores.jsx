@@ -7,6 +7,7 @@ import {
   getGoals,
   generateRotation,
   assignChore,
+  createChore,
   deleteChore,
   setChoreDone,
   computeProgress,
@@ -50,6 +51,7 @@ export default function Chores() {
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
   const [selectedKey, setSelectedKey] = useState(null) // 이름 클릭 → 그 사람 집안일 편집
+  const [picker, setPicker] = useState(null) // { title, dayIdx, dueDate, category, points }
 
   const dayIndexOf = (dueDate) => Math.round((new Date(dueDate) - new Date(week)) / 86400000)
 
@@ -252,12 +254,31 @@ export default function Chores() {
                   <td className="p-1.5 text-[11px] text-slate-300">{row.title}</td>
                   {DAY_LABELS.map((_, di) => {
                     const cs = row.days[di]
-                    if (!cs || cs.length === 0) return <td key={di} className="text-center p-0.5"><span className="text-slate-700">·</span></td>
+                    const openPicker = () => {
+                      if (!edit) return
+                      const sample = cs?.[0] || {}
+                      setPicker({
+                        title: row.title,
+                        dayIdx: di,
+                        dueDate: addDays(week, di),
+                        category: sample.category || '기타',
+                        points: sample.points || 10,
+                      })
+                    }
+                    if (!cs || cs.length === 0) {
+                      return (
+                        <td key={di} className="text-center p-0.5">
+                          <button onClick={openPicker} className={edit ? 'w-7 h-7 rounded-full border-2 border-dashed border-slate-600 text-slate-600 text-xs hover:border-white' : ''}>
+                            {edit ? '+' : '·'}
+                          </button>
+                        </td>
+                      )
+                    }
                     if (cs.length === 1) {
                       const c = cs[0]
                       return (
                         <td key={di} className="text-center p-0.5">
-                          <button onClick={() => edit && cycleAssign(c)} className={edit ? 'ring-2 ring-white/40 rounded-full' : ''}>
+                          <button onClick={openPicker} className={edit ? 'ring-2 ring-white/40 rounded-full' : ''}>
                             <Avatar k={c.assignee_key} size={26} dim={c.done} />
                           </button>
                         </td>
@@ -265,11 +286,13 @@ export default function Chores() {
                     }
                     return (
                       <td key={di} className="text-center p-0.5">
-                        <div className="flex flex-wrap justify-center gap-0.5">
-                          {cs.map((c) => (
-                            <Avatar key={c.id} k={c.assignee_key} size={16} dim={c.done} />
-                          ))}
-                        </div>
+                        <button onClick={openPicker} className={edit ? 'ring-2 ring-white/40 rounded-lg p-0.5' : ''}>
+                          <div className="flex flex-wrap justify-center gap-0.5">
+                            {cs.map((c) => (
+                              <Avatar key={c.id} k={c.assignee_key} size={16} dim={c.done} />
+                            ))}
+                          </div>
+                        </button>
                       </td>
                     )
                   })}
@@ -360,6 +383,58 @@ export default function Chores() {
               ))}
             </ul>
           )}
+        </div>
+      )}
+
+      {/* 다중 배정 팝업 */}
+      {picker && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center" onClick={() => setPicker(null)}>
+          <div className="bg-slate-800 rounded-t-2xl p-5 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold">{picker.title} · {DAY_LABELS[picker.dayIdx]}요일</h3>
+              <button onClick={() => setPicker(null)} className="text-slate-400">✕</button>
+            </div>
+            <p className="text-xs text-slate-400 mb-3">담당할 사람을 탭하세요 (여러 명 가능)</p>
+            <div className="flex gap-3 justify-center mb-4">
+              {FAMILY.map((f) => {
+                const existing = chores.find(
+                  (c) => c.title === picker.title && c.due_date === picker.dueDate && c.assignee_key === f.key
+                )
+                const isOn = !!existing
+                return (
+                  <button
+                    key={f.key}
+                    onClick={async () => {
+                      try {
+                        if (isOn) {
+                          await deleteChore(existing.id)
+                          setChores((cs) => cs.filter((c) => c.id !== existing.id))
+                        } else {
+                          const newC = await createChore({
+                            weekStart: week,
+                            dueDate: picker.dueDate,
+                            title: picker.title,
+                            category: picker.category,
+                            points: picker.points,
+                            assigneeKey: f.key,
+                          })
+                          if (newC) setChores((cs) => [...cs, newC])
+                        }
+                      } catch (e) { setMsg('⚠️ ' + friendlyError(e)) }
+                    }}
+                    className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition ${
+                      isOn ? 'border-emerald-400 bg-emerald-600/20' : 'border-slate-600 bg-slate-700/50'
+                    }`}
+                  >
+                    <Avatar k={f.key} size={36} />
+                    <span className="text-[11px] font-bold" style={{ color: f.color }}>{f.name}</span>
+                    <span className="text-[10px]">{isOn ? '✓ 배정됨' : '탭하여 추가'}</span>
+                  </button>
+                )
+              })}
+            </div>
+            <button onClick={() => setPicker(null)} className="w-full py-2.5 rounded-xl bg-indigo-600 font-bold text-sm">완료</button>
+          </div>
         </div>
       )}
 
