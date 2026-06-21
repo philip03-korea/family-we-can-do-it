@@ -50,8 +50,16 @@ export default function Chores() {
   const [edit, setEdit] = useState(false)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
-  const [selectedKey, setSelectedKey] = useState(null) // 이름 클릭 → 그 사람 집안일 편집
-  const [picker, setPicker] = useState(null) // { title, dayIdx, dueDate, category, points }
+  const [selectedKey, setSelectedKey] = useState(null)
+  const [picker, setPicker] = useState(null)
+  const [undo, setUndo] = useState(null) // { label, action }
+
+  // 되돌리기 자동 사라짐 (5초)
+  useEffect(() => {
+    if (!undo) return
+    const t = setTimeout(() => setUndo(null), 5000)
+    return () => clearTimeout(t)
+  }, [undo])
 
   const dayIndexOf = (dueDate) => Math.round((new Date(dueDate) - new Date(week)) / 86400000)
 
@@ -145,12 +153,19 @@ export default function Chores() {
     const next = !chore.done
     try {
       await setChoreDone(chore.id, next)
-      // 포인트 지갑 적립/취소
       if (next) await addChorePoints(chore)
       else await removeChorePoints(chore.id)
       setChores((cs) =>
         cs.map((c) => (c.id === chore.id ? { ...c, done: next, completed_at: next ? new Date().toISOString() : null } : c)),
       )
+      setUndo({ label: next ? `"${chore.title}" 완료 처리됨` : `"${chore.title}" 미완료로 변경`, action: async () => {
+        await setChoreDone(chore.id, !next)
+        if (!next) await addChorePoints(chore)
+        else await removeChorePoints(chore.id)
+        setChores((cs) =>
+          cs.map((c) => (c.id === chore.id ? { ...c, done: !next, completed_at: !next ? new Date().toISOString() : null } : c)),
+        )
+      }})
     } catch (e) {
       setMsg('⚠️ ' + friendlyError(e))
     }
@@ -409,16 +424,20 @@ export default function Chores() {
                         if (isOn) {
                           await deleteChore(existing.id)
                           setChores((cs) => cs.filter((c) => c.id !== existing.id))
+                          const undoData = { ...existing }
+                          setUndo({ label: `${nameOf(f.key)} 제거됨`, action: async () => {
+                            const restored = await createChore({ weekStart: week, dueDate: picker.dueDate, title: picker.title, category: picker.category, points: picker.points, assigneeKey: f.key })
+                            if (restored) setChores((cs) => [...cs, restored])
+                          }})
                         } else {
-                          const newC = await createChore({
-                            weekStart: week,
-                            dueDate: picker.dueDate,
-                            title: picker.title,
-                            category: picker.category,
-                            points: picker.points,
-                            assigneeKey: f.key,
-                          })
-                          if (newC) setChores((cs) => [...cs, newC])
+                          const newC = await createChore({ weekStart: week, dueDate: picker.dueDate, title: picker.title, category: picker.category, points: picker.points, assigneeKey: f.key })
+                          if (newC) {
+                            setChores((cs) => [...cs, newC])
+                            setUndo({ label: `${nameOf(f.key)} 배정됨`, action: async () => {
+                              await deleteChore(newC.id)
+                              setChores((cs) => cs.filter((c) => c.id !== newC.id))
+                            }})
+                          }
                         }
                       } catch (e) { setMsg('⚠️ ' + friendlyError(e)) }
                     }}
@@ -435,6 +454,20 @@ export default function Chores() {
             </div>
             <button onClick={() => setPicker(null)} className="w-full py-2.5 rounded-xl bg-indigo-600 font-bold text-sm">완료</button>
           </div>
+        </div>
+      )}
+
+      {/* 되돌리기 바 */}
+      {undo && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-700 border border-slate-500 rounded-2xl px-5 py-3 flex items-center gap-3 shadow-xl animate-pulse-once max-w-sm">
+          <span className="text-sm flex-1">{undo.label}</span>
+          <button
+            onClick={async () => { try { await undo.action() } catch {} setUndo(null) }}
+            className="text-sm font-bold text-amber-300 bg-slate-600 px-3 py-1.5 rounded-lg"
+          >
+            ↩ 되돌리기
+          </button>
+          <button onClick={() => setUndo(null)} className="text-slate-400 text-xs">✕</button>
         </div>
       )}
 

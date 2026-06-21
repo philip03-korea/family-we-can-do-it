@@ -32,18 +32,32 @@ export default function Meals() {
   const [msg, setMsg] = useState('')
   const [editDay, setEditDay] = useState(null)
   const [ef, setEf] = useState({ breakfast: '', lunch: '', dinner: '', note: '' })
-  const [planner, setPlanner] = useState(false) // 식단짜기 모드
-  const [planCat, setPlanCat] = useState(null) // 선택된 카테고리
-  const [preview, setPreview] = useState(null) // 미리보기 식단
+  const [planner, setPlanner] = useState(false)
+  const [planCat, setPlanCat] = useState(null)
+  const [preview, setPreview] = useState(null)
+  const [undo, setUndo] = useState(null) // { label, action }
+
+  // 되돌리기 자동 사라짐 (5초)
+  useEffect(() => {
+    if (!undo) return
+    const t = setTimeout(() => setUndo(null), 5000)
+    return () => clearTimeout(t)
+  }, [undo])
 
   function openEdit(d) {
     setEditDay(d.day)
     setEf({ breakfast: d.breakfast || '', lunch: d.lunch || '', dinner: d.dinner || '', note: d.note || '' })
   }
   async function saveEdit() {
+    const prev = meals.find((m) => m.day === editDay)
+    const prevData = prev ? { breakfast: prev.breakfast || '', lunch: prev.lunch || '', dinner: prev.dinner || '', note: prev.note || '' } : {}
     try {
       await saveMeal(editDay, ef)
       setMeals((ms) => ms.map((m) => (m.day === editDay ? { ...m, ...ef } : m)))
+      setUndo({ label: `${Number(editDay.slice(8))}일 식단 수정됨`, action: async () => {
+        await saveMeal(editDay, prevData)
+        setMeals((ms) => ms.map((m) => (m.day === editDay ? { ...m, ...prevData } : m)))
+      }})
       setEditDay(null)
     } catch (e) {
       setMsg(friendly(e))
@@ -166,11 +180,19 @@ export default function Meals() {
               <div className="flex gap-2">
                 <button
                   onClick={async () => {
+                    const prevMeals = [...meals]
                     try {
                       await bulkSaveMeals(preview)
                       setMeals(preview)
                       setPlanner(false); setPreview(null); setPlanCat(null)
                       setMsg('✅ 식단이 저장됐어요! 개별 수정은 ✏️ 수정 버튼으로.')
+                      setUndo({ label: '식단 전체 변경됨', action: async () => {
+                        if (prevMeals.length > 0) {
+                          await bulkSaveMeals(prevMeals)
+                          setMeals(prevMeals)
+                        }
+                        setMsg('↩ 이전 식단으로 되돌렸어요.')
+                      }})
                     } catch (e) { setMsg(friendly(e)) }
                   }}
                   className="flex-1 py-2.5 rounded-xl bg-emerald-600 text-sm font-bold"
@@ -308,6 +330,20 @@ export default function Meals() {
         ))}
         {wishes.length === 0 && <li className="text-slate-500 text-sm text-center py-4">아직 추천이 없어요. 먼저 올려보세요!</li>}
       </ul>
+
+      {/* 되돌리기 바 */}
+      {undo && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-700 border border-slate-500 rounded-2xl px-5 py-3 flex items-center gap-3 shadow-xl max-w-sm">
+          <span className="text-sm flex-1">{undo.label}</span>
+          <button
+            onClick={async () => { try { await undo.action() } catch {} setUndo(null) }}
+            className="text-sm font-bold text-amber-300 bg-slate-600 px-3 py-1.5 rounded-lg"
+          >
+            ↩ 되돌리기
+          </button>
+          <button onClick={() => setUndo(null)} className="text-slate-400 text-xs">✕</button>
+        </div>
+      )}
 
       <BottomNav />
     </div>
