@@ -129,6 +129,39 @@ export function durText(n) {
   return h ? `${h}시간` : `${m}분`
 }
 
+// 체크 대상이 아닌 타입 — 빈칸/미정/잠/잠준비는 "할 일"에서 제외
+// (잠 때문에 하루가 안 넘어가는 모순을 막기 위함. 필요하면 여기서 조정)
+export const NON_TASK_TYPES = new Set(['_', 'D', 'Z', 'P'])
+
+// 오늘 요일 컬럼 인덱스 (월=0 … 일=6)
+export function todayColIndex(d = new Date()) {
+  return (d.getDay() + 6) % 7
+}
+
+// 오늘 한 요일(col)의 "할 일" 목록 — 연속 같은 활동은 한 블록으로 묶음
+export function computeDayTasks(data, cust, col) {
+  const tasks = []
+  let r = 0
+  while (r < data.length) {
+    const code = data[r][col + 1]
+    let e = r
+    while (e + 1 < data.length && data[e + 1][col + 1] === code) e++
+    if (!NON_TASK_TYPES.has(code)) {
+      const disp = cellDisp(data, cust, r, col)
+      tasks.push({
+        slot: data[r][0], // 시작 시각을 키로 사용 (한 요일 안에서 유일)
+        startTime: data[r][0],
+        endTime: nextTime(data, e),
+        icon: disp.icon,
+        label: disp.text || TYPES[code]?.lb || '',
+        code,
+      })
+    }
+    r = e + 1
+  }
+  return tasks
+}
+
 // 한 칸의 표시 정보(아이콘/텍스트/색) — CUST 우선
 export function cellDisp(data, cust, r, c) {
   const code = data[r][c + 1]

@@ -4,6 +4,15 @@ import { useAuth } from '../context/AuthContext'
 import BottomNav from '../components/BottomNav'
 import { FAMILY } from '../data/family'
 import { loadSchedule, saveSchedule, defaultDoc } from '../lib/schedule'
+import { getPushEnabled, enablePush } from '../lib/push'
+import {
+  SCHED_MEMBER,
+  todayISO,
+  getDayProgress,
+  setTaskStatus,
+  clearTask,
+  awardDayComplete,
+} from '../lib/scheduleProgress'
 import {
   TYPES,
   TYPE_KEYS,
@@ -18,9 +27,23 @@ import {
   nextTime,
   durText,
   cellDisp,
+  computeDayTasks,
+  todayColIndex,
 } from '../data/schedule'
 
 const nameOf = (k) => FAMILY.find((f) => f.key === k)?.name || k
+
+// 하루 완료 보너스 포인트
+const POINTS_ALL_DONE = 20
+const POINTS_PARTIAL = 10
+
+// 항목 시작 시각("16:00")을 오늘의 Date 로
+function slotDateToday(slot) {
+  const [h, m] = slot.split(':').map(Number)
+  const d = new Date()
+  d.setHours(h, m, 0, 0)
+  return d
+}
 
 function timeAgo(iso) {
   if (!iso) return ''
@@ -53,8 +76,18 @@ export default function Schedule() {
   const [loadErr, setLoadErr] = useState('')
   const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
 
+  // 오늘의 할 일 / 완료·미루기
+  const day = todayISO()
+  const todayCol = todayColIndex()
+  const [progress, setProgress] = useState({}) // { slot: 'done' | 'postponed' }
+  const [celebrate, setCelebrate] = useState(false)
+  const [notifOn, setNotifOn] = useState(false)
+  const [notifMsg, setNotifMsg] = useState('')
+
   const hydrated = useRef(false)
   const saveTimer = useRef(null)
+  const reminderTimers = useRef([])
+  const firedSlots = useRef(new Set())
 
   // ── 불러오기 ──────────────────────────────────────
   async function refresh() {
@@ -67,6 +100,7 @@ export default function Schedule() {
       setUpdatedBy(d.updatedBy || null)
       setUpdatedAt(d.updatedAt || null)
       setLoadErr('')
+      getDayProgress(day).then(setProgress).catch(() => {})
       // 문서가 아직 없으면(처음) 기본 시간표를 한 번 저장해 가족과 공유
       if (!doc) {
         hydrated.current = true
@@ -253,6 +287,111 @@ export default function Schedule() {
     setData([...cloneData(data), [nt, '_', '_', '_', '_', '_', '_', '_']])
   }
 
+  // ── 오늘의 할 일 ──────────────────────────────────
+  const tasks = useMemo(() => computeDayTasks(data, cust, todayCol), [data, cust, todayCol])
+  const doneCount = tasks.filter((t) => progress[t.slot] === 'done').length
+  const resolvedCount = tasks.filter((t) => progress[t.slot]).length
+  const allResolved = tasks.length > 0 && resolvedCount === tasks.length
+  const allDone = tasks.length > 0 && doneCount === tasks.length
+
+  async function markTask(slot, status) {
+    const prev = progress[slot]
+    setProgress((p) => ({ ...p, [slot]: status }))
+    try {
+      await setTaskStatus(day, slot, status)
+    } catch (e) {
+      setProgress((p) => ({ ...p, [slot]: prev })) // 실패 시 롤백
+      setNotifMsg(friendly(e))
+    }
+  }
+  async function undoTask(slot) {
+    const prev = progress[slot]
+    setProgress((p) => {
+      const n = { ...p }
+      delete n[slot]
+      return n
+    })
+    try {
+      await clearTask(day, slot)
+    } catch (e) {
+      setProgress((p) => ({ ...p, [slot]: prev }))
+      setNotifMsg(friendly(e))
+    }
+  }
+  async function finishDay() {
+    if (!allResolved) return
+    try {
+      await awardDayComplete(day, allDone ? POINTS_ALL_DONE : POINTS_PARTIAL)
+    } catch {
+      /* 포인트 적립 실패는 치명적이지 않음 */
+    }
+    setCelebrate(true)
+    try {
+      navigator.vibrate?.([120, 60, 120, 60, 240])
+    } catch {
+      /* 진동 미지원 무시 */
+    }
+  }
+
+  // ── 시간대별 알림 (앱이 열려 있을 때 로컬 알림 + 진동) ──
+  useEffect(() => {
+    reminderTimers.current.forEach(clearTimeout)
+    reminderTimers.current = []
+    if (loading) return
+    const now = Date.now()
+    for (const t of tasks) {
+      if (progress[t.slot]) continue // 이미 완료/미루기면 알림 안 함
+      const at = slotDateToday(t.slot).getTime()
+      const diff = at - now
+      if (diff <= 0 || diff > 24 * 3600 * 1000) continue
+      const id = setTimeout(() => {
+        if (firedSlots.current.has(t.slot)) return
+        firedSlots.current.add(t.slot)
+        try {
+          navigator.vibrate?.([200, 100, 200])
+        } catch {
+          /* noop */
+        }
+        if ('Notification' in window && Notification.permission === 'granted') {
+          try {
+            new Notification(`⏰ ${t.startTime} ${t.icon || ''} ${t.label || '일정'}`.trim(), {
+              body: `${t.label || '일정'} 할 시간이에요! 끝나면 완료 체크 ✅`,
+              icon: '/icon-192.png',
+              tag: `sched-${t.slot}`,
+            })
+          } catch {
+            /* noop */
+          }
+        }
+      }, diff)
+      reminderTimers.current.push(id)
+    }
+    return () => {
+      reminderTimers.current.forEach(clearTimeout)
+      reminderTimers.current = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasks, progress, loading])
+
+  // 푸시(알림) 켜짐 여부 확인
+  useEffect(() => {
+    getPushEnabled().then(setNotifOn).catch(() => {})
+  }, [])
+
+  async function toggleNotif() {
+    try {
+      if (!notifOn) {
+        await enablePush({ userId: profile?.id, memberKey: myKey })
+        setNotifOn(true)
+        setNotifMsg('🔔 알림을 켰어요. 시간대별로 잊지 않게 알려드릴게요!')
+      } else {
+        setNotifMsg('알림은 대시보드 ⚙️ 설정에서 끌 수 있어요.')
+      }
+    } catch (e) {
+      setNotifMsg(e?.message || '알림을 켜지 못했어요.')
+    }
+  }
+
   // ── 렌더 ──────────────────────────────────────────
   const canEdit = !!myKey
   const blockText = block ? cellDisp(data, cust, block.startRow, block.col).text : ''
@@ -279,6 +418,115 @@ export default function Schedule() {
       </div>
 
       {loadErr && <p className="text-xs text-amber-300 mb-3">⚠️ {loadErr}</p>}
+
+      {/* ── 오늘의 할 일 ── */}
+      {!loading && (
+        <div className="bg-slate-800/70 border border-indigo-500/40 rounded-2xl p-4 mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="font-bold">✅ 오늘의 할 일</h2>
+            <span className="text-xs text-slate-400">
+              {day.slice(5).replace('-', '/')} ({DAYS_KO[todayCol]})
+            </span>
+            <button
+              onClick={toggleNotif}
+              className={`ml-auto text-xs px-2.5 py-1 rounded-full font-bold ${notifOn ? 'bg-emerald-600/80 text-white' : 'bg-slate-700 text-slate-200'}`}
+            >
+              {notifOn ? '🔔 알림 켜짐' : '🔔 알림 켜기'}
+            </button>
+          </div>
+
+          {notifMsg && <p className="text-[11px] text-amber-300 mb-2">{notifMsg}</p>}
+
+          {tasks.length === 0 ? (
+            <p className="text-sm text-slate-400 py-2">오늘은 체크할 일정이 없어요. 푹 쉬어요 😴</p>
+          ) : (
+            <>
+              {/* 진행률 */}
+              <div className="mb-3">
+                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                  <span>완료 {doneCount} · 미룸 {resolvedCount - doneCount} / 총 {tasks.length}</span>
+                  <span>{Math.round((resolvedCount / tasks.length) * 100)}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-slate-700 overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 transition-all"
+                    style={{ width: `${(resolvedCount / tasks.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* 항목 목록 */}
+              <ul className="space-y-1.5">
+                {tasks.map((t) => {
+                  const st = progress[t.slot]
+                  return (
+                    <li
+                      key={t.slot}
+                      className={`flex items-center gap-2 rounded-xl px-3 py-2 border ${
+                        st === 'done'
+                          ? 'bg-emerald-900/30 border-emerald-600/40'
+                          : st === 'postponed'
+                          ? 'bg-slate-700/40 border-slate-600'
+                          : 'bg-slate-900/50 border-slate-700'
+                      }`}
+                    >
+                      <span className="text-base shrink-0">{t.icon || '•'}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className={`text-sm font-bold ${st === 'postponed' ? 'text-slate-400 line-through' : ''}`}>
+                          {t.label || '일정'}
+                        </div>
+                        <div className="text-[11px] text-slate-500">
+                          {t.startTime} ~ {t.endTime}
+                        </div>
+                      </div>
+                      {st ? (
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className={`text-xs font-bold ${st === 'done' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                            {st === 'done' ? '완료 ✅' : '미룸 ⏭'}
+                          </span>
+                          <button onClick={() => undoTask(t.slot)} className="text-[11px] text-slate-400 underline">
+                            취소
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-1.5 shrink-0">
+                          <button
+                            onClick={() => markTask(t.slot, 'done')}
+                            className="text-xs font-bold bg-emerald-600 px-2.5 py-1.5 rounded-lg"
+                          >
+                            완료
+                          </button>
+                          <button
+                            onClick={() => markTask(t.slot, 'postponed')}
+                            className="text-xs font-bold bg-slate-600 px-2.5 py-1.5 rounded-lg"
+                          >
+                            미루기
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+
+              {/* 하루 마감 */}
+              <button
+                onClick={finishDay}
+                disabled={!allResolved}
+                className={`w-full mt-3 py-2.5 rounded-xl font-bold text-sm ${
+                  allResolved ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-500'
+                }`}
+              >
+                {allResolved ? '🌙 하루 마감하기' : `아직 ${tasks.length - resolvedCount}개 남았어요`}
+              </button>
+              <p className="text-[11px] text-slate-500 mt-1.5 text-center">
+                모든 일정을 완료/미루기로 체크해야 하루를 마감할 수 있어요
+                {allDone ? ` · 전부 완료 시 ${POINTS_ALL_DONE}P 🎉` : ''}
+              </p>
+            </>
+          )}
+        </div>
+      )}
 
       {canEdit && (
         <div className="flex flex-wrap gap-2 mb-3">
@@ -497,6 +745,25 @@ export default function Schedule() {
             </div>
           </div>
         </>
+      )}
+
+      {/* 하루 완료 축하 */}
+      {celebrate && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-6" onClick={() => setCelebrate(false)}>
+          <div className="bg-slate-900 border border-indigo-500/50 rounded-3xl p-7 max-w-xs text-center">
+            <div className="text-5xl mb-2">{allDone ? '🎉' : '👏'}</div>
+            <h2 className="text-xl font-bold mb-1">{allDone ? '오늘 일정 전부 완료!' : '오늘 하루 마감 완료!'}</h2>
+            <p className="text-sm text-slate-300 mb-1">
+              {allDone
+                ? `대단해요 하람! 보너스 ${POINTS_ALL_DONE}P 적립 🪙`
+                : `수고했어요! 보너스 ${POINTS_PARTIAL}P 적립 🪙 (다음엔 전부 완료 도전!)`}
+            </p>
+            <p className="text-xs text-slate-500 mb-4">내일도 차근차근 해봐요 💪</p>
+            <button onClick={() => setCelebrate(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 font-bold">
+              좋아요!
+            </button>
+          </div>
+        </div>
       )}
 
       <BottomNav />
