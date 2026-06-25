@@ -216,6 +216,7 @@ export default function Dashboard() {
           ['/chores', '🧹 집안일'],
           ['/shop', '🛒 보상 상점'],
           ['/meals', '🍚 식단표'],
+          ['/schedule', '🗓️ 하람 계획표'],
         ].map(([to, label]) => (
           <button key={to} onClick={() => navigate(to)} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
             {label}
