@@ -11,6 +11,8 @@ import {
   createChore,
   deleteChore,
   setChoreDone,
+  setChoreFixed,
+  addFixedChore,
   computeProgress,
   weekStartMonday,
   addDays,
@@ -156,6 +158,31 @@ export default function Chores() {
     }
   }
 
+  // 고정/해제 — fixed=true면 자동 로테이션에서 제외(담당 고정)
+  async function toggleFixed(chore, untilDate) {
+    const next = !chore.fixed
+    try {
+      await setChoreFixed(chore.id, next, next ? (untilDate || chore.due_date) : null)
+      setChores((cs) =>
+        cs.map((c) => (c.id === chore.id ? { ...c, fixed: next, fixed_until: next ? (untilDate || chore.due_date) : null } : c)),
+      )
+      setMsg(next ? `📌 "${chore.title}" 고정됨 — 자동 로테이션에서 제외돼요.` : `고정 해제됨`)
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyError(e))
+    }
+  }
+
+  // 고정 집안일 추가 — 오늘~untilDate 매일 같은 담당으로 생성
+  async function addFixed({ assigneeKey, title, points, untilDate }) {
+    try {
+      const n = await addFixedChore({ assigneeKey, title, points, startDate: today, untilDate })
+      await refresh()
+      setMsg(`📌 "${title}" 고정 ${n}일치 추가됨 (${today} ~ ${untilDate}).`)
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyError(e))
+    }
+  }
+
   async function toggle(chore) {
     const next = !chore.done
     try {
@@ -278,9 +305,12 @@ export default function Chores() {
           memberKey={selectedKey}
           chores={chores.filter((c) => c.assignee_key === selectedKey).sort((a, b) => a.due_date.localeCompare(b.due_date))}
           dayIndexOf={dayIndexOf}
+          today={today}
           onReassign={reassign}
           onToggle={toggle}
           onRemove={removeChore}
+          onToggleFixed={toggleFixed}
+          onAddFixed={addFixed}
           onClose={() => setSelectedKey(null)}
         />
       )}
@@ -331,8 +361,9 @@ export default function Chores() {
                       const c = cs[0]
                       return (
                         <td key={di} className="text-center p-0.5">
-                          <button onClick={openPicker} className={edit ? 'ring-2 ring-white/40 rounded-full' : ''}>
+                          <button onClick={openPicker} className={`relative inline-block ${edit ? 'ring-2 ring-white/40 rounded-full' : ''}`}>
                             <Avatar k={c.assignee_key} size={26} dim={c.done} />
+                            {c.fixed && <span className="absolute -top-1.5 -right-1.5 text-[10px]" title="고정">📌</span>}
                           </button>
                         </td>
                       )
@@ -545,8 +576,18 @@ export default function Chores() {
   )
 }
 
-// 이름 클릭 시: 그 사람의 집안일 목록 + 담당 변경/완료/삭제
-function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onRemove, onClose }) {
+// 이름 클릭 시: 그 사람의 집안일 목록 + 담당 변경/완료/삭제/고정
+function MemberChores({ memberKey, chores, dayIndexOf, today, onReassign, onToggle, onRemove, onToggleFixed, onAddFixed, onClose }) {
+  // 고정 토글용 만료일(각 집안일마다) — 기본 7일 뒤
+  const [fixUntil, setFixUntil] = useState({})
+  // 고정 추가 폼
+  const [showAdd, setShowAdd] = useState(false)
+  const [newTitle, setNewTitle] = useState('')
+  const [newPoints, setNewPoints] = useState(10)
+  const [newUntil, setNewUntil] = useState(addDays(today, 6))
+
+  const untilFor = (c) => fixUntil[c.id] || (c.fixed_until && c.fixed_until >= c.due_date ? c.fixed_until : addDays(c.due_date, 6))
+
   return (
     <div className="bg-slate-800/60 border border-indigo-500/40 rounded-2xl p-4 mb-6">
       <div className="flex items-center justify-between mb-3">
@@ -555,11 +596,11 @@ function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onR
       </div>
 
       {chores.length === 0 ? (
-        <p className="text-slate-400 text-sm text-center py-3">맡은 집안일이 없어요. 아래 표/자동 로테이션으로 배정해요.</p>
+        <p className="text-slate-400 text-sm text-center py-3">맡은 집안일이 없어요. 아래 표/자동 로테이션·고정 추가로 배정해요.</p>
       ) : (
         <ul className="space-y-2">
           {chores.map((c) => (
-            <li key={c.id} className="bg-slate-900 rounded-xl p-3">
+            <li key={c.id} className={`rounded-xl p-3 ${c.fixed ? 'bg-violet-900/40 border border-violet-500/40' : 'bg-slate-900'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <button
                   onClick={() => onToggle(c)}
@@ -568,11 +609,35 @@ function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onR
                   {c.done && <span className="text-emerald-950 text-sm">✓</span>}
                 </button>
                 <span className={`flex-1 text-sm ${c.done ? 'line-through text-slate-500' : ''}`}>
+                  {c.fixed && <span className="text-violet-300 mr-1">📌</span>}
                   {DAY_LABELS[dayIndexOf(c.due_date)] || ''}요일 · {c.title}
                 </span>
                 <span className="text-xs text-slate-400">+{c.points}P</span>
                 <button onClick={() => onRemove(c.id)} className="text-slate-500 text-sm ml-1" aria-label="삭제">🗑</button>
               </div>
+
+              {/* 고정 토글 + 만료일 */}
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                {c.fixed ? (
+                  <>
+                    <span className="text-[11px] text-violet-300">📌 고정됨 · {c.fixed_until || '무기한'}까지</span>
+                    <button onClick={() => onToggleFixed(c)} className="text-[11px] bg-slate-700 px-2 py-1 rounded-lg text-slate-300">고정 해제</button>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-[11px] text-slate-500">📌 고정(로테이션 제외):</span>
+                    <input
+                      type="date"
+                      value={untilFor(c)}
+                      min={c.due_date}
+                      onChange={(e) => setFixUntil((m) => ({ ...m, [c.id]: e.target.value }))}
+                      className="bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-[11px]"
+                    />
+                    <button onClick={() => onToggleFixed(c, untilFor(c))} className="text-[11px] bg-violet-600 px-2 py-1 rounded-lg font-bold">까지 고정</button>
+                  </>
+                )}
+              </div>
+
               {/* 담당 바꾸기 */}
               <div className="flex items-center gap-1.5">
                 <span className="text-[11px] text-slate-500 mr-1">담당 변경:</span>
@@ -590,6 +655,43 @@ function MemberChores({ memberKey, chores, dayIndexOf, onReassign, onToggle, onR
           ))}
         </ul>
       )}
+
+      {/* 고정 집안일 추가 */}
+      <div className="mt-3 pt-3 border-t border-slate-700">
+        {!showAdd ? (
+          <button onClick={() => setShowAdd(true)} className="w-full py-2 rounded-xl bg-violet-600/80 text-sm font-bold">📌 고정 집안일 추가</button>
+        ) : (
+          <div className="bg-slate-900 rounded-xl p-3 space-y-2">
+            <p className="text-xs text-violet-300 font-bold">📌 {nameOf(memberKey)}에게 고정 배정 (오늘 ~ 만료일 매일)</p>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="집안일 이름 (예: 강아지 산책)"
+              className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm"
+            />
+            <div className="flex items-center gap-2">
+              <label className="text-[11px] text-slate-400">포인트</label>
+              <input type="number" value={newPoints} min={1} onChange={(e) => setNewPoints(+e.target.value)} className="w-16 bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-sm" />
+              <label className="text-[11px] text-slate-400 ml-1">만료일</label>
+              <input type="date" value={newUntil} min={today} onChange={(e) => setNewUntil(e.target.value)} className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-sm" />
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  if (!newTitle.trim()) return
+                  onAddFixed({ assigneeKey: memberKey, title: newTitle.trim(), points: newPoints, untilDate: newUntil })
+                  setNewTitle(''); setShowAdd(false)
+                }}
+                className="flex-1 py-2 rounded-lg bg-violet-600 text-sm font-bold"
+              >
+                추가
+              </button>
+              <button onClick={() => setShowAdd(false)} className="px-4 py-2 rounded-lg bg-slate-700 text-sm">취소</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

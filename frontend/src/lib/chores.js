@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { ROTATION } from '../data/chores'
+import { FAMILY } from '../data/family'
 
 // ============================================================
 // 집안일 데이터 접근 + 자동 로테이션 로직
@@ -75,39 +76,111 @@ function weekIndex(weekStart) {
 
 /**
  * 자동 로테이션 — 그 주 집안일을 템플릿으로 새로 생성.
- * - rotate: pool 을 (요일순서 + 주차)에 따라 순환해 매주 담당이 바뀜
- * - perMember: members 각자 본인 몫(같은 날 여러 명)
- * - biweekly: 2주에 1번만 생성
- * 기존 그 주 데이터는 지우고 다시 만든다(완료 기록도 초기화).
+ * - 고정(fixed=true)은 보존하고 제외 — 담당이 안 바뀐다.
+ * - 나머지는 포인트 합계 기준으로 **공평하게** 분배(현재 부하 최소인 사람에게 우선).
+ * - perMember: members 각자 본인 몫(같은 날 여러 명) — 고정 부하에 합산.
+ * - biweekly: 2주에 1번만 생성.
+ * 고정 외 기존 데이터는 지우고 다시 만든다(완료 기록도 초기화).
  */
 export async function generateRotation(weekStart) {
-  await supabase.from('chores').delete().eq('week_start', weekStart)
+  // 1) 이번 주 기존 집안일 로드 → 유효 고정만 보존, 나머지 삭제
+  const existing = await listChores(weekStart)
+  const kept = existing.filter((c) => c.fixed && (!c.fixed_until || c.fixed_until >= c.due_date))
+  const keptIds = new Set(kept.map((c) => c.id))
+  const toDelete = existing.filter((c) => !keptIds.has(c.id)).map((c) => c.id)
+  if (toDelete.length) await supabase.from('chores').delete().in('id', toDelete)
+
   const wIdx = weekIndex(weekStart)
-  const mk = (dayIdx, c, assignee) => ({
+  const memberKeys = FAMILY.map((f) => f.key)
+
+  // 2) 공평 분배 기준이 되는 현재 부하(고정 포함)
+  const load = {}
+  for (const k of memberKeys) load[k] = 0
+  for (const c of kept) if (load[c.assignee_key] != null) load[c.assignee_key] += c.points
+
+  // 고정으로 이미 덮인 (집안일·날짜) 조합 — 템플릿에서 제외
+  const coveredFixed = new Set(kept.map((c) => `${c.title}__${c.due_date}`))
+
+  const mk = (dueDate, c, assignee) => ({
     week_start: weekStart,
-    due_date: addDays(weekStart, dayIdx),
+    due_date: dueDate,
     title: c.title,
     category: c.category,
     points: c.points,
     assignee_key: assignee,
     done: false,
+    fixed: false,
+    fixed_until: null,
   })
 
   const rows = []
   for (const c of ROTATION) {
     if (c.biweekly && wIdx % 2 !== 0) continue
     if (c.type === 'perMember') {
-      for (const dayIdx of c.days) for (const m of c.members) rows.push(mk(dayIdx, c, m))
+      for (const dayIdx of c.days) {
+        const due = addDays(weekStart, dayIdx)
+        for (const m of c.members) {
+          if (coveredFixed.has(`${c.title}__${due}`)) continue
+          rows.push(mk(due, c, m))
+          if (load[m] != null) load[m] += c.points
+        }
+      }
     } else {
-      c.days.forEach((dayIdx, occ) => {
-        const assignee = c.pool[(occ + wIdx) % c.pool.length]
-        rows.push(mk(dayIdx, c, assignee))
-      })
+      for (const dayIdx of c.days) {
+        const due = addDays(weekStart, dayIdx)
+        if (coveredFixed.has(`${c.title}__${due}`)) continue
+        // 공평: pool 중 현재 부하가 가장 적은 사람. 동률은 주차에 따라 회전.
+        const pool = c.pool
+        const order = pool.map((_, i) => pool[(i + wIdx) % pool.length])
+        let best = order[0]
+        for (const m of order) if ((load[m] ?? Infinity) < (load[best] ?? Infinity)) best = m
+        rows.push(mk(due, c, best))
+        if (load[best] != null) load[best] += c.points
+      }
     }
   }
+  if (rows.length) {
+    const { error } = await supabase.from('chores').insert(rows)
+    if (error) throw error
+  }
+  return rows.length
+}
+
+/**
+ * 고정 집안일 추가 — startDate~untilDate 매일 같은 담당으로 고정 생성.
+ * 자동 로테이션에서 제외된다(fixed=true).
+ */
+export async function addFixedChore({ assigneeKey, title, points = 10, category = '고정', startDate = todayYmd(), untilDate }) {
+  if (!untilDate || untilDate < startDate) untilDate = startDate
+  const rows = []
+  let d = startDate
+  for (let i = 0; i < 366 && d <= untilDate; i++) {
+    rows.push({
+      week_start: weekStartMonday(new Date(d + 'T00:00:00')),
+      due_date: d,
+      title,
+      category,
+      points,
+      assignee_key: assigneeKey,
+      done: false,
+      fixed: true,
+      fixed_until: untilDate,
+    })
+    d = addDays(d, 1)
+  }
+  if (!rows.length) return 0
   const { error } = await supabase.from('chores').insert(rows)
   if (error) throw error
   return rows.length
+}
+
+/** 기존 집안일 고정/해제 (해제 시 fixed_until도 비움) */
+export async function setChoreFixed(id, fixed, fixedUntil = null) {
+  const { error } = await supabase
+    .from('chores')
+    .update({ fixed, fixed_until: fixed ? fixedUntil : null })
+    .eq('id', id)
+  if (error) throw error
 }
 
 /** 담당자 변경 (수동 지정) */
