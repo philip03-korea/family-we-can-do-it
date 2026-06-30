@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { sendFamilyMessage } from '../lib/db'
 import {
   listChores,
+  listOverdue,
   getGoals,
   generateRotation,
   assignChore,
@@ -45,6 +46,7 @@ export default function Chores() {
 
   const [week, setWeek] = useState(weekStartMonday())
   const [chores, setChores] = useState([])
+  const [overdue, setOverdue] = useState([]) // 밀린(지난 날·이전 주) 미완료 — 언제든 체크
   const [goals, setGoals] = useState(DEFAULT_GOALS)
   const [edit, setEdit] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -54,14 +56,19 @@ export default function Chores() {
   const dayIndexOf = (dueDate) => Math.round((new Date(dueDate) - new Date(week)) / 86400000)
 
   async function refresh() {
-    const [c, g] = await Promise.all([listChores(week), getGoals().catch(() => DEFAULT_GOALS)])
+    const [c, g, od] = await Promise.all([
+      listChores(week),
+      getGoals().catch(() => DEFAULT_GOALS),
+      myKey ? listOverdue(myKey).catch(() => []) : Promise.resolve([]),
+    ])
     setChores(c)
+    setOverdue(od)
     if (g && Object.keys(g).length) setGoals(g)
   }
   useEffect(() => {
     refresh().catch((e) => setMsg('⚠️ ' + friendlyError(e)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [week])
+  }, [week, myKey])
 
   const today = todayYmd()
   const progress = useMemo(() => computeProgress(chores), [chores])
@@ -149,6 +156,24 @@ export default function Chores() {
       setChores((cs) =>
         cs.map((c) => (c.id === chore.id ? { ...c, done: next, completed_at: next ? new Date().toISOString() : null } : c)),
       )
+      // 밀린 목록에 있던 항목이면: 완료 시 제거
+      setOverdue((os) => (next ? os.filter((c) => c.id !== chore.id) : os))
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyError(e))
+    }
+  }
+
+  // 밀린(다른 주일 수 있음) 집안일 완료 처리 — chores state 밖이라 별도 핸들러
+  async function completeOverdue(chore) {
+    try {
+      await setChoreDone(chore.id, true)
+      await addChorePoints(chore)
+      setOverdue((os) => os.filter((c) => c.id !== chore.id))
+      // 마침 보고 있는 주에 속한 항목이면 표/현황도 갱신
+      setChores((cs) =>
+        cs.map((c) => (c.id === chore.id ? { ...c, done: true, completed_at: new Date().toISOString() } : c)),
+      )
+      setMsg('✅ 밀린 집안일을 완료 처리했어요. 포인트가 적립됐어요!')
     } catch (e) {
       setMsg('⚠️ ' + friendlyError(e))
     }
@@ -277,6 +302,35 @@ export default function Chores() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* 밀린 내 할 일 — 지난 날·이전 주, 언제든 다시 완료 체크 */}
+      {overdue.length > 0 && (
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-bold flex items-center gap-2 text-amber-300">
+              🔴 밀린 할 일 <Avatar k={myKey} size={24} />
+            </h2>
+            <span className="text-xs text-amber-400/80">{overdue.length}개 · 지금 체크 가능</span>
+          </div>
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3">
+            <p className="text-xs text-amber-200/80 mb-2">예전에 못 끝낸 집안일이에요. 지금 했다면 체크하면 포인트가 적립돼요.</p>
+            {overdue.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => completeOverdue(c)}
+                className="w-full flex items-center gap-3 py-2.5 border-b border-amber-500/20 last:border-0 text-left"
+              >
+                <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 border-2 border-amber-400/70">
+                  <span className="text-amber-300 text-xs">✓</span>
+                </span>
+                <span className="flex-1 text-sm">{c.title}</span>
+                <span className="text-xs text-amber-300/80">{c.due_date.slice(5)}</span>
+                <span className="text-xs text-violet-300">+{c.points}P</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 

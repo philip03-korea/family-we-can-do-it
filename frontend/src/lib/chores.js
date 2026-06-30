@@ -40,6 +40,24 @@ export async function listChores(weekStart) {
   return data || []
 }
 
+/**
+ * 밀린(지난 날·이전 주 포함) 미완료 집안일.
+ * 주차와 무관하게 due_date < 기준일이면서 아직 안 한 것을 모두 가져온다.
+ * → "오늘 못 했어도 언제든 다시 완료 체크" 용.
+ */
+export async function listOverdue(assigneeKey, before = todayYmd()) {
+  let q = supabase
+    .from('chores')
+    .select('*')
+    .eq('done', false)
+    .lt('due_date', before)
+    .order('due_date')
+  if (assigneeKey) q = q.eq('assignee_key', assigneeKey)
+  const { data, error } = await q
+  if (error) throw error
+  return data || []
+}
+
 /** 가족별 주간 목표 */
 export async function getGoals() {
   const { data, error } = await supabase.from('chore_goals').select('*')
