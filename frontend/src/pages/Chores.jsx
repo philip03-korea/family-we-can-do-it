@@ -8,6 +8,7 @@ import {
   getGoals,
   generateRotation,
   assignChore,
+  createChore,
   deleteChore,
   setChoreDone,
   computeProgress,
@@ -51,7 +52,16 @@ export default function Chores() {
   const [edit, setEdit] = useState(false)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
-  const [selectedKey, setSelectedKey] = useState(null) // 이름 클릭 → 그 사람 집안일 편집
+  const [selectedKey, setSelectedKey] = useState(null)
+  const [picker, setPicker] = useState(null)
+  const [undo, setUndo] = useState(null) // { label, action }
+
+  // 되돌리기 자동 사라짐 (5초)
+  useEffect(() => {
+    if (!undo) return
+    const t = setTimeout(() => setUndo(null), 5000)
+    return () => clearTimeout(t)
+  }, [undo])
 
   const dayIndexOf = (dueDate) => Math.round((new Date(dueDate) - new Date(week)) / 86400000)
 
@@ -150,7 +160,6 @@ export default function Chores() {
     const next = !chore.done
     try {
       await setChoreDone(chore.id, next)
-      // 포인트 지갑 적립/취소
       if (next) await addChorePoints(chore)
       else await removeChorePoints(chore.id)
       setChores((cs) =>
@@ -158,6 +167,14 @@ export default function Chores() {
       )
       // 밀린 목록에 있던 항목이면: 완료 시 제거
       setOverdue((os) => (next ? os.filter((c) => c.id !== chore.id) : os))
+      setUndo({ label: next ? `"${chore.title}" 완료 처리됨` : `"${chore.title}" 미완료로 변경`, action: async () => {
+        await setChoreDone(chore.id, !next)
+        if (!next) await addChorePoints(chore)
+        else await removeChorePoints(chore.id)
+        setChores((cs) =>
+          cs.map((c) => (c.id === chore.id ? { ...c, done: !next, completed_at: !next ? new Date().toISOString() : null } : c)),
+        )
+      }})
     } catch (e) {
       setMsg('⚠️ ' + friendlyError(e))
     }
@@ -173,13 +190,21 @@ export default function Chores() {
       setChores((cs) =>
         cs.map((c) => (c.id === chore.id ? { ...c, done: true, completed_at: new Date().toISOString() } : c)),
       )
-      setMsg('✅ 밀린 집안일을 완료 처리했어요. 포인트가 적립됐어요!')
+      setUndo({ label: `"${chore.title}" 완료 처리됨 (밀린 일)`, action: async () => {
+        await setChoreDone(chore.id, false)
+        await removeChorePoints(chore.id)
+        setOverdue((os) => [...os, { ...chore, done: false }].sort((a, b) => a.due_date.localeCompare(b.due_date)))
+        setChores((cs) =>
+          cs.map((c) => (c.id === chore.id ? { ...c, done: false, completed_at: null } : c)),
+        )
+      }})
     } catch (e) {
       setMsg('⚠️ ' + friendlyError(e))
     }
   }
 
   async function nudge(c) {
+    if (!user?.id) { setMsg('⚠️ 로그인이 필요해요.'); return }
     try {
       await sendFamilyMessage({
         userId: user.id,
@@ -187,9 +212,14 @@ export default function Chores() {
         memberKey: myKey,
         text: `🧹 @${nameOf(c.assignee_key)} "${c.title}" 아직 안 했어요! 부탁해요 🙏`,
       })
-      setMsg('가족 채팅으로 알림을 보냈어요.')
+      setUndo({ label: `✅ ${nameOf(c.assignee_key)}에게 콕 찔렀어요!`, action: null })
     } catch (e) {
-      setMsg(e.message)
+      const em = e?.message || ''
+      if (/row-level security|policy|permission|RLS/i.test(em)) {
+        setMsg('⚠️ 메시지 권한 오류 — Supabase RLS 정책을 확인해 주세요.')
+      } else {
+        setMsg('⚠️ 콕 찌르기 실패: ' + em)
+      }
     }
   }
 
@@ -277,12 +307,31 @@ export default function Chores() {
                   <td className="p-1.5 text-[11px] text-slate-300">{row.title}</td>
                   {DAY_LABELS.map((_, di) => {
                     const cs = row.days[di]
-                    if (!cs || cs.length === 0) return <td key={di} className="text-center p-0.5"><span className="text-slate-700">·</span></td>
+                    const openPicker = () => {
+                      if (!edit) return
+                      const sample = cs?.[0] || {}
+                      setPicker({
+                        title: row.title,
+                        dayIdx: di,
+                        dueDate: addDays(week, di),
+                        category: sample.category || '기타',
+                        points: sample.points || 10,
+                      })
+                    }
+                    if (!cs || cs.length === 0) {
+                      return (
+                        <td key={di} className="text-center p-0.5">
+                          <button onClick={openPicker} className={edit ? 'w-7 h-7 rounded-full border-2 border-dashed border-slate-600 text-slate-600 text-xs hover:border-white' : ''}>
+                            {edit ? '+' : '·'}
+                          </button>
+                        </td>
+                      )
+                    }
                     if (cs.length === 1) {
                       const c = cs[0]
                       return (
                         <td key={di} className="text-center p-0.5">
-                          <button onClick={() => edit && cycleAssign(c)} className={edit ? 'ring-2 ring-white/40 rounded-full' : ''}>
+                          <button onClick={openPicker} className={edit ? 'ring-2 ring-white/40 rounded-full' : ''}>
                             <Avatar k={c.assignee_key} size={26} dim={c.done} />
                           </button>
                         </td>
@@ -290,11 +339,13 @@ export default function Chores() {
                     }
                     return (
                       <td key={di} className="text-center p-0.5">
-                        <div className="flex flex-wrap justify-center gap-0.5">
-                          {cs.map((c) => (
-                            <Avatar key={c.id} k={c.assignee_key} size={16} dim={c.done} />
-                          ))}
-                        </div>
+                        <button onClick={openPicker} className={edit ? 'ring-2 ring-white/40 rounded-lg p-0.5' : ''}>
+                          <div className="flex flex-wrap justify-center gap-0.5">
+                            {cs.map((c) => (
+                              <Avatar key={c.id} k={c.assignee_key} size={16} dim={c.done} />
+                            ))}
+                          </div>
+                        </button>
                       </td>
                     )
                   })}
@@ -414,6 +465,78 @@ export default function Chores() {
               ))}
             </ul>
           )}
+        </div>
+      )}
+
+      {/* 다중 배정 팝업 */}
+      {picker && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center" onClick={() => setPicker(null)}>
+          <div className="bg-slate-800 rounded-t-2xl p-5 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold">{picker.title} · {DAY_LABELS[picker.dayIdx]}요일</h3>
+              <button onClick={() => setPicker(null)} className="text-slate-400">✕</button>
+            </div>
+            <p className="text-xs text-slate-400 mb-3">담당할 사람을 탭하세요 (여러 명 가능)</p>
+            <div className="flex gap-3 justify-center mb-4">
+              {FAMILY.map((f) => {
+                const existing = chores.find(
+                  (c) => c.title === picker.title && c.due_date === picker.dueDate && c.assignee_key === f.key
+                )
+                const isOn = !!existing
+                return (
+                  <button
+                    key={f.key}
+                    onClick={async () => {
+                      try {
+                        if (isOn) {
+                          await deleteChore(existing.id)
+                          setChores((cs) => cs.filter((c) => c.id !== existing.id))
+                          const undoData = { ...existing }
+                          setUndo({ label: `${nameOf(f.key)} 제거됨`, action: async () => {
+                            const restored = await createChore({ weekStart: week, dueDate: picker.dueDate, title: picker.title, category: picker.category, points: picker.points, assigneeKey: f.key })
+                            if (restored) setChores((cs) => [...cs, restored])
+                          }})
+                        } else {
+                          const newC = await createChore({ weekStart: week, dueDate: picker.dueDate, title: picker.title, category: picker.category, points: picker.points, assigneeKey: f.key })
+                          if (newC) {
+                            setChores((cs) => [...cs, newC])
+                            setUndo({ label: `${nameOf(f.key)} 배정됨`, action: async () => {
+                              await deleteChore(newC.id)
+                              setChores((cs) => cs.filter((c) => c.id !== newC.id))
+                            }})
+                          }
+                        }
+                      } catch (e) { setMsg('⚠️ ' + friendlyError(e)) }
+                    }}
+                    className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition ${
+                      isOn ? 'border-emerald-400 bg-emerald-600/20' : 'border-slate-600 bg-slate-700/50'
+                    }`}
+                  >
+                    <Avatar k={f.key} size={36} />
+                    <span className="text-[11px] font-bold" style={{ color: f.color }}>{f.name}</span>
+                    <span className="text-[10px]">{isOn ? '✓ 배정됨' : '탭하여 추가'}</span>
+                  </button>
+                )
+              })}
+            </div>
+            <button onClick={() => setPicker(null)} className="w-full py-2.5 rounded-xl bg-indigo-600 font-bold text-sm">완료</button>
+          </div>
+        </div>
+      )}
+
+      {/* 되돌리기 바 */}
+      {undo && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-700 border border-slate-500 rounded-2xl px-5 py-3 flex items-center gap-3 shadow-xl animate-pulse-once max-w-sm">
+          <span className="text-sm flex-1">{undo.label}</span>
+          {undo.action && (
+            <button
+              onClick={async () => { try { await undo.action() } catch {} setUndo(null) }}
+              className="text-sm font-bold text-amber-300 bg-slate-600 px-3 py-1.5 rounded-lg"
+            >
+              ↩ 되돌리기
+            </button>
+          )}
+          <button onClick={() => setUndo(null)} className="text-slate-400 text-xs">✕</button>
         </div>
       )}
 

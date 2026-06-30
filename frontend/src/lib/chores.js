@@ -116,6 +116,21 @@ export async function assignChore(id, assigneeKey) {
   if (error) throw error
 }
 
+/** 새 집안일 추가 (빈 칸에 배정할 때) */
+export async function createChore({ weekStart, dueDate, title, category, points, assigneeKey }) {
+  const { data, error } = await supabase.from('chores').insert({
+    week_start: weekStart,
+    due_date: dueDate,
+    title,
+    category: category || '기타',
+    points: points || 10,
+    assignee_key: assigneeKey,
+    done: false,
+  }).select()
+  if (error) throw error
+  return data?.[0]
+}
+
 /** 집안일 삭제 */
 export async function deleteChore(id) {
   const { error } = await supabase.from('chores').delete().eq('id', id)
