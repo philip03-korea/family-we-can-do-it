@@ -13,12 +13,18 @@ export const ALL_MEMBERS = ['mom', 'dad', 'haeum', 'haul', 'haram']
 export const ROTATION = [
   { title: '설거지', category: '주방', points: 10, type: 'rotate', days: [0, 1, 2, 3, 4, 5, 6], pool: ['dad', 'mom', 'haul', 'haram', 'haeum'] },
   { title: '빨래', category: '빨래', points: 15, type: 'rotate', days: [1, 3, 5], pool: ['mom', 'dad', 'haul', 'haram', 'haeum'] },
-  { title: '분리수거', category: '쓰레기', points: 15, type: 'rotate', days: [2, 6], pool: ['haul', 'haram'] },
   { title: '거실·화장실 청소', category: '청소', points: 20, type: 'rotate', days: [3, 6], pool: ['haeum', 'haul', 'haram'] },
-  { title: '안방 화장실 청소', category: '청소', points: 20, type: 'rotate', days: [6], pool: ['dad'] },
   { title: '방 청소(내 방)', category: '청소', points: 10, type: 'perMember', days: [5], members: ALL_MEMBERS },
   { title: '신발 빨래(내 신발)', category: '기타', points: 15, type: 'perMember', days: [5], members: ALL_MEMBERS, biweekly: true },
 ]
+
+// 항상 고정 배정 — 자동 로테이션에서 사람이 절대 안 바뀜(📌 fixed).
+// byDay: 0=월 … 6=일 → 담당 member_key
+export const FIXED_RULES = [
+  { title: '분리수거', category: '쓰레기', points: 15, byDay: { 2: 'haul', 6: 'haram' } }, // 수=하울, 일=하람 고정
+  { title: '안방 화장실 청소', category: '청소', points: 20, byDay: { 6: 'dad' } }, // 일=아빠 고정
+]
+export const FIXED_TITLES = FIXED_RULES.map((r) => r.title)
 
 // 가족별 주간 목표 포인트 (DB chore_goals 의 기본값과 동일)
 export const DEFAULT_GOALS = { mom: 100, dad: 100, haeum: 50, haul: 90, haram: 80 }
