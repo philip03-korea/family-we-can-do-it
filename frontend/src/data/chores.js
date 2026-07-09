@@ -19,10 +19,12 @@ export const ROTATION = [
 ]
 
 // 항상 고정 배정 — 자동 로테이션에서 사람이 절대 안 바뀜(📌 fixed).
-// byDay: 0=월 … 6=일 → 담당 member_key
+// byDay: 0=월 … 6=일 → 담당 member_key (배열이면 그날 여러 명이 함께)
 export const FIXED_RULES = [
-  { title: '분리수거', category: '쓰레기', points: 15, byDay: { 2: 'haul', 6: 'haram' } }, // 수=하울, 일=하람 고정
-  { title: '안방 화장실 청소', category: '청소', points: 20, byDay: { 6: 'dad' } }, // 일=아빠 고정
+  // 분리수거: 수요일·일요일 모두 하울+하람 2명 세트 고정
+  { title: '분리수거', category: '쓰레기', points: 15, byDay: { 2: ['haul', 'haram'], 6: ['haul', 'haram'] } },
+  // 안방 화장실 청소: 아빠 고정
+  { title: '안방 화장실 청소', category: '청소', points: 20, byDay: { 6: ['dad'] } },
 ]
 export const FIXED_TITLES = FIXED_RULES.map((r) => r.title)
 

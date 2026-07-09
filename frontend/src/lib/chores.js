@@ -89,12 +89,12 @@ function buildPlan({ weekStarts, keep, inMonth, fixedUntil }) {
   for (const k of memberKeys) load[k] = 0
   for (const c of keep) if (load[c.assignee_key] != null) load[c.assignee_key] += c.points
 
-  const covered = new Set(keep.map((c) => `${c.title}__${c.due_date}`))
+  // 기존 고정(kept)이 이미 덮은 (집안일·날짜) — 새로 만들지 않음.
+  // (같은 칸에 여러 명이 배정되는 경우(방청소·2명 분리수거)는 막지 않는다)
+  const coveredFixed = new Set(keep.map((c) => `${c.title}__${c.due_date}`))
   const rows = []
   const pushRow = (weekStart, due, tmpl, assignee, fixed) => {
-    const key = `${tmpl.title}__${due}`
-    if (covered.has(key)) return
-    covered.add(key)
+    if (coveredFixed.has(`${tmpl.title}__${due}`)) return
     rows.push({
       week_start: weekStart,
       due_date: due,
@@ -112,12 +112,12 @@ function buildPlan({ weekStarts, keep, inMonth, fixedUntil }) {
   for (const weekStart of weekStarts) {
     const wIdx = weekIndex(weekStart)
 
-    // 1) 고정 규칙 먼저 (부하 선반영)
+    // 1) 고정 규칙 먼저 (부하 선반영) — byDay 값이 배열이면 그날 여러 명이 함께
     for (const fr of FIXED_RULES) {
       for (const [dayIdx, who] of Object.entries(fr.byDay)) {
         const due = addDays(weekStart, Number(dayIdx))
         if (!inMonth(due)) continue
-        pushRow(weekStart, due, fr, who, true)
+        for (const p of Array.isArray(who) ? who : [who]) pushRow(weekStart, due, fr, p, true)
       }
     }
 
