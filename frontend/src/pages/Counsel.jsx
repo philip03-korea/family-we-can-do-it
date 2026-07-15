@@ -8,7 +8,7 @@ import {
 } from '../data/counsel'
 import {
   saveResult, listMyResults, listSharedResults, setShared, setNote, deleteResult,
-  listChildCrisis, markParentSeen,
+  listChildCrisis, markParentSeen, notifyParentsOfCrisis,
   latestByTest, trendOf, friendlyCounselError,
 } from '../lib/counsel'
 import BottomNav from '../components/BottomNav'
@@ -84,7 +84,7 @@ function CrisisScreen({ onClose, notifiesParent }) {
         {notifiesParent ? (
           <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-4">
             <p className="text-xs text-amber-200/90 leading-relaxed">
-              처음에 약속한 대로, <strong>이 답은 엄마·아빠에게 알려질 거예요.</strong> 숨기려는 게 아니라
+              처음에 약속한 대로, <strong>이 답은 엄마·아빠 폰으로 알림이 갔어요.</strong> 숨기려는 게 아니라
               미리 말해둔 거고, 네가 걱정돼서예요. 점수나 다른 검사 내용은 여전히 너만 봐요.
               <br /><br />
               이 앱은 AI 조력자라 훈련된 상담사가 아니고 진단도 하지 않아요.
@@ -355,6 +355,11 @@ export default function Counsel() {
 
     try {
       const row = await saveResult({ userId: user.id, memberKey: myKey, testKey: test.key, answers })
+
+      // 위기 신호 → 부모에게 즉시 푸시 (검사 전 아이에게 미리 고지된 동작).
+      // 실패해도 흐름을 막지 않는다 — 위기 알림 탭에는 어차피 뜬다.
+      if (scored.crisis && iNotifyParents) notifyParentsOfCrisis(row.id)
+
       await refresh()
       if (!scored.crisis) setViewing({ test, result: scored, row })
       else setViewing({ test, result: scored, row, deferred: true })
@@ -487,7 +492,7 @@ export default function Counsel() {
                 <>
                   <br /><br />
                   ⚠️ <strong className="text-amber-300">딱 하나 예외</strong> — 스스로를 해치고 싶다는 답을 하면
-                  그때는 엄마·아빠에게 알려져요. 숨기려는 게 아니라 미리 말해두는 거예요.
+                  그때는 엄마·아빠 폰으로 바로 알림이 가요. 숨기려는 게 아니라 미리 말해두는 거예요.
                 </>
               )}
             </p>

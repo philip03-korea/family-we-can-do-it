@@ -52,6 +52,24 @@ export async function listSharedResults() {
 }
 
 /**
+ * 위기 결과 → 부모에게 푸시 알림.
+ * 검사 시작 전 자녀에게 미리 고지된 동작이다.
+ * 서버가 result_id 를 재검증(본인 것 / 진짜 crisis / 자녀)한 뒤에만 발송한다.
+ * 실패해도 앱 흐름을 막지 않는다(위기 알림 탭에는 어차피 뜬다).
+ */
+export async function notifyParentsOfCrisis(resultId) {
+  try {
+    const { data, error } = await supabase.functions.invoke('notify-crisis', {
+      body: { result_id: resultId },
+    })
+    if (error) return { ok: false, error: error.message }
+    return data
+  } catch (e) {
+    return { ok: false, error: String(e) }
+  }
+}
+
+/**
  * 부모 전용 — 자녀의 위기 결과 목록 (검사 화면에 미리 고지된 범위)
  * RLS: crisis=true && member_key in (자녀) && 요청자가 부모일 때만 조회됨.
  * 평상시 점수는 조회되지 않는다.
