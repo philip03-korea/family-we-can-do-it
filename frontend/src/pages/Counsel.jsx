@@ -4,9 +4,11 @@ import { useAuth } from '../context/AuthContext'
 import { FAMILY, colorOf, textOnColor } from '../data/family'
 import {
   TESTS, TEST_LIST, DISCLAIMER, HOTLINES, CHAT_HELP, CENTER_FINDER, TONE_STYLE, scoreTest,
+  CONFIDENTIALITY, PARENT_KEYS, notifiesParents,
 } from '../data/counsel'
 import {
   saveResult, listMyResults, listSharedResults, setShared, setNote, deleteResult,
+  listChildCrisis, markParentSeen,
   latestByTest, trendOf, friendlyCounselError,
 } from '../lib/counsel'
 import BottomNav from '../components/BottomNav'
@@ -28,7 +30,7 @@ function Avatar({ k, size = 24 }) {
 // ============================================================
 // 위기개입 화면 — 하23 프로토콜: 점수보다 먼저, 즉시, 회피 없이
 // ============================================================
-function CrisisScreen({ onClose }) {
+function CrisisScreen({ onClose, notifiesParent }) {
   return (
     <div className="fixed inset-0 z-[60] bg-slate-900 overflow-y-auto">
       <div className="max-w-md mx-auto p-5 pb-10">
@@ -78,13 +80,26 @@ function CrisisScreen({ onClose }) {
           </ul>
         </div>
 
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-4">
-          <p className="text-xs text-amber-200/90 leading-relaxed">
-            이 앱은 AI 조력자예요. 훈련된 상담사가 아니고 진단도 하지 않아요.
-            그래서 <strong>실제 전문가에게 연결되는 것</strong>이 가장 중요해요.
-            이 결과는 <strong>가족에게 자동으로 공유되지 않아요</strong> — 말하고 싶을 때 직접 이야기하면 돼요.
-          </p>
-        </div>
+        {/* ⚠️ 이 안내는 실제 동작과 반드시 일치해야 한다 (거짓 고지 금지) */}
+        {notifiesParent ? (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-4">
+            <p className="text-xs text-amber-200/90 leading-relaxed">
+              처음에 약속한 대로, <strong>이 답은 엄마·아빠에게 알려질 거예요.</strong> 숨기려는 게 아니라
+              미리 말해둔 거고, 네가 걱정돼서예요. 점수나 다른 검사 내용은 여전히 너만 봐요.
+              <br /><br />
+              이 앱은 AI 조력자라 훈련된 상담사가 아니고 진단도 하지 않아요.
+              그래서 <strong>실제 전문가·어른에게 연결되는 것</strong>이 가장 중요해요.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-4">
+            <p className="text-xs text-amber-200/90 leading-relaxed">
+              이 앱은 AI 조력자예요. 훈련된 상담사가 아니고 진단도 하지 않아요.
+              그래서 <strong>실제 전문가에게 연결되는 것</strong>이 가장 중요해요.
+              이 결과는 가족에게 공유되지 않아요 — 말하고 싶을 때 직접 이야기하면 돼요.
+            </p>
+          </div>
+        )}
 
         <button onClick={onClose} className="w-full py-3 rounded-2xl bg-slate-700 font-bold text-sm">
           확인했어요, 닫기
@@ -92,6 +107,62 @@ function CrisisScreen({ onClose }) {
         <p className="text-center text-[11px] text-slate-500 mt-3">
           이 화면은 언제든 상담 탭에서 다시 볼 수 있어요.
         </p>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// 비밀보장의 한계 고지 — 검사 시작 전 반드시 표시
+// (하23 상담 윤리: 고지 내용은 실제 동작과 일치해야 한다)
+// ============================================================
+function ConsentScreen({ test, isChild, onAgree, onCancel }) {
+  const c = isChild ? CONFIDENTIALITY.child : CONFIDENTIALITY.parent
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900 overflow-y-auto">
+      <div className="max-w-md mx-auto p-5 pb-10">
+        <div className="flex items-center justify-between mb-4 pt-2">
+          <h2 className="font-bold">{test.emoji} {test.name}</h2>
+          <button onClick={onCancel} className="text-slate-400 text-sm">닫기 ✕</button>
+        </div>
+
+        <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 mb-4">
+          <h3 className="font-bold text-base mb-3">{c.title}</h3>
+
+          <div className="flex gap-3 mb-4">
+            <span className="text-xl shrink-0">🔒</span>
+            <p className="text-sm text-slate-200 leading-relaxed">{c.private}</p>
+          </div>
+
+          {isChild && (
+            <div className="flex gap-3 mb-4 bg-amber-500/10 border border-amber-500/30 rounded-xl p-3">
+              <span className="text-xl shrink-0">⚠️</span>
+              <p className="text-sm text-amber-100 leading-relaxed">{c.limit}</p>
+            </div>
+          )}
+          {!isChild && (
+            <div className="flex gap-3 mb-4">
+              <span className="text-xl shrink-0">👨‍👩‍👧‍👦</span>
+              <p className="text-sm text-slate-300 leading-relaxed">{c.limit}</p>
+            </div>
+          )}
+
+          {c.why && (
+            <div className="flex gap-3">
+              <span className="text-xl shrink-0">💙</span>
+              <p className="text-sm text-slate-300 leading-relaxed">{c.why}</p>
+            </div>
+          )}
+        </div>
+
+        <p className="text-[11px] text-slate-500 leading-relaxed mb-4">{DISCLAIMER}</p>
+
+        <button onClick={onAgree} className="w-full py-3.5 rounded-2xl bg-indigo-600 font-bold text-sm mb-2">
+          알겠어요, 시작할게요
+        </button>
+        <button onClick={onCancel} className="w-full py-3 rounded-2xl bg-slate-800 text-slate-400 font-bold text-sm">
+          나중에 할게요
+        </button>
       </div>
     </div>
   )
@@ -238,13 +309,18 @@ function ResultView({ test, result, onShare, onClose, isShared }) {
 // 메인
 // ============================================================
 export default function Counsel() {
-  const { user, profile } = useAuth()
+  const { user, ownProfile } = useAuth()
   const navigate = useNavigate()
-  const myKey = profile?.member_key
+  // 실제 로그인 계정 기준 — 미리보기 모드로 다른 사람 결과가 섞이지 않게
+  const myKey = ownProfile?.member_key
+  const isParent = PARENT_KEYS.includes(myKey)
+  const iNotifyParents = notifiesParents(myKey) // 자녀 계정인가
 
-  const [tab, setTab] = useState('tests')      // tests | mine | family
+  const [tab, setTab] = useState('tests')      // tests | mine | family | alerts
   const [results, setResults] = useState([])
   const [sharedRows, setSharedRows] = useState([])
+  const [alerts, setAlerts] = useState([])     // 부모 전용: 자녀 위기
+  const [consent, setConsent] = useState(null) // 고지 화면에 띄울 test
   const [running, setRunning] = useState(null) // test object
   const [viewing, setViewing] = useState(null) // { test, result, row }
   const [crisis, setCrisis] = useState(false)
@@ -253,17 +329,19 @@ export default function Counsel() {
 
   async function refresh() {
     if (!user?.id) return
-    const [mine, shared] = await Promise.all([
+    const [mine, shared, al] = await Promise.all([
       listMyResults(user.id).catch(() => []),
       listSharedResults().catch(() => []),
+      isParent ? listChildCrisis().catch(() => []) : Promise.resolve([]),
     ])
     setResults(mine)
     setSharedRows(shared)
+    setAlerts(al)
   }
   useEffect(() => {
     refresh().catch((e) => setMsg('⚠️ ' + friendlyCounselError(e)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id])
+  }, [user?.id, myKey])
 
   const latest = useMemo(() => latestByTest(results), [results])
 
@@ -348,17 +426,23 @@ export default function Counsel() {
       {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
 
       {/* 탭 */}
-      <div className="flex gap-2 mb-4">
+      <div className="grid grid-cols-2 gap-2 mb-4">
         {[
           { k: 'tests',  t: '검사하기' },
           { k: 'mine',   t: `내 기록${results.length ? ` (${results.length})` : ''}` },
           { k: 'family', t: `가족 나눔${sharedRows.length ? ` (${sharedRows.length})` : ''}` },
+          // 부모 전용 — 자녀에게 미리 고지된 위기 알림
+          ...(isParent ? [{ k: 'alerts', t: `🚨 위기 알림${alerts.length ? ` (${alerts.length})` : ''}`, urgent: alerts.some((a) => !a.parent_seen_at) }] : []),
         ].map((x) => (
           <button
             key={x.k}
             onClick={() => setTab(x.k)}
-            className={`flex-1 py-2 rounded-xl text-sm font-bold border ${
-              tab === x.k ? 'bg-indigo-600 border-indigo-500' : 'bg-slate-800 border-slate-600 text-slate-400'
+            className={`py-2 rounded-xl text-sm font-bold border ${
+              tab === x.k
+                ? 'bg-indigo-600 border-indigo-500'
+                : x.urgent
+                  ? 'bg-rose-600/30 border-rose-500 text-rose-200 animate-pulse'
+                  : 'bg-slate-800 border-slate-600 text-slate-400'
             }`}
           >
             {x.t}
@@ -374,7 +458,7 @@ export default function Counsel() {
             return (
               <button
                 key={t.key}
-                onClick={() => setRunning(t)}
+                onClick={() => setConsent(t)}
                 className="w-full bg-slate-800/60 border border-slate-700 rounded-2xl p-4 text-left active:scale-[0.99] transition"
               >
                 <div className="flex items-start gap-3">
@@ -394,10 +478,20 @@ export default function Counsel() {
               </button>
             )
           })}
-          <p className="text-[11px] text-slate-600 leading-relaxed pt-2">
-            검사 결과는 <strong className="text-slate-400">기본적으로 나만 볼 수 있어요.</strong> 가족과 나누고 싶은 결과만
-            직접 &ldquo;가족회의에서 나누기&rdquo;를 눌러 공유하면 돼요.
-          </p>
+          {/* ⚠️ 이 안내는 실제 동작과 일치해야 한다 */}
+          <div className="bg-slate-800/40 border border-slate-700 rounded-2xl p-3 mt-2">
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              🔒 검사 결과는 <strong className="text-slate-300">기본적으로 나만 볼 수 있어요.</strong> 가족과 나누고 싶은 결과만
+              직접 &ldquo;가족회의에서 나누기&rdquo;를 눌러 공유하면 돼요.
+              {iNotifyParents && (
+                <>
+                  <br /><br />
+                  ⚠️ <strong className="text-amber-300">딱 하나 예외</strong> — 스스로를 해치고 싶다는 답을 하면
+                  그때는 엄마·아빠에게 알려져요. 숨기려는 게 아니라 미리 말해두는 거예요.
+                </>
+              )}
+            </p>
+          </div>
         </div>
       )}
 
@@ -498,7 +592,99 @@ export default function Counsel() {
         </div>
       )}
 
+      {/* ── 부모 전용: 자녀 위기 알림 (자녀에게 미리 고지된 범위) ── */}
+      {tab === 'alerts' && isParent && (
+        <div>
+          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3 mb-3">
+            <p className="text-xs text-slate-300 leading-relaxed">
+              아이들에게 <strong className="text-white">&ldquo;스스로를 해치고 싶다는 답을 하면 엄마·아빠한테 알려줄 거야&rdquo;</strong>라고
+              미리 말하고 받은 검사예요. 여기 뜨는 건 그 약속에 해당하는 경우입니다.
+              <br /><br />
+              <span className="text-slate-400">평상시 점수(우울·불안·자존감·스트레스)는 아이 본인만 봅니다. 여기엔 안 떠요.</span>
+            </p>
+          </div>
+
+          {alerts.length === 0 ? (
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 text-center">
+              <div className="text-3xl mb-2">😌</div>
+              <p className="text-sm text-emerald-200 font-bold mb-1">위기 신호가 없어요</p>
+              <p className="text-xs text-slate-400">아이들이 검사에서 자해·죽음에 대한 답을 한 적이 없어요.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {alerts.map((r) => {
+                const t = TESTS[r.test_key]
+                const isNew = !r.parent_seen_at
+                return (
+                  <div key={r.id} className={`rounded-2xl p-4 border-2 ${isNew ? 'bg-rose-500/15 border-rose-500/50' : 'bg-slate-800/60 border-slate-700'}`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Avatar k={r.member_key} size={28} />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-sm">
+                          {nameOf(r.member_key)}
+                          {isNew && <span className="ml-2 text-[10px] bg-rose-600 px-1.5 py-0.5 rounded-full">NEW</span>}
+                        </div>
+                        <div className="text-[11px] text-slate-400">{t?.name} · {r.created_at.slice(0, 16).replace('T', ' ')}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-900/60 rounded-xl p-3 mb-3">
+                      <p className="text-xs text-rose-200 leading-relaxed">
+                        &ldquo;차라리 죽는 것이 낫겠다고 생각하거나 어떤 식으로든 자신을 해칠 것이라고 생각함&rdquo;
+                        문항에 <strong>응답이 있었어요.</strong>
+                      </p>
+                    </div>
+
+                    <div className="bg-slate-900/40 rounded-xl p-3 mb-3">
+                      <p className="text-xs font-bold text-slate-200 mb-1.5">🤝 지금 하실 것</p>
+                      <ul className="text-xs text-slate-300 space-y-1 leading-relaxed">
+                        <li>· <strong>오늘 안에</strong> 아이와 단둘이 이야기해주세요. 조용하고 편한 자리에서요.</li>
+                        <li>· &ldquo;검사에서 봤어. 많이 힘들었구나. 얘기해줄 수 있어?&rdquo; — 놀라거나 혼내지 않기.</li>
+                        <li>· &ldquo;왜 그런 생각을 해?&rdquo; ❌ → 그냥 <strong>끝까지 들어주기</strong> ⭕</li>
+                        <li>· 아이는 이 알림이 갈 걸 <strong>미리 알고 답했어요.</strong> 도움을 요청한 것일 수 있어요.</li>
+                        <li>· 전문가 상담을 함께 알아봐주세요. 혼자 판단하지 마세요.</li>
+                      </ul>
+                    </div>
+
+                    <div className="flex gap-2 mb-2">
+                      <a href="tel:109" className="flex-1 py-2.5 rounded-xl bg-rose-600 text-center text-sm font-bold">📞 109 상담</a>
+                      <a href="tel:15770199" className="flex-1 py-2.5 rounded-xl bg-slate-700 text-center text-sm font-bold">1577-0199</a>
+                      <a href="tel:1388" className="flex-1 py-2.5 rounded-xl bg-slate-700 text-center text-sm font-bold">1388</a>
+                    </div>
+
+                    {isNew && (
+                      <button
+                        onClick={async () => {
+                          try { await markParentSeen(r.id); await refresh(); setMsg('확인 표시했어요.') }
+                          catch (e) { setMsg('⚠️ ' + friendlyCounselError(e)) }
+                        }}
+                        className="w-full py-2 rounded-xl bg-slate-700 text-xs font-bold text-slate-300"
+                      >
+                        ✓ 아이와 이야기했어요
+                      </button>
+                    )}
+                    {!isNew && (
+                      <p className="text-[10px] text-slate-500 text-center">
+                        ✓ {r.parent_seen_at.slice(0, 10)} 확인함
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 오버레이들 */}
+      {consent && (
+        <ConsentScreen
+          test={consent}
+          isChild={iNotifyParents}
+          onAgree={() => { setRunning(consent); setConsent(null) }}
+          onCancel={() => setConsent(null)}
+        />
+      )}
       {running && (
         <TestRunner
           test={running}
@@ -506,7 +692,7 @@ export default function Counsel() {
           onCancel={() => setRunning(null)}
         />
       )}
-      {crisis && <CrisisScreen onClose={() => setCrisis(false)} />}
+      {crisis && <CrisisScreen notifiesParent={iNotifyParents} onClose={() => setCrisis(false)} />}
       {viewing && !crisis && viewing.test && viewing.result?.level && (
         <ResultView
           test={viewing.test}

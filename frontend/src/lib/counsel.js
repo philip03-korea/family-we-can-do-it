@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { scoreTest, TESTS } from '../data/counsel'
+import { scoreTest, TESTS, CHILD_KEYS } from '../data/counsel'
 
 // ============================================================
 // 심리검사 결과 저장/조회 (하23)
@@ -49,6 +49,31 @@ export async function listSharedResults() {
     .order('created_at', { ascending: false })
   if (error) throw error
   return data || []
+}
+
+/**
+ * 부모 전용 — 자녀의 위기 결과 목록 (검사 화면에 미리 고지된 범위)
+ * RLS: crisis=true && member_key in (자녀) && 요청자가 부모일 때만 조회됨.
+ * 평상시 점수는 조회되지 않는다.
+ */
+export async function listChildCrisis() {
+  const { data, error } = await supabase
+    .from('counsel_results')
+    .select('*')
+    .eq('crisis', true)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  // 본인(부모) 것은 제외 — 자녀 위기만
+  return (data || []).filter((r) => CHILD_KEYS.includes(r.member_key))
+}
+
+/** 부모가 확인함 표시 (대화 후 정리용) */
+export async function markParentSeen(id) {
+  const { error } = await supabase
+    .from('counsel_results')
+    .update({ parent_seen_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) throw error
 }
 
 /** 가족 공유 on/off — 위기 결과는 앱에서도 차단 */
