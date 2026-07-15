@@ -7,6 +7,9 @@ import {
   listOverdue,
   getGoals,
   generateRotation,
+  generateMonthRotation,
+  listMonthChores,
+  getMonthScores,
   assignChore,
   createChore,
   deleteChore,
@@ -16,12 +19,23 @@ import {
   computeProgress,
   weekStartMonday,
   addDays,
+  ymd,
   todayYmd,
 } from '../lib/chores'
 import { addChorePoints, removeChorePoints } from '../lib/rewards'
 import { FAMILY, colorOf, textOnColor } from '../data/family'
 import { DAY_LABELS, DEFAULT_GOALS, REWARD_TEXT, STREAK_BONUS_TEXT, PARENT_KEYS } from '../data/chores'
 import BottomNav from '../components/BottomNav'
+
+const monthOf = (ymdStr) => ymdStr.slice(0, 7)
+const monthLabel = (mo) => `${Number(mo.slice(5))}월`
+function addMonth(mo, n) {
+  const [y, m] = mo.split('-').map(Number)
+  const d = new Date(y, m - 1 + n, 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+const prevMonth = (mo) => addMonth(mo, -1)
+const medalOf = (i) => ['🥇', '🥈', '🥉'][i] || `${i + 1}위`
 
 const emojiOf = (key) => FAMILY.find((f) => f.key === key)?.emoji || '·'
 const nameOf = (key) => FAMILY.find((f) => f.key === key)?.name || '미지정'
@@ -58,6 +72,13 @@ export default function Chores() {
   const [picker, setPicker] = useState(null)
   const [undo, setUndo] = useState(null) // { label, action }
 
+  // 보기 모드(주간/월간) + 월별 데이터
+  const [viewMode, setViewMode] = useState('week') // 'week' | 'month'
+  const [month, setMonth] = useState(monthOf(todayYmd()))
+  const [monthChores, setMonthChores] = useState([])
+  const [scores, setScores] = useState({}) // 이번(보는) 달 점수
+  const [award, setAward] = useState(null) // 지난달 시상 팝업 { month, ranking }
+
   // 되돌리기 자동 사라짐 (5초)
   useEffect(() => {
     if (!undo) return
@@ -82,6 +103,40 @@ export default function Chores() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week, myKey])
 
+  // 보는 달의 집안일(달력) + 점수(순위) 로드
+  async function refreshMonth(mo = month) {
+    const [mc, sc] = await Promise.all([
+      listMonthChores(mo).catch(() => []),
+      getMonthScores(mo).catch(() => ({})),
+    ])
+    setMonthChores(mc)
+    setScores(sc)
+  }
+  useEffect(() => {
+    refreshMonth(month).catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [month])
+
+  // 매월 초 시상 팝업 — 새 달에 처음 열면 지난달 순위를 축하 팝업으로
+  useEffect(() => {
+    const thisMonth = monthOf(todayYmd())
+    const last = prevMonth(thisMonth)
+    const shownKey = `famtalk_award_shown_${last}`
+    if (localStorage.getItem(shownKey)) return
+    getMonthScores(last)
+      .then((sc) => {
+        const ranking = FAMILY.map((f) => ({ key: f.key, ...(sc[f.key] || { points: 0, count: 0 }) }))
+          .filter((r) => r.points > 0)
+          .sort((a, b) => b.points - a.points)
+        if (ranking.length >= 1) {
+          setAward({ month: last, ranking })
+          localStorage.setItem(shownKey, '1')
+        }
+      })
+      .catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const today = todayYmd()
   const progress = useMemo(() => computeProgress(chores), [chores])
 
@@ -99,6 +154,36 @@ export default function Chores() {
     }
     return titles.map((t) => map[t])
   }, [chores, week])
+
+  // 이번(보는) 달 순위 — 점수 내림차순
+  const monthRanking = useMemo(
+    () =>
+      FAMILY.map((f) => ({ key: f.key, name: f.name, color: f.color, ...(scores[f.key] || { points: 0, count: 0 }) }))
+        .sort((a, b) => b.points - a.points),
+    [scores],
+  )
+
+  // 월간 달력 — 그 달을 월요일 시작 주 단위로 나눈 6주 격자
+  const calendar = useMemo(() => {
+    const firstYmd = `${month}-01`
+    const start = weekStartMonday(new Date(firstYmd + 'T00:00:00'))
+    const byDay = {}
+    for (const c of monthChores) (byDay[c.due_date] ||= []).push(c)
+    const weeks = []
+    let cur = start
+    for (let w = 0; w < 6; w++) {
+      const days = []
+      for (let d = 0; d < 7; d++) {
+        const cell = cur
+        days.push({ date: cell, inMonth: monthOf(cell) === month, items: byDay[cell] || [] })
+        cur = addDays(cur, 1)
+      }
+      weeks.push(days)
+      // 다음 주 월요일이 이미 다음 달이면 종료 (그 달을 덮는 최소 주 수)
+      if (monthOf(cur) !== month) break
+    }
+    return weeks
+  }, [month, monthChores])
 
   const myToday = chores.filter((c) => c.assignee_key === myKey && c.due_date === today)
   const myDonePts = progress[myKey]?.done || 0
@@ -121,7 +206,25 @@ export default function Chores() {
     try {
       const n = await generateRotation(week)
       await refresh()
-      setMsg(`✅ 자동 로테이션 완료 — ${n}개 집안일이 배정됐어요.`)
+      await refreshMonth()
+      setMsg(`✅ 이번 주 자동 로테이션 완료 — ${n}개 배정.`)
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyError(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // 한 달치 미리 공평하게 배정
+  async function doRotateMonth() {
+    if (!window.confirm(`${monthLabel(month)} 한 달치를 새로 공평하게 배정할까요?\n(고정 규칙: 분리수거 수·일=하울·하람, 안방화장실=아빠 / 이미 완료한 기록·직접 만든 고정은 유지)`)) return
+    setBusy(true)
+    setMsg(`${monthLabel(month)} 한 달치 배정 중…`)
+    try {
+      const n = await generateMonthRotation(month)
+      await refreshMonth()
+      await refresh()
+      setMsg(`✅ ${monthLabel(month)} 한 달치 배정 완료 — ${n}개 집안일.`)
     } catch (e) {
       setMsg('⚠️ ' + friendlyError(e))
     } finally {
@@ -257,32 +360,78 @@ export default function Chores() {
         <h1 className="text-xl font-bold">🧹 집안일</h1>
       </header>
 
-      {/* 주 이동 */}
-      <div className="flex items-center justify-between mb-4 bg-slate-800/60 rounded-xl px-3 py-2">
-        <button onClick={() => setWeek(addDays(week, -7))} className="text-slate-400 px-2">‹</button>
-        <span className="text-sm">
-          {week === weekStartMonday() ? '이번 주' : ''} {week} ~ {addDays(week, 6)}
-        </span>
-        <button onClick={() => setWeek(addDays(week, 7))} className="text-slate-400 px-2">›</button>
+      {/* 주간 / 월간 보기 토글 */}
+      <div className="flex gap-1 mb-3 bg-slate-800/60 rounded-xl p-1">
+        {[
+          ['week', '주간 보기'],
+          ['month', '월간 달력'],
+        ].map(([mode, label]) => (
+          <button
+            key={mode}
+            onClick={() => setViewMode(mode)}
+            className={`flex-1 py-2 rounded-lg text-sm font-bold ${viewMode === mode ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      {/* 액션 버튼 */}
-      <div className="flex gap-2 mb-4">
-        <button onClick={doRotate} disabled={busy} className="flex-1 py-2.5 rounded-xl bg-indigo-600 font-medium text-sm disabled:opacity-50">
-          🔄 자동 로테이션
-        </button>
-        <button
-          onClick={() => setEdit((e) => !e)}
-          className={`flex-1 py-2.5 rounded-xl font-medium text-sm border ${
-            edit ? 'bg-amber-600 border-amber-500' : 'bg-slate-800 border-slate-600 text-slate-300'
-          }`}
-        >
-          ✏️ 수동 지정 {edit ? '완료' : ''}
-        </button>
-      </div>
-      {edit && <p className="text-xs text-amber-300 mb-3">표의 칸을 탭하면 담당자가 순서대로 바뀝니다.</p>}
+      {viewMode === 'week' ? (
+        <>
+          {/* 주 이동 */}
+          <div className="flex items-center justify-between mb-4 bg-slate-800/60 rounded-xl px-3 py-2">
+            <button onClick={() => setWeek(addDays(week, -7))} className="text-slate-400 px-2">‹</button>
+            <span className="text-sm">
+              {week === weekStartMonday() ? '이번 주' : ''} {week} ~ {addDays(week, 6)}
+            </span>
+            <button onClick={() => setWeek(addDays(week, 7))} className="text-slate-400 px-2">›</button>
+          </div>
+
+          {/* 액션 버튼 */}
+          <div className="flex gap-2 mb-4">
+            <button onClick={doRotate} disabled={busy} className="flex-1 py-2.5 rounded-xl bg-slate-700 border border-slate-600 font-medium text-sm disabled:opacity-50">
+              🔄 이번 주만
+            </button>
+            <button
+              onClick={() => setEdit((e) => !e)}
+              className={`flex-1 py-2.5 rounded-xl font-medium text-sm border ${
+                edit ? 'bg-amber-600 border-amber-500' : 'bg-slate-800 border-slate-600 text-slate-300'
+              }`}
+            >
+              ✏️ 수동 지정 {edit ? '완료' : ''}
+            </button>
+          </div>
+          {edit && <p className="text-xs text-amber-300 mb-3">표의 칸을 탭하면 담당자가 순서대로 바뀝니다.</p>}
+        </>
+      ) : (
+        <>
+          {/* 월 이동 */}
+          <div className="flex items-center justify-between mb-3 bg-slate-800/60 rounded-xl px-3 py-2">
+            <button onClick={() => setMonth(addMonth(month, -1))} className="text-slate-400 px-2">‹</button>
+            <span className="text-sm font-bold">
+              {month.slice(0, 4)}년 {monthLabel(month)}
+              {month === monthOf(todayYmd()) ? ' (이번 달)' : ''}
+            </span>
+            <button onClick={() => setMonth(addMonth(month, 1))} className="text-slate-400 px-2">›</button>
+          </div>
+
+          {/* 한 달치 자동 배정 */}
+          <button
+            onClick={doRotateMonth}
+            disabled={busy}
+            className="w-full py-2.5 rounded-xl bg-indigo-600 font-bold text-sm mb-2 disabled:opacity-50"
+          >
+            📅 {monthLabel(month)} 한 달치 자동 배정 (공평 분배)
+          </button>
+          <p className="text-[11px] text-slate-500 mb-3">
+            📌 고정: 분리수거 수·일 = 하울·하람 / 안방화장실 = 아빠 · 나머지는 포인트 기준 공평 분배
+          </p>
+        </>
+      )}
       {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
 
+      {viewMode === 'week' && (
+      <>
       {/* 가족 칩 — 이름을 누르면 그 사람 집안일 목록/수정 */}
       <p className="text-xs text-slate-500 mb-2">이름을 누르면 그 사람의 집안일을 보고 수정할 수 있어요</p>
       <div className="flex gap-2 mb-4">
@@ -318,7 +467,7 @@ export default function Chores() {
       {/* 주간 당번표 */}
       {grid.length === 0 ? (
         <div className="bg-slate-800/60 rounded-2xl p-6 text-center text-slate-400 text-sm mb-6">
-          아직 당번표가 없어요.<br />“🔄 자동 로테이션”으로 시작해 보세요.
+          아직 당번표가 없어요.<br />“월간 달력 → 📅 한 달치 자동 배정”으로 시작해 보세요.
         </div>
       ) : (
         <div className="bg-slate-800/60 rounded-2xl p-3 mb-6 overflow-x-auto">
@@ -386,6 +535,57 @@ export default function Chores() {
           </table>
         </div>
       )}
+      </>
+      )}
+
+      {/* 월간 달력 보기 */}
+      {viewMode === 'month' && (
+        <MonthCalendar weeks={calendar} month={month} today={today} />
+      )}
+
+      {/* 이번(보는) 달 순위 — 경쟁 보드 */}
+      <div className="bg-slate-800/60 border border-amber-500/30 rounded-2xl p-4 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-bold">🏆 {monthLabel(month)} 집안일 순위</h2>
+          <button
+            onClick={() => {
+              const last = prevMonth(monthOf(todayYmd()))
+              getMonthScores(last).then((sc) => {
+                const ranking = FAMILY.map((f) => ({ key: f.key, ...(sc[f.key] || { points: 0, count: 0 }) }))
+                  .filter((r) => r.points > 0)
+                  .sort((a, b) => b.points - a.points)
+                if (ranking.length) setAward({ month: last, ranking })
+                else setMsg('지난달 완료 기록이 아직 없어요.')
+              })
+            }}
+            className="text-[11px] text-amber-300 underline"
+          >
+            지난달 시상 보기
+          </button>
+        </div>
+        {monthRanking.every((r) => r.points === 0) ? (
+          <p className="text-sm text-slate-400 text-center py-2">아직 완료한 집안일이 없어요. 먼저 시작해봐요! 💪</p>
+        ) : (
+          <ul className="space-y-2">
+            {monthRanking.map((r, i) => {
+              const top = monthRanking[0].points || 1
+              const rank = r.points === 0 ? '·' : medalOf(i)
+              return (
+                <li key={r.key} className="flex items-center gap-2">
+                  <span className="w-6 text-center text-sm">{rank}</span>
+                  <Avatar k={r.key} size={22} />
+                  <span className="text-sm font-bold w-10" style={{ color: r.color }}>{r.name}</span>
+                  <div className="flex-1 h-2 rounded-full bg-slate-900 overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${(r.points / top) * 100}%`, background: r.color }} />
+                  </div>
+                  <span className="text-xs text-violet-300 w-14 text-right">{r.points}P·{r.count}개</span>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+        <p className="text-[11px] text-slate-500 mt-2">매월 1일, 지난달 1·2·3위를 축하 팝업으로 알려줘요 🎉</p>
+      </div>
 
       {/* 밀린 내 할 일 — 지난 날·이전 주, 언제든 다시 완료 체크 */}
       {overdue.length > 0 && (
@@ -571,7 +771,108 @@ export default function Chores() {
         </div>
       )}
 
+      {/* 매월 초 시상 팝업 */}
+      {award && <AwardPopup award={award} onClose={() => setAward(null)} />}
+
       <BottomNav />
+    </div>
+  )
+}
+
+// 월간 달력 — 주 단위 격자, 각 날짜 칸에 담당 아바타
+function MonthCalendar({ weeks, month, today }) {
+  const [openDay, setOpenDay] = useState(null)
+  const dayItems = openDay ? weeks.flat().find((d) => d.date === openDay)?.items || [] : []
+  return (
+    <div className="bg-slate-800/60 rounded-2xl p-2 mb-6">
+      <div className="grid grid-cols-7 mb-1">
+        {DAY_LABELS.map((d, i) => (
+          <div key={d} className={`text-center text-[11px] font-bold py-1 ${i === 5 ? 'text-amber-400' : i === 6 ? 'text-rose-400' : 'text-slate-400'}`}>{d}</div>
+        ))}
+      </div>
+      {weeks.map((wk, wi) => (
+        <div key={wi} className="grid grid-cols-7 gap-0.5 mb-0.5">
+          {wk.map((cell) => {
+            const done = cell.items.filter((c) => c.done).length
+            const isToday = cell.date === today
+            return (
+              <button
+                key={cell.date}
+                onClick={() => cell.items.length && setOpenDay(cell.date)}
+                className={`min-h-[52px] rounded-lg p-1 flex flex-col items-stretch text-left border ${
+                  isToday ? 'border-indigo-400' : 'border-transparent'
+                } ${cell.inMonth ? 'bg-slate-900/60' : 'bg-slate-900/20 opacity-40'}`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className={`text-[10px] font-bold ${isToday ? 'text-indigo-300' : 'text-slate-400'}`}>{Number(cell.date.slice(8))}</span>
+                  {cell.items.length > 0 && <span className="text-[8px] text-slate-500">{done}/{cell.items.length}</span>}
+                </div>
+                <div className="flex flex-wrap gap-0.5 mt-0.5">
+                  {cell.items.slice(0, 5).map((c) => (
+                    <Avatar key={c.id} k={c.assignee_key} size={13} dim={c.done} />
+                  ))}
+                  {cell.items.length > 5 && <span className="text-[8px] text-slate-500">+{cell.items.length - 5}</span>}
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      ))}
+
+      {/* 날짜 상세 */}
+      {openDay && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center" onClick={() => setOpenDay(null)}>
+          <div className="bg-slate-800 rounded-t-2xl p-5 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold">{openDay.slice(5).replace('-', '/')} 집안일</h3>
+              <button onClick={() => setOpenDay(null)} className="text-slate-400">✕</button>
+            </div>
+            <ul className="space-y-1.5 max-h-72 overflow-y-auto">
+              {dayItems.map((c) => (
+                <li key={c.id} className="flex items-center gap-2 text-sm">
+                  <Avatar k={c.assignee_key} size={22} dim={c.done} />
+                  <span className={`font-bold ${c.done ? 'line-through text-slate-500' : ''}`} style={{ color: colorOf(c.assignee_key) }}>{nameOf(c.assignee_key)}</span>
+                  <span className={`flex-1 ${c.done ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                    {c.fixed && '📌 '}{c.title}
+                  </span>
+                  <span className="text-xs text-slate-400">+{c.points}P{c.done ? ' ✓' : ''}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// 매월 초 시상 팝업 — 지난달 1·2·3위 축하
+function AwardPopup({ award, onClose }) {
+  const top3 = award.ranking.slice(0, 3)
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-6" onClick={onClose}>
+      <div className="bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-400/50 rounded-3xl p-6 max-w-xs w-full text-center" onClick={(e) => e.stopPropagation()}>
+        <div className="text-4xl mb-1">🏆</div>
+        <h2 className="text-lg font-bold mb-1">{monthLabel(award.month)} 집안일 시상식</h2>
+        <p className="text-xs text-slate-400 mb-4">지난달 가장 열심히 한 가족을 축하해요! 🎉</p>
+        <div className="space-y-2 mb-4">
+          {top3.map((r, i) => (
+            <div
+              key={r.key}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2 ${i === 0 ? 'bg-amber-500/20 border border-amber-400/50' : 'bg-slate-800'}`}
+            >
+              <span className="text-2xl">{medalOf(i)}</span>
+              <Avatar k={r.key} size={30} />
+              <span className="font-bold flex-1 text-left" style={{ color: colorOf(r.key) }}>{nameOf(r.key)}</span>
+              <span className="text-sm text-violet-300 font-bold">{r.points}P</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-sm text-amber-200 mb-4 font-bold">
+          🎉 {nameOf(top3[0].key)} 축하해요! 이번 달도 화이팅! 💪
+        </p>
+        <button onClick={onClose} className="w-full py-2.5 rounded-xl bg-amber-500 text-slate-900 font-bold">확인 🎊</button>
+      </div>
     </div>
   )
 }
