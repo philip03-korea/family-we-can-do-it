@@ -217,6 +217,9 @@ export default function Dashboard() {
           ['/shop', '🛒 보상 상점'],
           ['/meals', '🍚 식단표'],
           ['/schedule', '🗓️ 하람 계획표'],
+          ['/counsel', '🧠 마음 상담'],
+          // 교회 교육기획 — 아빠 계정에서만 노출(서버에서도 재검증)
+          ...(ownKey === 'dad' ? [['/church', '⛪ 교회 교육기획']] : []),
         ].map(([to, label]) => (
           <button key={to} onClick={() => navigate(to)} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
             {label}

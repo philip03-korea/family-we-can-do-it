@@ -1,0 +1,523 @@
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { FAMILY, colorOf, textOnColor } from '../data/family'
+import {
+  TESTS, TEST_LIST, DISCLAIMER, HOTLINES, CHAT_HELP, CENTER_FINDER, TONE_STYLE, scoreTest,
+} from '../data/counsel'
+import {
+  saveResult, listMyResults, listSharedResults, setShared, setNote, deleteResult,
+  latestByTest, trendOf, friendlyCounselError,
+} from '../lib/counsel'
+import BottomNav from '../components/BottomNav'
+
+const nameOf = (k) => FAMILY.find((f) => f.key === k)?.name || '가족'
+
+function Avatar({ k, size = 24 }) {
+  if (!k) return null
+  return (
+    <span
+      className="inline-flex items-center justify-center rounded-full font-bold shrink-0"
+      style={{ width: size, height: size, background: colorOf(k), color: textOnColor(k), fontSize: size * 0.5 }}
+    >
+      {FAMILY.find((f) => f.key === k)?.emoji || '·'}
+    </span>
+  )
+}
+
+// ============================================================
+// 위기개입 화면 — 하23 프로토콜: 점수보다 먼저, 즉시, 회피 없이
+// ============================================================
+function CrisisScreen({ onClose }) {
+  return (
+    <div className="fixed inset-0 z-[60] bg-slate-900 overflow-y-auto">
+      <div className="max-w-md mx-auto p-5 pb-10">
+        <div className="bg-rose-500/15 border-2 border-rose-500/50 rounded-2xl p-5 mb-4 mt-4">
+          <h1 className="text-xl font-bold text-rose-200 mb-3">잠깐만요. 혼자 두지 않을게요.</h1>
+          <p className="text-sm text-slate-200 leading-relaxed mb-2">
+            방금 답변에서 <strong className="text-rose-200">스스로를 해치고 싶은 마음</strong>에 대한 이야기가 있었어요.
+            지금 정말 힘든 시간을 보내고 계시는 것 같아요.
+          </p>
+          <p className="text-sm text-slate-200 leading-relaxed">
+            그 마음이 드는 건 당신이 약해서가 아니에요. 지금 바로 도움을 받을 수 있고,
+            아래 번호는 <strong>24시간·무료·비밀보장</strong>이에요.
+          </p>
+        </div>
+
+        <div className="space-y-2 mb-4">
+          {HOTLINES.filter((h) => h.urgent).map((h) => (
+            <a
+              key={h.num}
+              href={`tel:${h.num.replace(/-/g, '')}`}
+              className="block bg-rose-600 rounded-2xl p-4 active:scale-[0.98] transition"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-2xl font-black text-white">{h.num}</div>
+                  <div className="text-sm font-bold text-rose-100">{h.name}</div>
+                  <div className="text-xs text-rose-200/80 mt-0.5">{h.desc}</div>
+                </div>
+                <span className="text-3xl">📞</span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <p className="text-xs text-slate-400 mb-2">전화가 부담스러우면 채팅으로도 가능해요</p>
+        <a href={CHAT_HELP.url} target="_blank" rel="noreferrer" className="block bg-slate-800 border border-slate-600 rounded-2xl p-4 mb-4">
+          <div className="font-bold text-sm text-sky-300">💬 {CHAT_HELP.name}</div>
+          <div className="text-xs text-slate-400 mt-1">{CHAT_HELP.desc}</div>
+        </a>
+
+        <div className="bg-slate-800/60 rounded-2xl p-4 mb-4">
+          <h2 className="font-bold text-sm mb-2">🤝 지금 할 수 있는 것</h2>
+          <ul className="text-sm text-slate-300 space-y-2 leading-relaxed">
+            <li>· <strong className="text-white">곁에 있는 가족에게 지금 마음을 말해주세요.</strong> 혼자 견디지 않아도 돼요.</li>
+            <li>· 위 번호로 전화하거나, 어렵다면 문자·채팅 상담을 이용해보세요.</li>
+            <li>· 당장 위험하다고 느껴지면 <a href="tel:119" className="text-rose-300 font-bold underline">119</a> 또는 <a href="tel:112" className="text-rose-300 font-bold underline">112</a>에 연락하세요.</li>
+          </ul>
+        </div>
+
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-4">
+          <p className="text-xs text-amber-200/90 leading-relaxed">
+            이 앱은 AI 조력자예요. 훈련된 상담사가 아니고 진단도 하지 않아요.
+            그래서 <strong>실제 전문가에게 연결되는 것</strong>이 가장 중요해요.
+            이 결과는 <strong>가족에게 자동으로 공유되지 않아요</strong> — 말하고 싶을 때 직접 이야기하면 돼요.
+          </p>
+        </div>
+
+        <button onClick={onClose} className="w-full py-3 rounded-2xl bg-slate-700 font-bold text-sm">
+          확인했어요, 닫기
+        </button>
+        <p className="text-center text-[11px] text-slate-500 mt-3">
+          이 화면은 언제든 상담 탭에서 다시 볼 수 있어요.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// 검사 진행
+// ============================================================
+function TestRunner({ test, onDone, onCancel }) {
+  const [idx, setIdx] = useState(0)
+  const [answers, setAnswers] = useState([])
+  const total = test.questions.length
+  const pct = Math.round((idx / total) * 100)
+
+  function pick(v) {
+    const next = [...answers]
+    next[idx] = v
+    setAnswers(next)
+    if (idx + 1 < total) setTimeout(() => setIdx(idx + 1), 140)
+    else setTimeout(() => onDone(next), 140)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900 overflow-y-auto">
+      <div className="max-w-md mx-auto p-5">
+        <div className="flex items-center justify-between mb-3 pt-2">
+          <button onClick={onCancel} className="text-slate-400 text-sm">← 그만두기</button>
+          <span className="text-xs text-slate-400">{idx + 1} / {total}</span>
+        </div>
+
+        <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-5">
+          <div className="h-full transition-all duration-300" style={{ width: `${pct}%`, background: test.color }} />
+        </div>
+
+        <p className="text-xs text-slate-500 mb-1">{test.period}</p>
+        <h2 className="text-lg font-bold leading-snug mb-6 min-h-[3.5rem]">{test.questions[idx]}</h2>
+
+        <div className="space-y-2">
+          {test.scale.map((s) => (
+            <button
+              key={s.v}
+              onClick={() => pick(s.v)}
+              className={`w-full py-3.5 px-4 rounded-2xl text-left text-sm font-medium border-2 transition active:scale-[0.98] ${
+                answers[idx] === s.v ? 'border-white bg-slate-700' : 'border-slate-700 bg-slate-800/60'
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        {idx > 0 && (
+          <button onClick={() => setIdx(idx - 1)} className="w-full mt-4 py-2.5 text-sm text-slate-400">
+            ← 이전 문항
+          </button>
+        )}
+
+        <p className="text-[11px] text-slate-600 mt-6 leading-relaxed">{DISCLAIMER}</p>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// 결과 화면
+// ============================================================
+function ResultView({ test, result, onShare, onClose, isShared }) {
+  const tone = TONE_STYLE[result.level.tone]
+  const pct = Math.round((result.score / test.max) * 100)
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900 overflow-y-auto">
+      <div className="max-w-md mx-auto p-5 pb-10">
+        <div className="flex items-center justify-between mb-4 pt-2">
+          <h2 className="font-bold">{test.emoji} {test.name} 결과</h2>
+          <button onClick={onClose} className="text-slate-400 text-sm">닫기 ✕</button>
+        </div>
+
+        <div className={`${tone.bg} border-2 ${tone.border} rounded-2xl p-5 mb-4 text-center`}>
+          <div className="text-5xl font-black mb-1" style={{ color: test.color }}>{result.score}</div>
+          <div className="text-xs text-slate-400 mb-3">/ {test.max}점</div>
+          <div className={`text-xl font-bold ${tone.text}`}>{result.level.label}</div>
+          <div className="h-2 bg-slate-900/60 rounded-full overflow-hidden mt-4">
+            <div className="h-full" style={{ width: `${pct}%`, background: test.color }} />
+          </div>
+        </div>
+
+        <div className="bg-slate-800/60 rounded-2xl p-4 mb-4">
+          <h3 className="text-sm font-bold mb-2">💡 다음 단계</h3>
+          <p className="text-sm text-slate-300 leading-relaxed">{result.level.next}</p>
+          {test.note && <p className="text-xs text-slate-500 mt-2">{test.note}</p>}
+        </div>
+
+        {/* 중등도 이상이면 상담 자원 안내 */}
+        {(result.level.tone === 'warn' || result.level.tone === 'alert') && (
+          <div className="bg-slate-800/60 border border-slate-600 rounded-2xl p-4 mb-4">
+            <h3 className="text-sm font-bold mb-2">🤝 도움받을 수 있는 곳</h3>
+            <div className="space-y-2">
+              <a href="tel:15770199" className="flex items-center justify-between bg-slate-900 rounded-xl p-3">
+                <div>
+                  <div className="font-bold text-sm">1577-0199</div>
+                  <div className="text-[11px] text-slate-400">정신건강 위기상담 · 24시간</div>
+                </div>
+                <span>📞</span>
+              </a>
+              <a href={CENTER_FINDER.url} target="_blank" rel="noreferrer" className="flex items-center justify-between bg-slate-900 rounded-xl p-3">
+                <div>
+                  <div className="font-bold text-sm">{CENTER_FINDER.name}</div>
+                  <div className="text-[11px] text-slate-400">{CENTER_FINDER.desc}</div>
+                </div>
+                <span>🔗</span>
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* 가족 공유 — 위기 결과는 불가 */}
+        {result.crisis ? (
+          <div className="bg-slate-800/60 border border-slate-600 rounded-2xl p-4 mb-4">
+            <p className="text-xs text-slate-400 leading-relaxed">
+              🔒 이 결과는 가족 공유가 되지 않아요. 먼저 전문가와 이야기해보시고,
+              가족에게는 직접 말하고 싶을 때 말해주세요.
+            </p>
+          </div>
+        ) : (
+          <button
+            onClick={onShare}
+            className={`w-full py-3 rounded-2xl font-bold text-sm mb-3 border-2 ${
+              isShared ? 'bg-violet-600 border-violet-400' : 'bg-slate-800 border-slate-600 text-slate-300'
+            }`}
+          >
+            {isShared ? '✓ 가족회의에서 나누기 (공유됨)' : '👨‍👩‍👧‍👦 가족회의에서 나누기'}
+          </button>
+        )}
+
+        <p className="text-[11px] text-slate-600 leading-relaxed mb-4">{DISCLAIMER}</p>
+        <button onClick={onClose} className="w-full py-3 rounded-2xl bg-slate-700 font-bold text-sm">닫기</button>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// 메인
+// ============================================================
+export default function Counsel() {
+  const { user, profile } = useAuth()
+  const navigate = useNavigate()
+  const myKey = profile?.member_key
+
+  const [tab, setTab] = useState('tests')      // tests | mine | family
+  const [results, setResults] = useState([])
+  const [sharedRows, setSharedRows] = useState([])
+  const [running, setRunning] = useState(null) // test object
+  const [viewing, setViewing] = useState(null) // { test, result, row }
+  const [crisis, setCrisis] = useState(false)
+  const [msg, setMsg] = useState('')
+  const [showHotlines, setShowHotlines] = useState(false)
+
+  async function refresh() {
+    if (!user?.id) return
+    const [mine, shared] = await Promise.all([
+      listMyResults(user.id).catch(() => []),
+      listSharedResults().catch(() => []),
+    ])
+    setResults(mine)
+    setSharedRows(shared)
+  }
+  useEffect(() => {
+    refresh().catch((e) => setMsg('⚠️ ' + friendlyCounselError(e)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id])
+
+  const latest = useMemo(() => latestByTest(results), [results])
+
+  // 검사 완료 → 채점 → 위기 우선 → 저장 → 결과
+  async function handleDone(test, answers) {
+    const scored = scoreTest(test.key, answers)
+    setRunning(null)
+
+    // ⚠️ 하23 규칙: 위기문항 양성이면 점수 설명보다 먼저 위기개입
+    if (scored.crisis) setCrisis(true)
+
+    try {
+      const row = await saveResult({ userId: user.id, memberKey: myKey, testKey: test.key, answers })
+      await refresh()
+      if (!scored.crisis) setViewing({ test, result: scored, row })
+      else setViewing({ test, result: scored, row, deferred: true })
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyCounselError(e))
+    }
+  }
+
+  async function toggleShare(row) {
+    try {
+      await setShared(row.id, !row.shared, row.crisis)
+      await refresh()
+      setViewing((v) => (v ? { ...v, row: { ...v.row, shared: !row.shared } } : v))
+      setMsg(!row.shared ? '👨‍👩‍👧‍👦 가족회의에서 볼 수 있게 공유했어요.' : '공유를 해제했어요.')
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyCounselError(e))
+    }
+  }
+
+  async function removeRow(id) {
+    try {
+      await deleteResult(id)
+      await refresh()
+    } catch (e) {
+      setMsg('⚠️ ' + friendlyCounselError(e))
+    }
+  }
+
+  return (
+    <div className="min-h-screen max-w-md mx-auto p-5 pb-28">
+      <header className="flex items-center gap-3 mb-4">
+        <button onClick={() => navigate('/')} className="text-slate-400 text-sm">← 대시보드</button>
+        <h1 className="text-xl font-bold">🧠 마음 상담</h1>
+      </header>
+
+      {/* 상시 안내 */}
+      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3 mb-3">
+        <p className="text-[11px] text-slate-400 leading-relaxed">{DISCLAIMER}</p>
+      </div>
+
+      {/* 위기 자원은 항상 접근 가능 */}
+      <button
+        onClick={() => setShowHotlines((s) => !s)}
+        className="w-full bg-rose-500/10 border border-rose-500/30 rounded-2xl p-3 mb-4 text-left"
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-bold text-rose-200">🆘 지금 많이 힘들다면 — 상담 전화</span>
+          <span className="text-rose-300 text-xs">{showHotlines ? '접기 ▲' : '펼치기 ▼'}</span>
+        </div>
+        {showHotlines && (
+          <div className="mt-3 space-y-2">
+            {HOTLINES.map((h) => (
+              <a key={h.num} href={`tel:${h.num.replace(/-/g, '')}`} className="flex items-center justify-between bg-slate-900 rounded-xl p-2.5">
+                <div>
+                  <div className="font-bold text-sm">{h.num} <span className="text-slate-400 font-normal text-xs">{h.name}</span></div>
+                  <div className="text-[10px] text-slate-500">{h.desc}</div>
+                </div>
+                <span className="text-sm">📞</span>
+              </a>
+            ))}
+            <a href={CHAT_HELP.url} target="_blank" rel="noreferrer" className="block bg-slate-900 rounded-xl p-2.5">
+              <div className="font-bold text-sm text-sky-300">💬 {CHAT_HELP.name}</div>
+              <div className="text-[10px] text-slate-500">{CHAT_HELP.desc}</div>
+            </a>
+          </div>
+        )}
+      </button>
+
+      {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
+
+      {/* 탭 */}
+      <div className="flex gap-2 mb-4">
+        {[
+          { k: 'tests',  t: '검사하기' },
+          { k: 'mine',   t: `내 기록${results.length ? ` (${results.length})` : ''}` },
+          { k: 'family', t: `가족 나눔${sharedRows.length ? ` (${sharedRows.length})` : ''}` },
+        ].map((x) => (
+          <button
+            key={x.k}
+            onClick={() => setTab(x.k)}
+            className={`flex-1 py-2 rounded-xl text-sm font-bold border ${
+              tab === x.k ? 'bg-indigo-600 border-indigo-500' : 'bg-slate-800 border-slate-600 text-slate-400'
+            }`}
+          >
+            {x.t}
+          </button>
+        ))}
+      </div>
+
+      {/* ── 검사하기 ── */}
+      {tab === 'tests' && (
+        <div className="space-y-3">
+          {TEST_LIST.map((t) => {
+            const last = latest[t.key]
+            return (
+              <button
+                key={t.key}
+                onClick={() => setRunning(t)}
+                className="w-full bg-slate-800/60 border border-slate-700 rounded-2xl p-4 text-left active:scale-[0.99] transition"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">{t.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-sm">{t.name}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{t.questions.length}문항 · {t.period}</div>
+                    {last && (
+                      <div className="text-[11px] mt-1.5" style={{ color: t.color }}>
+                        최근: {last.score}/{last.max_score}점 · {last.level_label}
+                        <span className="text-slate-600"> ({last.created_at.slice(5, 10)})</span>
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-slate-500 text-sm">›</span>
+                </div>
+              </button>
+            )
+          })}
+          <p className="text-[11px] text-slate-600 leading-relaxed pt-2">
+            검사 결과는 <strong className="text-slate-400">기본적으로 나만 볼 수 있어요.</strong> 가족과 나누고 싶은 결과만
+            직접 &ldquo;가족회의에서 나누기&rdquo;를 눌러 공유하면 돼요.
+          </p>
+        </div>
+      )}
+
+      {/* ── 내 기록 ── */}
+      {tab === 'mine' && (
+        <div className="space-y-2">
+          {results.length === 0 ? (
+            <p className="text-slate-400 text-sm text-center py-8">아직 검사 기록이 없어요.</p>
+          ) : (
+            results.map((r) => {
+              const t = TESTS[r.test_key]
+              const lvl = t?.levels.find((l) => l.key === r.level_key)
+              const tone = TONE_STYLE[lvl?.tone || 'ok']
+              return (
+                <div key={r.id} className={`${tone.bg} border ${tone.border} rounded-2xl p-3`}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{t?.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold">{t?.name}</div>
+                      <div className="text-[11px] text-slate-400">{r.created_at.slice(0, 10)} · {r.score}/{r.max_score}점</div>
+                    </div>
+                    <span className={`text-xs font-bold ${tone.text}`}>{r.level_label}</span>
+                    <button onClick={() => removeRow(r.id)} className="text-slate-500 text-sm ml-1">🗑</button>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    {r.crisis ? (
+                      <span className="text-[10px] text-rose-300">🔒 비공개 고정 (위기 신호)</span>
+                    ) : (
+                      <button
+                        onClick={() => toggleShare(r)}
+                        className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${
+                          r.shared ? 'bg-violet-600' : 'bg-slate-700 text-slate-300'
+                        }`}
+                      >
+                        {r.shared ? '✓ 가족 공유중' : '가족회의에서 나누기'}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setViewing({ test: t, result: { score: r.score, max: r.max_score, level: lvl, crisis: r.crisis }, row: r })}
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-700 text-slate-300"
+                    >
+                      결과 보기
+                    </button>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+      )}
+
+      {/* ── 가족 나눔 (가족회의용) ── */}
+      {tab === 'family' && (
+        <div>
+          <div className="bg-violet-500/10 border border-violet-500/30 rounded-2xl p-3 mb-3">
+            <p className="text-xs text-violet-200/90 leading-relaxed">
+              👨‍👩‍👧‍👦 가족이 <strong>직접 공유하기로 선택한</strong> 결과만 보여요.
+              가족회의에서 &ldquo;요즘 어땠어?&rdquo; 하고 이야기를 시작하는 데 써보세요.
+              점수로 평가하지 말고, <strong>마음을 물어봐주는 것</strong>이 목적이에요.
+            </p>
+          </div>
+          {sharedRows.length === 0 ? (
+            <p className="text-slate-400 text-sm text-center py-8">아직 공유된 결과가 없어요.</p>
+          ) : (
+            <div className="space-y-2">
+              {sharedRows.map((r) => {
+                const t = TESTS[r.test_key]
+                const lvl = t?.levels.find((l) => l.key === r.level_key)
+                const tone = TONE_STYLE[lvl?.tone || 'ok']
+                return (
+                  <div key={r.id} className={`${tone.bg} border ${tone.border} rounded-2xl p-3`}>
+                    <div className="flex items-center gap-2">
+                      <Avatar k={r.member_key} size={26} />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-bold">{nameOf(r.member_key)} · {t?.name}</div>
+                        <div className="text-[11px] text-slate-400">{r.created_at.slice(0, 10)} · {r.score}/{r.max_score}점</div>
+                      </div>
+                      <span className={`text-xs font-bold ${tone.text}`}>{r.level_label}</span>
+                    </div>
+                    {r.note && <p className="text-xs text-slate-300 mt-2 bg-slate-900/50 rounded-lg p-2">💬 {r.note}</p>}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* 가족회의 대화 가이드 */}
+          <div className="bg-slate-800/60 rounded-2xl p-4 mt-4">
+            <h3 className="text-sm font-bold mb-2">🗣️ 가족회의 대화 팁</h3>
+            <ul className="text-xs text-slate-300 space-y-1.5 leading-relaxed">
+              <li>· &ldquo;점수가 왜 이래?&rdquo; ❌ → &ldquo;요즘 어떤 게 제일 힘들었어?&rdquo; ⭕</li>
+              <li>· 조언하려 하기보다 <strong>끝까지 들어주기</strong>부터.</li>
+              <li>· &ldquo;그럴 수도 있지&rdquo;로 넘기지 않기 — 감정을 그대로 인정해주기.</li>
+              <li>· 0~10점으로 물어보기: &ldquo;지금 기분이 몇 점이야? 1점 올리려면 뭐가 필요해?&rdquo;</li>
+              <li>· 힘들다고 하면 <strong>믿음이 부족해서가 아니에요</strong> — 필요하면 전문가와 연결해주세요.</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {/* 오버레이들 */}
+      {running && (
+        <TestRunner
+          test={running}
+          onDone={(answers) => handleDone(running, answers)}
+          onCancel={() => setRunning(null)}
+        />
+      )}
+      {crisis && <CrisisScreen onClose={() => setCrisis(false)} />}
+      {viewing && !crisis && viewing.test && viewing.result?.level && (
+        <ResultView
+          test={viewing.test}
+          result={viewing.result}
+          isShared={!!viewing.row?.shared}
+          onShare={() => toggleShare(viewing.row)}
+          onClose={() => setViewing(null)}
+        />
+      )}
+
+      <BottomNav />
+    </div>
+  )
+}

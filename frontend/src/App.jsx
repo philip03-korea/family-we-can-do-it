@@ -15,6 +15,8 @@ import Quiz from './pages/Quiz'
 import Meals from './pages/Meals'
 import Sentences from './pages/Sentences'
 import Schedule from './pages/Schedule'
+import Counsel from './pages/Counsel'
+import Church from './pages/Church'
 import SetupNotice from './pages/SetupNotice'
 
 function Protected({ children }) {
@@ -143,6 +145,24 @@ export default function App() {
         element={
           <Protected>
             <Schedule />
+          </Protected>
+        }
+      />
+      {/* 마음 상담 — 전 가족 */}
+      <Route
+        path="/counsel"
+        element={
+          <Protected>
+            <Counsel />
+          </Protected>
+        }
+      />
+      {/* 교회 교육기획 — 아빠 전용(페이지·서버 양쪽에서 검증) */}
+      <Route
+        path="/church"
+        element={
+          <Protected>
+            <Church />
           </Protected>
         }
       />
