@@ -218,6 +218,7 @@ export default function Dashboard() {
           ['/meals', '🍚 식단표'],
           ['/schedule', '🗓️ 하람 계획표'],
           ['/counsel', '🧠 마음 상담'],
+          ['/talk', '💬 가족 대화'],
           // 교회 교육기획 — 아빠 계정에서만 노출(서버에서도 재검증)
           ...(ownKey === 'dad' ? [['/church', '⛪ 교회 교육기획']] : []),
         ].map(([to, label]) => (

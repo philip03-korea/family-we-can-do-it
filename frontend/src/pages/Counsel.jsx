@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { FAMILY, colorOf, textOnColor } from '../data/family'
 import {
-  TESTS, TEST_LIST, DISCLAIMER, HOTLINES, CHAT_HELP, CENTER_FINDER, TONE_STYLE, scoreTest,
-  CONFIDENTIALITY, PARENT_KEYS, notifiesParents,
+  TESTS, TEST_LIST, TEST_GROUPS, DISCLAIMER, HOTLINES, CHAT_HELP, CENTER_FINDER, TONE_STYLE, scoreTest,
+  CONFIDENTIALITY, PARENT_KEYS, notifiesParents, displayScore, displayMax,
 } from '../data/counsel'
 import {
   saveResult, listMyResults, listSharedResults, setShared, setNote, deleteResult,
@@ -108,6 +108,124 @@ function CrisisScreen({ onClose, notifiesParent }) {
           이 화면은 언제든 상담 탭에서 다시 볼 수 있어요.
         </p>
       </div>
+    </div>
+  )
+}
+
+// ============================================================
+// ⓘ 검사 설명 — 어떤 검사인지 알고 받도록
+// ============================================================
+function InfoPanel({ test, onStart, onClose }) {
+  const i = test.info || {}
+  const rows = [
+    { icon: '🔍', label: '어떤 검사인가요?', text: i.what },
+    { icon: '👤', label: '누가 만들었나요?', text: i.who },
+    { icon: '🧮', label: '어떻게 채점하나요?', text: i.how },
+    { icon: '⚠️', label: '한계 — 꼭 알아두세요', text: i.limit, warn: true },
+    { icon: '📄', label: '출처·사용 권한', text: i.license },
+  ].filter((r) => r.text)
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900 overflow-y-auto">
+      <div className="max-w-md mx-auto p-5 pb-10">
+        <div className="flex items-center justify-between mb-4 pt-2">
+          <h2 className="font-bold flex items-center gap-2">
+            <span className="text-xl">{test.emoji}</span> {test.name}
+          </h2>
+          <button onClick={onClose} className="text-slate-400 text-sm">닫기 ✕</button>
+        </div>
+
+        <div className="flex gap-2 mb-4">
+          <span className="text-[11px] bg-slate-800 border border-slate-600 rounded-full px-2.5 py-1">
+            {test.questions.length}문항
+          </span>
+          <span className="text-[11px] bg-slate-800 border border-slate-600 rounded-full px-2.5 py-1">
+            약 {test.minutes}분
+          </span>
+          <span className="text-[11px] bg-slate-800 border border-slate-600 rounded-full px-2.5 py-1">
+            {test.period}
+          </span>
+          {test.kind === 'profile' && (
+            <span className="text-[11px] bg-violet-600/30 border border-violet-500/50 text-violet-200 rounded-full px-2.5 py-1">
+              점수 아님 · 프로필
+            </span>
+          )}
+        </div>
+
+        <div className="space-y-3 mb-4">
+          {rows.map((r) => (
+            <div key={r.label} className={`rounded-2xl p-3.5 border ${r.warn ? 'bg-amber-500/10 border-amber-500/30' : 'bg-slate-800/60 border-slate-700'}`}>
+              <div className={`text-xs font-bold mb-1.5 ${r.warn ? 'text-amber-300' : 'text-slate-400'}`}>
+                {r.icon} {r.label}
+              </div>
+              <p className="text-sm text-slate-200 leading-relaxed">{r.text}</p>
+            </div>
+          ))}
+          {i.note && (
+            <div className="bg-sky-500/10 border border-sky-500/30 rounded-2xl p-3.5">
+              <p className="text-sm text-sky-200 leading-relaxed">💡 {i.note}</p>
+            </div>
+          )}
+        </div>
+
+        {/* 프로필형이면 무엇을 재는지 미리 보여줌 */}
+        {test.dimensions && (
+          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3.5 mb-4">
+            <div className="text-xs font-bold text-slate-400 mb-2">📊 이런 걸 봐요</div>
+            <div className="space-y-1.5">
+              {test.dimensions.map((d) => (
+                <div key={d.key} className="flex items-start gap-2">
+                  <span className="text-sm shrink-0">{d.emoji}</span>
+                  <div className="text-xs">
+                    <span className="font-bold" style={{ color: d.color }}>{d.name}</span>
+                    <span className="text-slate-400"> — {d.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <button onClick={onStart} className="w-full py-3.5 rounded-2xl bg-indigo-600 font-bold text-sm mb-2">
+          검사 시작하기
+        </button>
+        <button onClick={onClose} className="w-full py-3 rounded-2xl bg-slate-800 text-slate-400 font-bold text-sm">
+          나중에
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// 프로필형 결과 (빅파이브·SDQ) — 점수가 아니라 "결"을 보여줌
+// ============================================================
+function ProfileResult({ test, subscores }) {
+  return (
+    <div className="space-y-3">
+      {test.dimensions.map((d) => {
+        const s = subscores?.[d.key]
+        if (!s) return null
+        const desc = s.pct >= 60 ? d.high : s.pct <= 40 ? d.low : null
+        return (
+          <div key={d.key} className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3.5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-bold flex items-center gap-1.5">
+                <span>{d.emoji}</span>
+                <span style={{ color: d.color }}>{d.name}</span>
+              </span>
+              <span className="text-xs text-slate-400">{s.raw} / {s.max}</span>
+            </div>
+            <div className="h-2.5 bg-slate-900 rounded-full overflow-hidden mb-2">
+              <div className="h-full rounded-full transition-all" style={{ width: `${s.pct}%`, background: d.color }} />
+            </div>
+            {desc && <p className="text-xs text-slate-300 leading-relaxed">{desc}</p>}
+          </div>
+        )
+      })}
+      <p className="text-[11px] text-slate-500 leading-relaxed pt-1">
+        높은 쪽이 좋은 게 아니에요. 그냥 &ldquo;나는 이런 결의 사람&rdquo;이라는 뜻이에요.
+      </p>
     </div>
   )
 }
@@ -230,8 +348,9 @@ function TestRunner({ test, onDone, onCancel }) {
 // 결과 화면
 // ============================================================
 function ResultView({ test, result, onShare, onClose, isShared }) {
-  const tone = TONE_STYLE[result.level.tone]
-  const pct = Math.round((result.score / test.max) * 100)
+  const isProfile = test.kind === 'profile'
+  const tone = TONE_STYLE[result.level?.tone || 'ok']
+  const pct = isProfile ? 0 : Math.round((result.score / test.max) * 100)
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900 overflow-y-auto">
@@ -241,23 +360,33 @@ function ResultView({ test, result, onShare, onClose, isShared }) {
           <button onClick={onClose} className="text-slate-400 text-sm">닫기 ✕</button>
         </div>
 
-        <div className={`${tone.bg} border-2 ${tone.border} rounded-2xl p-5 mb-4 text-center`}>
-          <div className="text-5xl font-black mb-1" style={{ color: test.color }}>{result.score}</div>
-          <div className="text-xs text-slate-400 mb-3">/ {test.max}점</div>
-          <div className={`text-xl font-bold ${tone.text}`}>{result.level.label}</div>
-          <div className="h-2 bg-slate-900/60 rounded-full overflow-hidden mt-4">
-            <div className="h-full" style={{ width: `${pct}%`, background: test.color }} />
+        {isProfile ? (
+          <div className="mb-4">
+            <ProfileResult test={test} subscores={result.subscores} />
           </div>
-        </div>
+        ) : (
+          <div className={`${tone.bg} border-2 ${tone.border} rounded-2xl p-5 mb-4 text-center`}>
+            <div className="text-5xl font-black mb-1" style={{ color: test.color }}>
+              {displayScore(test.key, result.score)}
+            </div>
+            <div className="text-xs text-slate-400 mb-3">/ {displayMax(test.key)}점</div>
+            <div className={`text-xl font-bold ${tone.text}`}>{result.level.label}</div>
+            <div className="h-2 bg-slate-900/60 rounded-full overflow-hidden mt-4">
+              <div className="h-full" style={{ width: `${pct}%`, background: test.color }} />
+            </div>
+          </div>
+        )}
 
-        <div className="bg-slate-800/60 rounded-2xl p-4 mb-4">
-          <h3 className="text-sm font-bold mb-2">💡 다음 단계</h3>
-          <p className="text-sm text-slate-300 leading-relaxed">{result.level.next}</p>
-          {test.note && <p className="text-xs text-slate-500 mt-2">{test.note}</p>}
-        </div>
+        {!isProfile && (
+          <div className="bg-slate-800/60 rounded-2xl p-4 mb-4">
+            <h3 className="text-sm font-bold mb-2">💡 다음 단계</h3>
+            <p className="text-sm text-slate-300 leading-relaxed">{result.level.next}</p>
+            {test.note && <p className="text-xs text-slate-500 mt-2">{test.note}</p>}
+          </div>
+        )}
 
         {/* 중등도 이상이면 상담 자원 안내 */}
-        {(result.level.tone === 'warn' || result.level.tone === 'alert') && (
+        {!isProfile && (result.level.tone === 'warn' || result.level.tone === 'alert') && (
           <div className="bg-slate-800/60 border border-slate-600 rounded-2xl p-4 mb-4">
             <h3 className="text-sm font-bold mb-2">🤝 도움받을 수 있는 곳</h3>
             <div className="space-y-2">
@@ -320,6 +449,7 @@ export default function Counsel() {
   const [results, setResults] = useState([])
   const [sharedRows, setSharedRows] = useState([])
   const [alerts, setAlerts] = useState([])     // 부모 전용: 자녀 위기
+  const [info, setInfo] = useState(null)       // ⓘ 설명 화면에 띄울 test
   const [consent, setConsent] = useState(null) // 고지 화면에 띄울 test
   const [running, setRunning] = useState(null) // test object
   const [viewing, setViewing] = useState(null) // { test, result, row }
@@ -457,32 +587,58 @@ export default function Counsel() {
 
       {/* ── 검사하기 ── */}
       {tab === 'tests' && (
-        <div className="space-y-3">
-          {TEST_LIST.map((t) => {
-            const last = latest[t.key]
-            return (
-              <button
-                key={t.key}
-                onClick={() => setConsent(t)}
-                className="w-full bg-slate-800/60 border border-slate-700 rounded-2xl p-4 text-left active:scale-[0.99] transition"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{t.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-bold text-sm">{t.name}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{t.questions.length}문항 · {t.period}</div>
-                    {last && (
-                      <div className="text-[11px] mt-1.5" style={{ color: t.color }}>
-                        최근: {last.score}/{last.max_score}점 · {last.level_label}
-                        <span className="text-slate-600"> ({last.created_at.slice(5, 10)})</span>
+        <div className="space-y-5">
+          {TEST_GROUPS.map((g) => (
+            <div key={g.name}>
+              <div className="mb-2">
+                <h3 className="text-sm font-bold text-slate-200">{g.name}</h3>
+                <p className="text-[11px] text-slate-500">{g.desc}</p>
+              </div>
+              <div className="space-y-2">
+                {g.keys.map((k) => {
+                  const t = TESTS[k]
+                  const last = latest[t.key]
+                  return (
+                    <div key={t.key} className="bg-slate-800/60 border border-slate-700 rounded-2xl p-3.5">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">{t.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-sm">{t.name}</div>
+                          <div className="text-xs text-slate-400 mt-0.5">
+                            {t.questions.length}문항 · 약 {t.minutes}분
+                            {t.kind === 'profile' && <span className="text-violet-300"> · 프로필형</span>}
+                            {t.forChildren && <span className="text-emerald-300"> · 청소년용</span>}
+                          </div>
+                          {last && (
+                            <div className="text-[11px] mt-1" style={{ color: t.color }}>
+                              최근: {last.level_key === 'profile'
+                                ? '프로필 결과'
+                                : `${displayScore(t.key, last.score)}/${displayMax(t.key)}점 · ${last.level_label}`}
+                              <span className="text-slate-600"> ({last.created_at.slice(5, 10)})</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <span className="text-slate-500 text-sm">›</span>
-                </div>
-              </button>
-            )
-          })}
+                      <div className="flex gap-2 mt-2.5">
+                        <button
+                          onClick={() => setInfo(t)}
+                          className="px-3 py-1.5 rounded-lg bg-slate-700 text-[11px] font-bold text-slate-300"
+                        >
+                          ⓘ 어떤 검사예요?
+                        </button>
+                        <button
+                          onClick={() => setConsent(t)}
+                          className="flex-1 py-1.5 rounded-lg bg-indigo-600 text-[11px] font-bold"
+                        >
+                          검사하기
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
           {/* ⚠️ 이 안내는 실제 동작과 일치해야 한다 */}
           <div className="bg-slate-800/40 border border-slate-700 rounded-2xl p-3 mt-2">
             <p className="text-[11px] text-slate-400 leading-relaxed">
@@ -516,7 +672,10 @@ export default function Counsel() {
                     <span className="text-lg">{t?.emoji}</span>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-bold">{t?.name}</div>
-                      <div className="text-[11px] text-slate-400">{r.created_at.slice(0, 10)} · {r.score}/{r.max_score}점</div>
+                      <div className="text-[11px] text-slate-400">
+                        {r.created_at.slice(0, 10)}
+                        {r.level_key !== 'profile' && ` · ${displayScore(r.test_key, r.score)}/${displayMax(r.test_key)}점`}
+                      </div>
                     </div>
                     <span className={`text-xs font-bold ${tone.text}`}>{r.level_label}</span>
                     <button onClick={() => removeRow(r.id)} className="text-slate-500 text-sm ml-1">🗑</button>
@@ -535,7 +694,11 @@ export default function Counsel() {
                       </button>
                     )}
                     <button
-                      onClick={() => setViewing({ test: t, result: { score: r.score, max: r.max_score, level: lvl, crisis: r.crisis }, row: r })}
+                      onClick={() => setViewing({
+                        test: t,
+                        result: { score: r.score, max: r.max_score, level: lvl, crisis: r.crisis, subscores: r.subscores },
+                        row: r,
+                      })}
                       className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-700 text-slate-300"
                     >
                       결과 보기
@@ -682,6 +845,13 @@ export default function Counsel() {
       )}
 
       {/* 오버레이들 */}
+      {info && (
+        <InfoPanel
+          test={info}
+          onStart={() => { setConsent(info); setInfo(null) }}
+          onClose={() => setInfo(null)}
+        />
+      )}
       {consent && (
         <ConsentScreen
           test={consent}
@@ -698,7 +868,8 @@ export default function Counsel() {
         />
       )}
       {crisis && <CrisisScreen notifiesParent={iNotifyParents} onClose={() => setCrisis(false)} />}
-      {viewing && !crisis && viewing.test && viewing.result?.level && (
+      {/* 프로필형(빅파이브·SDQ)은 level 이 null 이므로 조건에서 걸러지면 안 된다 */}
+      {viewing && !crisis && viewing.test && (viewing.result?.level || viewing.result?.subscores) && (
         <ResultView
           test={viewing.test}
           result={viewing.result}

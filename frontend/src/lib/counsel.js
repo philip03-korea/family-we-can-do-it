@@ -9,18 +9,21 @@ import { scoreTest, TESTS, CHILD_KEYS } from '../data/counsel'
 //  · 위기문항 양성(crisis=true) 결과는 공유 불가 — DB check 제약으로도 강제됨.
 // ============================================================
 
-/** 검사 결과 채점 + 저장 */
+/** 검사 결과 채점 + 저장 (총점형·프로필형 모두 지원) */
 export async function saveResult({ userId, memberKey, testKey, answers }) {
-  const { score, max, level, crisis } = scoreTest(testKey, answers)
+  const { score, max, level, crisis, subscores } = scoreTest(testKey, answers)
+  const t = TESTS[testKey]
   const row = {
     user_id: userId,
     member_key: memberKey,
     test_key: testKey,
-    score,
-    max_score: max,
-    level_key: level.key,
-    level_label: level.label,
+    // 프로필형(빅파이브·SDQ)은 총점이 없다 → 0 / '프로필' 로 저장하고 subscores 를 본다
+    score: score ?? 0,
+    max_score: max ?? 0,
+    level_key: level?.key ?? 'profile',
+    level_label: level?.label ?? '프로필 결과',
     answers,
+    subscores,
     crisis,
     shared: false,
   }

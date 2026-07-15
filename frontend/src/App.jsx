@@ -16,6 +16,7 @@ import Meals from './pages/Meals'
 import Sentences from './pages/Sentences'
 import Schedule from './pages/Schedule'
 import Counsel from './pages/Counsel'
+import Talk from './pages/Talk'
 import Church from './pages/Church'
 import SetupNotice from './pages/SetupNotice'
 
@@ -154,6 +155,15 @@ export default function App() {
         element={
           <Protected>
             <Counsel />
+          </Protected>
+        }
+      />
+      {/* 가족 대화 — 대화카드·감정일기·강점찾기 */}
+      <Route
+        path="/talk"
+        element={
+          <Protected>
+            <Talk />
           </Protected>
         }
       />

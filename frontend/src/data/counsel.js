@@ -62,190 +62,87 @@ export const CENTER_FINDER = {
   desc: '서류·진단서 없이 무료 이용 가능',
 }
 
-// ── 응답 척도 ──────────────────────────────────────────────
-const FREQ_4 = [
-  { v: 0, label: '전혀 아니다' },
-  { v: 1, label: '며칠 동안' },
-  { v: 2, label: '일주일 이상' },
-  { v: 3, label: '거의 매일' },
-]
-
-const AGREE_4 = [
-  { v: 1, label: '전혀 그렇지 않다' },
-  { v: 2, label: '그렇지 않다' },
-  { v: 3, label: '그렇다' },
-  { v: 4, label: '매우 그렇다' },
-]
-
-const FREQ_5 = [
-  { v: 0, label: '전혀 없었다' },
-  { v: 1, label: '거의 없었다' },
-  { v: 2, label: '때때로 있었다' },
-  { v: 3, label: '자주 있었다' },
-  { v: 4, label: '매우 자주 있었다' },
-]
+// ── 검사 문항은 data/tests.js 로 분리 (11종) ──────────────────
+// ⚠️ 문항을 임의로 만들지 않는다. 전부 검증된 무료/퍼블릭도메인 표준 도구.
+export { TESTS, TEST_LIST, TEST_GROUPS } from './tests'
+import { TESTS } from './tests'
 
 // ============================================================
-// 검사 정의
+// 채점 엔진
+//   kind: 'score'   → 총점 하나 + 구간 해석
+//   kind: 'profile' → 하위척도별 점수(빅파이브·SDQ). 총점/구간 없음.
 // ============================================================
-export const TESTS = {
-  // ── PHQ-9 우울 선별 ──────────────────────────────────────
-  phq9: {
-    key: 'phq9',
-    name: 'PHQ-9 우울 자가검사',
-    emoji: '💙',
-    color: '#60a5fa',
-    period: '지난 2주 동안',
-    intro: '지난 2주 동안 아래 문제들로 얼마나 자주 방해를 받았는지 골라주세요.',
-    scale: FREQ_4,
-    max: 27,
-    // 9번(index 8) = 위기문항 — 1점 이상이면 총점과 무관하게 위기개입
-    crisisIndex: 8,
-    questions: [
-      '일 또는 여가활동을 하는 데 흥미나 즐거움을 느끼지 못함',
-      '기분이 가라앉거나, 우울하거나, 절망감을 느낌',
-      '잠들기가 어렵거나 자주 깨거나, 혹은 잠을 너무 많이 잠',
-      '피곤하다고 느끼거나 기운이 거의 없음',
-      '식욕이 없거나 혹은 너무 많이 먹음',
-      '자신을 부정적으로 봄 — 자신이 실패자라고 느끼거나 자신 또는 가족을 실망시킴',
-      '신문을 읽거나 텔레비전을 보는 것과 같은 일에 집중하는 것이 어려움',
-      '다른 사람들이 알아챌 정도로 평소보다 말과 행동이 느려짐, 또는 반대로 너무 안절부절 못하거나 들떠서 평소보다 많이 돌아다님',
-      '차라리 죽는 것이 낫겠다고 생각하거나 어떤 식으로든 자신을 해칠 것이라고 생각함',
-    ],
-    levels: [
-      { max: 4,  key: 'none',     label: '우울 아님',        tone: 'good',  next: '지금 상태를 잘 유지해요. 수면·운동·규칙적인 루틴이 큰 도움이 돼요.' },
-      { max: 9,  key: 'mild',     label: '가벼운 우울',      tone: 'ok',    next: '가벼운 수준이에요. 스스로 돌보는 시간을 늘리고, 2주 뒤 다시 점검해보세요.' },
-      { max: 14, key: 'moderate', label: '중등도 우울',      tone: 'warn',  next: '지역 정신건강복지센터(1577-0199)나 상담센터에서 정식 평가를 받아보시길 권해요.' },
-      { max: 19, key: 'modsevere',label: '중등도-중증 우울', tone: 'warn',  next: '전문가의 도움이 필요한 수준이에요. 정신건강의학과·상담센터 상담을 권합니다.' },
-      { max: 27, key: 'severe',   label: '중증 우울',        tone: 'alert', next: '전문가 평가가 꼭 필요한 수준이에요. 109 또는 1577-0199로 상담받고, 가능하면 가족과 함께 병원에 가보세요.' },
-    ],
-  },
 
-  // ── GAD-7 불안 선별 ─────────────────────────────────────
-  gad7: {
-    key: 'gad7',
-    name: 'GAD-7 불안 자가검사',
-    emoji: '💛',
-    color: '#fbbf24',
-    period: '지난 2주 동안',
-    intro: '지난 2주 동안 아래 문제들로 얼마나 자주 방해를 받았는지 골라주세요.',
-    scale: FREQ_4,
-    max: 21,
-    crisisIndex: null,
-    questions: [
-      '초조하거나 불안하거나 조마조마하게 느낌',
-      '걱정하는 것을 멈추거나 조절할 수가 없음',
-      '여러 가지 것들에 대해 걱정을 너무 많이 함',
-      '편하게 있기가 어려움',
-      '너무 안절부절 못해서 가만히 앉아 있기가 힘듦',
-      '쉽게 짜증이 나거나 화가 남',
-      '마치 끔찍한 일이 생길 것처럼 두려움을 느낌',
-    ],
-    levels: [
-      { max: 4,  key: 'minimal',  label: '최소 불안',   tone: 'good',  next: '불안 수준이 낮아요. 지금의 리듬을 유지해보세요.' },
-      { max: 9,  key: 'mild',     label: '경도 불안',   tone: 'ok',    next: '가벼운 불안이에요. 호흡·산책 같은 이완 습관이 도움이 돼요.' },
-      { max: 14, key: 'moderate', label: '중등도 불안', tone: 'warn',  next: '10점 이상은 전문가 평가를 권하는 구간이에요. 상담센터·1577-0199를 이용해보세요.' },
-      { max: 21, key: 'severe',   label: '중증 불안',   tone: 'alert', next: '일상에 큰 영향을 주는 수준이에요. 정신건강의학과 진료를 권합니다.' },
-    ],
-  },
-
-  // ── 로젠버그 자존감 척도 ────────────────────────────────
-  rses: {
-    key: 'rses',
-    name: '로젠버그 자존감 척도',
-    emoji: '💚',
-    color: '#34d399',
-    period: '평소 나에 대해',
-    intro: '평소 자신에 대해 어떻게 느끼는지 골라주세요. 정답은 없어요.',
-    scale: AGREE_4,
-    max: 40,
-    min: 10,
-    crisisIndex: null,
-    // 역채점 문항 index (0-based): 3,5,8,9,10번 → 2,4,7,8,9
-    reverse: [2, 4, 7, 8, 9],
-    questions: [
-      '나는 내가 다른 사람들처럼 가치 있는 사람이라고 느낀다',
-      '나는 내가 좋은 성품을 가졌다고 생각한다',
-      '나는 대체로 실패한 사람이라는 느낌이 든다',
-      '나는 다른 사람들만큼 일을 잘 할 수 있다',
-      '나는 내 자신에게 자랑할 만한 것이 별로 없다고 느낀다',
-      '나는 내 자신에 대해 긍정적인 태도를 가지고 있다',
-      '전반적으로 나는 나 자신에 대해 만족한다',
-      '나는 내 자신을 좀 더 존중할 수 있으면 좋겠다',
-      '나는 가끔 내가 정말 쓸모없는 사람이라고 느낀다',
-      '나는 가끔 내가 전혀 좋은 점이 없는 사람이라고 생각한다',
-    ],
-    levels: [
-      { max: 19, key: 'low',    label: '자존감이 낮은 편',  tone: 'warn', next: '스스로를 조금 더 너그럽게 봐줘도 괜찮아요. 이야기 나눌 사람이 있으면 큰 도움이 됩니다.' },
-      { max: 29, key: 'mid',    label: '보통 범위',         tone: 'ok',   next: '일반적인 범위예요. 잘하는 것·좋아하는 것을 적어보면 더 단단해져요.' },
-      { max: 40, key: 'high',   label: '자존감이 높은 편',  tone: 'good', next: '자신을 긍정적으로 보고 있어요. 이 강점을 가족과 나눠보세요.' },
-    ],
-    note: '절대적인 정상/비정상 기준이 아니라, 본인의 변화 추이를 보는 용도예요.',
-  },
-
-  // ── PSS-10 지각된 스트레스 ──────────────────────────────
-  pss10: {
-    key: 'pss10',
-    name: 'PSS-10 스트레스 척도',
-    emoji: '🧡',
-    color: '#fb923c',
-    period: '지난 한 달 동안',
-    intro: '지난 한 달 동안 얼마나 자주 그렇게 느꼈는지 골라주세요.',
-    scale: FREQ_5,
-    max: 40,
-    crisisIndex: null,
-    // 역채점 문항 index: 4,5,7,8번 → 3,4,6,7
-    reverse: [3, 4, 6, 7],
-    questions: [
-      '예상치 못한 일 때문에 당황했던 적이 얼마나 있었나요?',
-      '중요한 일들을 조절할 수 없다고 느낀 적이 얼마나 있었나요?',
-      '신경이 예민해지고 스트레스를 받는다고 느낀 적이 얼마나 있었나요?',
-      '개인적인 문제를 처리하는 능력에 대해 자신감을 느낀 적이 얼마나 있었나요?',
-      '일이 원하는 대로 진행되고 있다고 느낀 적이 얼마나 있었나요?',
-      '해야 할 일들에 대처할 수 없다고 느낀 적이 얼마나 있었나요?',
-      '일상에서 짜증나는 일들을 잘 조절할 수 있었나요?',
-      '자신이 일을 잘 해내고 있다고 느낀 적이 얼마나 있었나요?',
-      '통제할 수 없는 일 때문에 화가 난 적이 얼마나 있었나요?',
-      '어려운 일이 너무 많아 극복할 수 없다고 느낀 적이 얼마나 있었나요?',
-    ],
-    levels: [
-      { max: 13, key: 'low',  label: '낮은 스트레스',   tone: 'good', next: '스트레스를 잘 관리하고 있어요.' },
-      { max: 26, key: 'mid',  label: '보통 스트레스',   tone: 'ok',   next: '일반적인 범위예요. 쉬는 시간을 의식적으로 확보해보세요.' },
-      { max: 40, key: 'high', label: '높은 스트레스',   tone: 'warn', next: '스트레스가 높은 편이에요. 무엇이 부담인지 적어보고, 가족·상담센터와 나눠보세요.' },
-    ],
-    note: '절대 기준보다는 "무엇이 나를 힘들게 하는지" 대화의 출발점으로 쓰는 검사예요.',
-  },
+const scaleRange = (t) => {
+  const vs = t.scale.map((s) => s.v)
+  return { lo: Math.min(...vs), hi: Math.max(...vs) }
 }
 
-export const TEST_LIST = ['phq9', 'gad7', 'rses', 'pss10'].map((k) => TESTS[k])
+/** 역채점 값 변환: (최대+최소) - v */
+const flip = (v, lo, hi) => hi + lo - Number(v)
 
-// ============================================================
-// 채점
-// ============================================================
 /**
- * answers: 문항 순서대로의 응답값 배열
- * @returns { score, max, level, crisis }
+ * @param testKey 검사 키
+ * @param answers 문항 순서대로의 응답값 배열
+ * @returns { score, max, level, crisis, subscores }
+ *          profile 검사면 score=null, level=null, subscores={dimKey: {raw, max, min, pct}}
  */
 export function scoreTest(testKey, answers) {
   const t = TESTS[testKey]
   if (!t) throw new Error('알 수 없는 검사: ' + testKey)
+  const { lo, hi } = scaleRange(t)
 
-  const maxScale = Math.max(...t.scale.map((s) => s.v))
-  const minScale = Math.min(...t.scale.map((s) => s.v))
+  // 위기문항(PHQ-9 9번)은 어떤 검사 유형이든 최우선으로 판정
+  const crisis = t.crisisIndex != null && Number(answers[t.crisisIndex]) >= 1
 
+  // ── 다차원(프로필) 검사 ──
+  if (t.kind === 'profile') {
+    const subscores = {}
+    for (const d of t.dimensions) {
+      const idxs = t.keying
+        .map((k, i) => (k.d === d.key ? i : -1))
+        .filter((i) => i >= 0)
+      let raw = 0
+      for (const i of idxs) {
+        const v = Number(answers[i] ?? lo)
+        raw += t.keying[i].s === -1 ? flip(v, lo, hi) : v
+      }
+      const dMin = idxs.length * lo
+      const dMax = idxs.length * hi
+      subscores[d.key] = {
+        raw,
+        min: dMin,
+        max: dMax,
+        pct: dMax === dMin ? 0 : Math.round(((raw - dMin) / (dMax - dMin)) * 100),
+      }
+    }
+    return { score: null, max: null, level: null, crisis, subscores }
+  }
+
+  // ── 총점형 검사 ──
   let score = 0
   answers.forEach((a, i) => {
     const v = Number(a)
-    // 역채점: (최대+최소) - 값
-    score += t.reverse?.includes(i) ? (maxScale + minScale - v) : v
+    score += t.reverse?.includes(i) ? flip(v, lo, hi) : v
   })
-
   const level = t.levels.find((l) => score <= l.max) || t.levels[t.levels.length - 1]
+  return { score, max: t.max, level, crisis, subscores: null }
+}
 
-  // 위기문항 양성 여부 (PHQ-9 9번에 1점 이상)
-  const crisis = t.crisisIndex != null && Number(answers[t.crisisIndex]) >= 1
-
-  return { score, max: t.max, level, crisis }
+/** WHO-5 처럼 환산점수를 쓰는 검사의 표시용 점수 */
+export function displayScore(testKey, score) {
+  const t = TESTS[testKey]
+  if (!t) return score
+  if (t.scoreMultiplier) return score * t.scoreMultiplier
+  if (t.meanScore) return (score / t.questions.length).toFixed(2)
+  return score
+}
+export function displayMax(testKey) {
+  const t = TESTS[testKey]
+  if (!t) return 0
+  if (t.scoreMultiplier) return t.max * t.scoreMultiplier
+  if (t.meanScore) return '5.00'
+  return t.max
 }
 
 /** 결과 톤 → 색상 클래스 */
