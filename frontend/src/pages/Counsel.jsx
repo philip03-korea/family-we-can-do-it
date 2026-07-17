@@ -664,7 +664,7 @@ export default function Counsel() {
           ) : (
             results.map((r) => {
               const t = TESTS[r.test_key]
-              const lvl = t?.levels.find((l) => l.key === r.level_key)
+              const lvl = t?.levels?.find((l) => l.key === r.level_key)
               const tone = TONE_STYLE[lvl?.tone || 'ok']
               return (
                 <div key={r.id} className={`${tone.bg} border ${tone.border} rounded-2xl p-3`}>
@@ -727,7 +727,7 @@ export default function Counsel() {
             <div className="space-y-2">
               {sharedRows.map((r) => {
                 const t = TESTS[r.test_key]
-                const lvl = t?.levels.find((l) => l.key === r.level_key)
+                const lvl = t?.levels?.find((l) => l.key === r.level_key)
                 const tone = TONE_STYLE[lvl?.tone || 'ok']
                 return (
                   <div key={r.id} className={`${tone.bg} border ${tone.border} rounded-2xl p-3`}>
