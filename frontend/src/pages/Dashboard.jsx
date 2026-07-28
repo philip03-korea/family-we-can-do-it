@@ -397,8 +397,18 @@ function Stat({ label, value, accent }) {
 // 처음 로그인 시: 가족 구성원 선택 → profiles에 저장
 function PickMember({ user, onPicked, saving, setSaving }) {
   const [error, setError] = useState('')
+  // 이미 다른 계정이 가져간 구성원 (한 구성원 = 한 계정)
+  const [taken, setTaken] = useState([])
+
+  useEffect(() => {
+    supabase
+      .from('profiles')
+      .select('id, member_key')
+      .then(({ data }) => setTaken((data || []).filter((p) => p.id !== user.id).map((p) => p.member_key)))
+  }, [user.id])
 
   async function pick(f) {
+    if (taken.includes(f.key)) return
     setSaving(true)
     setError('')
     const { error } = await supabase.from('profiles').upsert({
@@ -408,7 +418,11 @@ function PickMember({ user, onPicked, saving, setSaving }) {
       level: f.level,
       toefl_track: !!f.toefl,
     })
-    if (error) setError(error.message)
+    // DB 유니크 인덱스(step14)에 걸린 경우 — 그 사이 다른 기기에서 선점한 상황
+    if (error?.code === '23505') {
+      setError(`${f.name}는 이미 다른 계정이 사용 중이에요. 본인 계정으로 로그인해 주세요.`)
+      setTaken((t) => [...t, f.key])
+    } else if (error) setError(error.message)
     else await onPicked()
     setSaving(false)
   }
@@ -418,24 +432,27 @@ function PickMember({ user, onPicked, saving, setSaving }) {
       <h1 className="text-2xl font-bold mt-6 mb-1">누구신가요?</h1>
       <p className="text-slate-400 text-sm mb-6">가족 구성원을 선택하면 추천 레벨로 시작합니다.</p>
       <div className="space-y-3">
-        {FAMILY.map((f) => (
-          <button
-            key={f.key}
-            disabled={saving}
-            onClick={() => pick(f)}
-            className={`${LEVELS[f.level].bg} w-full rounded-2xl p-4 flex items-center gap-4 text-left disabled:opacity-50`}
-          >
-            <span className="text-3xl">{f.emoji}</span>
-            <div className="flex-1">
-              <div className="font-bold text-white">
-                {f.name} <span className="text-white/70 text-sm font-normal">· {f.age}</span>
+        {FAMILY.map((f) => {
+          const used = taken.includes(f.key)
+          return (
+            <button
+              key={f.key}
+              disabled={saving || used}
+              onClick={() => pick(f)}
+              className={`${LEVELS[f.level].bg} w-full rounded-2xl p-4 flex items-center gap-4 text-left disabled:opacity-50 ${used ? 'grayscale' : ''}`}
+            >
+              <span className="text-3xl">{f.emoji}</span>
+              <div className="flex-1">
+                <div className="font-bold text-white">
+                  {f.name} <span className="text-white/70 text-sm font-normal">· {f.age}</span>
+                </div>
+                <div className="text-white/80 text-sm">
+                  {used ? '이미 사용 중 — 다른 계정이 선택했어요' : `레벨 ${f.level} · ${f.focus}`}
+                </div>
               </div>
-              <div className="text-white/80 text-sm">
-                레벨 {f.level} · {f.focus}
-              </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          )
+        })}
       </div>
       {error && <p className="text-amber-300 text-sm mt-4">⚠️ {error}</p>}
     </div>
