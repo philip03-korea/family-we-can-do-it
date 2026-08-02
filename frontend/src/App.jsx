@@ -19,6 +19,7 @@ import Counsel from './pages/Counsel'
 import Talk from './pages/Talk'
 import Church from './pages/Church'
 import SetupNotice from './pages/SetupNotice'
+import RefreshButton from './components/RefreshButton'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -41,6 +42,7 @@ export default function App() {
   if (loading) return <FullScreen>불러오는 중…</FullScreen>
 
   return (
+    <>
     <Routes>
       {/* 공개 사용설명서 — 로그인 없이 열람 (카톡 공유용) */}
       <Route path="/guide" element={<Guide />} />
@@ -178,5 +180,8 @@ export default function App() {
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    {/* 어디서나 최신 버전으로 새로고침 (아이폰 PWA용) */}
+    <RefreshButton />
+    </>
   )
 }
