@@ -296,8 +296,9 @@ function Strengths({ user, myKey }) {
     } catch (e) { setMsg('⚠️ ' + friendlyTalkError(e)) }
   }
 
-  // 나에게 온 것
-  const toMe = notes.filter((n) => n.to_member === myKey)
+  // 편지처럼 — 나와 관련된 것만 보인다 (받은 것 / 보낸 것)
+  const toMe = notes.filter((n) => n.to_member === myKey)   // 나에게 온 것
+  const fromMe = notes.filter((n) => n.from_member === myKey) // 내가 보낸 것
 
   return (
     <div>
@@ -384,12 +385,13 @@ function Strengths({ user, myKey }) {
 
       {msg && <p className="text-xs text-slate-300 mb-3">{msg}</p>}
 
-      {/* 전체 기록 */}
-      {notes.length > 0 && (
+      {/* 내가 보낸 강점 — 편지처럼 나와 상대에게만 보인다 */}
+      {fromMe.length > 0 && (
         <div>
-          <h3 className="text-sm font-bold mb-2">가족이 서로에게 찾아준 강점</h3>
+          <h3 className="text-sm font-bold mb-2">✉️ 내가 전한 강점</h3>
+          <p className="text-[11px] text-slate-500 mb-2">강점 편지는 주고받은 두 사람에게만 보여요.</p>
           <div className="space-y-2">
-            {notes.map((n) => (
+            {fromMe.map((n) => (
               <div key={n.id} className="bg-slate-800/60 border border-slate-700 rounded-xl p-3">
                 <div className="flex items-center gap-1.5 mb-1.5 text-[11px]">
                   <Avatar k={n.from_member} size={18} />
