@@ -8,6 +8,8 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // 등록은 src/lib/pwaUpdate.js 에서 직접 한다 (주기적 업데이트 확인을 위해). 자동 주입 끔.
+      injectRegister: false,
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'FamTalk — 우리 가족 영어',

@@ -34,6 +34,31 @@ cd frontend && npm install    # package.json이 바뀌었을 수 있음
 
 ## 2. 작업 로그 (최신이 위)
 
+### 2026-08-02 — 아이폰 새 버전 자동 반영 + 전역 "새로고침" 버튼
+
+- **증상**: 아이폰 홈화면 PWA에서 새 배포가 안 잡힘(주소창·당겨서새로고침 없음). "새로고침이 안 된다".
+- **원인**: `vite-plugin-pwa`가 `autoUpdate`지만 새 서비스워커를 **최초 로딩 때만** 확인 → 앱을 계속 켜두거나 백그라운드 복귀 시 갱신 안 됨.
+- **조치**:
+  - `src/lib/pwaUpdate.js` 신설. `registerPwaUpdater()` — SW 등록 + **30초마다** `reg.update()` + `visibilitychange`/`focus` 때 재확인. 새 SW 오면 자동 교체·리로드(autoUpdate가 skipWaiting+clientsClaim).
+  - `hardRefresh()` — 캐시(`caches`) 전부 비우고 `location.reload()`. 아이폰용 탈출구.
+  - `src/components/RefreshButton.jsx` — 하단 네비 위 우측 떠 있는 "🔄 새로고침" 버튼. `App.jsx`에서 전역 렌더(모든 화면).
+  - `main.jsx`에서 `registerPwaUpdater()` 호출. `vite.config.js`에 `injectRegister: false`(수동 등록으로 통일, 중복 등록 방지).
+- **파일**: `frontend/src/lib/pwaUpdate.js`(신규), `frontend/src/components/RefreshButton.jsx`(신규), `frontend/src/main.jsx`, `frontend/src/App.jsx`, `frontend/vite.config.js`
+- **검증**: `npm run build` 통과(`dist/sw.js` 생성). **주의**: 각자 기기에서 이번 버전을 **한 번은** 기존 방식으로 열어야(아이폰은 홈화면 앱을 완전히 종료 후 재실행) 새 자동갱신 로직이 깔림. 그 다음부터는 버튼/자동갱신이 동작.
+- **남은 것**: 없음.
+
+### 2026-08-02 — 강점 찾기: 편지처럼 주고받은 두 사람에게만 공개
+
+- **증상**: 가족 대화 → 강점 찾기 하단 "가족이 서로에게 찾아준 강점"이 **모든 구성원의 강점 편지를 전부** 표시. 아빠→하음에게 준 강점을 하울도 봄.
+- **원인**: `Talk.jsx` `Strengths` 컴포넌트가 `listStrengths()`가 돌려준 전체 노트(`notes`)를 필터 없이 하단에 렌더.
+- **조치**: 편지 개념으로 변경. 나와 관련된 것만 보이게 필터.
+  - 상단 "🎁 가족이 본 나의 강점" = 내가 **받은** 것 (`to_member === myKey`) — 기존 유지
+  - 하단을 "✉️ 내가 전한 강점" 으로 교체 = 내가 **보낸** 것 (`from_member === myKey`)만 표시 (`fromMe`)
+  - 안내문 "강점 편지는 주고받은 두 사람에게만 보여요." 추가
+  - 앱이 단일 Supabase 계정 + `member_key` 프로필 구분 구조라 DB RLS로는 구성원 프라이버시 분리 불가 → 클라이언트에서 `member_key` 기준 필터가 올바른 방식. `strength_notes` 스키마/마이그레이션 변경 없음.
+- **파일**: `frontend/src/pages/Talk.jsx`
+- **남은 것**: 없음. (원한다면 후속으로 `listStrengths`를 서버측에서 `from_member`/`to_member` 조건으로 좁히는 것도 가능하나 공유 계정 구조상 실익 없음.)
+
 ### 2026-07-28 — 구성원 중복 선택 방지 (엄마 프로필 2개 정리)
 
 - **증상**: 대시보드 미리보기 줄에 엄마가 두 번 표시. 엄마 미리보기를 눌러도 빈 화면.
