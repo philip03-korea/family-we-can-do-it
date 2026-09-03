@@ -8,11 +8,31 @@
 ## 0. 새 컴퓨터에서 작업 시작할 때 (매번)
 
 ```bash
-cd <repo>
+git clone https://github.com/philip03-korea/family-we-can-do-it.git   # 처음이면
+cd family-we-can-do-it
 git pull                      # ← 항상 먼저. 다른 PC 작업분이 있다
 cat HANDOFF.md                # ← 이 파일부터 읽기 (특히 「대기 중」 항목)
 cd frontend && npm install    # package.json이 바뀌었을 수 있음
+npm run dev                   # http://localhost:5173
 ```
+
+### 처음 쓰는 PC라면 `frontend/.env` 를 직접 만들어야 한다
+
+`.env` 는 **커밋되지 않는다**(gitignore). 없으면 앱이 셋업 안내 화면만 뜨고 아무것도 안 된다.
+`frontend/.env.example` 을 복사한 뒤 값을 채운다. 값은 Supabase 대시보드
+→ 프로젝트 `ghmroezwdwkvruygrqzv` → Settings → API 에서 가져온다.
+
+```bash
+cp frontend/.env.example frontend/.env
+```
+
+```
+VITE_SUPABASE_URL=https://ghmroezwdwkvruygrqzv.supabase.co
+VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
+```
+
+> anon 키는 브라우저에 노출되는 공개 키라 그 자체로는 위험하지 않지만, 그래도 `.env` 는 커밋하지 않는다.
+> **서비스 롤 키는 절대 `frontend/` 에 넣지 않는다** — 서버(Edge Function) 시크릿 전용이다.
 
 `git status`가 지저분하면 **다른 PC에서 커밋을 안 하고 두고 간 것**이다. 덮어쓰기 전에 내용부터 확인할 것.
 
@@ -33,6 +53,28 @@ cd frontend && npm install    # package.json이 바뀌었을 수 있음
   1. 아이별로 어떤 기능을 열지 (캔버스에 적힌 건 논의용 예시값)
   2. 홈에서 음성 데모(TTS/STT)·레벨 사다리 A~F 를 빼도 되는지
   3. `database/step15_visibility.sql` 은 **아직 파일도 안 만들었다** (기획안 안에 내용만 있음)
+
+- **하울 진로 가이드플랜** — `docs/하울_진로_조사.md` 의 「5. 학교에 확인해야 할 것」 7가지를
+  등대글로벌스쿨(031-971-2731)에 문의해 채워야 플랜 작성 착수 가능.
+  특히 **하울이 미국 학제로 몇 학년인지**(Grade 10/11)에 따라 남은 시간이 1년 차이 난다.
+
+### 🔜 다음에 코드로 손댈 지점 (기획 승인 후)
+
+`docs/design/Spec.dc.html` 의 「적용 순서」 1~5 를 그대로 따른다. 요약:
+
+| 순서 | 파일 | 할 일 |
+|---|---|---|
+| 1 | `database/step15_visibility.sql` (신규) | `profiles.enabled_features text[]` + 부모 update 정책. **`is_parent()` 사용 필수** (아래 지뢰 참고). Supabase에서 수동 실행 후 여기 기록 |
+| 2 | `src/data/features.js` (신규) | 기능 17개 · 그룹 4개 정의 (키/이름/아이콘/라우트/그룹/기본노출) |
+| 2 | `src/pages/Manage.jsx` (신규) | 부모용 화면 설정. 이 단계까진 화면이 안 바뀐다 — 값만 쌓인다 |
+| 3 | `src/context/AuthContext.jsx` | `enabled_features` 읽어 `visibleFeatures` · `visibleGroups` 계산해 내려보냄 |
+| 3 | `src/components/BottomNav.jsx` | 고정 5개 → `visibleGroups` 로 동적 생성. **이때부터 아이 화면이 실제로 줄어든다** |
+| 4 | `src/pages/GroupHub.jsx` (신규) | 배움·집안·마음 공용 허브 하나. 그룹 키만 다르게 받음 |
+| 4 | `src/pages/Dashboard.jsx` | 런처 걷어내고 「오늘 할 일」 다이제스트로 축소 |
+| 4 | `src/App.jsx` | 라우트 재편 + 꺼진 기능 직접 접근 시 홈으로 되돌림 |
+| 5 | — | 부모 미리보기로 세 아이 화면 각각 열어보고 조정 |
+
+기획안 캔버스: https://claude.ai/code/artifact/a3bb3659-48aa-491e-a60e-615cea4ba362
 
 ---
 
@@ -118,3 +160,9 @@ cd frontend && npm install    # package.json이 바뀌었을 수 있음
 - **`profiles`는 한 구성원 = 한 계정.** 가족이 새 이메일로 다시 가입하면 데이터가 갈라진다. 계정을 바꿔야 하면 새로 가입하지 말고 기존 행의 `id`를 옮기거나 기존 계정 비밀번호를 재설정한다.
 - **`.env`는 커밋되지 않는다.** 새 PC에서는 `frontend/.env`(Supabase URL·anon key)를 직접 만들어야 앱이 뜬다.
 - 미리보기 모드(부모가 자녀 화면 보기)에서 저장 동작을 만들 때는 `viewUserId`가 아니라 **실제 로그인 계정 기준**으로 써야 한다 (`Counsel.jsx`, `Church.jsx` 참고).
+- **`profiles` 의 RLS 정책 안에서 `profiles` 를 직접 조회하면 무한재귀가 난다.** 부모 여부를 확인할 땐
+  step13 에서 만들어 둔 `is_parent()` (security definer) 를 쓴다. step15 를 쓸 때 그대로 적용될 함정이라
+  기획안에도 반영해 뒀다.
+- `database/` 의 마이그레이션 **번호가 겹쳐 있다** — `step11_fixed_chores` / `step11_schedule`,
+  `step12_counsel_church` / `step12_schedule_progress`. 서로 다른 PC에서 같은 번호를 쓴 흔적이라
+  파일명만으로는 실행 순서를 알 수 없다. 새로 만들 땐 `git pull` 후 가장 큰 번호 +1 을 쓸 것 (다음은 15).
