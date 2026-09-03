@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0b1220; color: #f8fafc;
+      font-family: Pretendard, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    * { box-sizing: border-box; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, 'Courier New', monospace;
+      font-size: 12px; line-height: 1.65; letter-spacing: 0; white-space: pre-wrap; }
+  </style>
+</helmet>
+
+<div style="width: 1400px; height: 770px; background: #0b1220; padding: 32px 36px; display: flex; flex-direction: column; gap: 20px">
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 5px">
+      <span style="font-size: 23px; font-weight: 800">무엇을 고쳐야 이게 되나</span>
+      <span style="font-size: 14px; color: #a8b4c4">노출 설정은 서버에 저장하고 화면은 그 값 하나로 그린다. 기능 코드는 건드리지 않는다.</span>
+    </div>
+    <span style="display: flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 21.4 20H2.6L12 3.6Z"/><path d="M12 10v4.2M12 17.4h.01"/></svg>
+      <span style="font-size: 12px; color: #fcd34d; font-weight: 600">SQL은 Supabase에서 수동 실행 후 HANDOFF.md에 기록</span>
+    </span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 480px minmax(0, 1fr) 330px; gap: 22px; flex: 1">
+
+    <div style="border-radius: 20px; border: 1px solid #334155; background: rgba(30,41,59,0.4); padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 14.5px; font-weight: 800">1 · 데이터 모델</span>
+      <span style="font-size: 12px; color: #a8b4c4; line-height: 1.5">기존 <span class="mono" style="color: #a5b4fc">profiles</span>에 컬럼 하나. <span class="mono" style="color: #a5b4fc">null</span>이면 나이별 기본값을 쓰고, 부모는 값과 무관하게 전체를 본다.</span>
+      <div class="mono" style="flex: 1; border-radius: 13px; background: #0f172a; border: 1px solid #1e293b; padding: 14px 15px; color: #cbd5e1; overflow: hidden">{{sql}}</div>
+    </div>
+
+    <div style="border-radius: 20px; border: 1px solid #334155; background: rgba(30,41,59,0.4); padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 14.5px; font-weight: 800">2 · 코드 변경</span>
+      <div style="display: flex; flex-direction: column; gap: 7px; flex: 1">
+        <sc-for list="{{files}}" as="f" hint-placeholder-count="6">
+          <div style="display: flex; align-items: flex-start; gap: 11px; padding: 10px 13px; border-radius: 13px; background: rgba(15,23,42,0.6); border: 1px solid #1e293b">
+            <span style="font-size: 10.5px; font-weight: 800; color: {{f.tagFg}}; background: {{f.tagBg}}; border-radius: 6px; padding: 3px 7px; flex: none; margin-top: 1px">{{f.tag}}</span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+              <span class="mono" style="color: #e2e8f0; font-weight: 600">{{f.path}}</span>
+              <span style="font-size: 12px; color: #a8b4c4; line-height: 1.45">{{f.what}}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="border-radius: 20px; border: 1px solid #4f46e5; background: rgba(79,70,229,0.07); padding: 20px; display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 14.5px; font-weight: 800">3 · 적용 순서</span>
+      <div style="display: flex; flex-direction: column; gap: 9px; flex: 1">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+          <div style="display: flex; align-items: flex-start; gap: 10px">
+            <span style="width: 21px; height: 21px; flex: none; border-radius: 999px; background: #4f46e5; color: #fff; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px">{{s.n}}</span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 13px; font-weight: 700; color: #e2e8f0">{{s.title}}</span>
+              <span style="font-size: 12px; color: #a8b4c4; line-height: 1.45">{{s.text}}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-radius: 13px; background: rgba(15,23,42,0.7); border: 1px solid #334155; padding: 12px 14px; display: flex; flex-direction: column; gap: 3px">
+        <span style="font-size: 12px; font-weight: 800; color: #a5b4fc">되돌리기</span>
+        <span style="font-size: 12px; color: #cbd5e1; line-height: 1.45">컬럼을 지우면 전원이 다시 전체를 본다. 기능 라우트는 그대로 살아 있으므로 데이터 손실이 없다.</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sql = [
+      '-- database/step15_visibility.sql',
+      'alter table public.profiles',
+      '  add column if not exists enabled_features text[];',
+      '',
+      '-- 부모만, 자녀 행에 한해 수정 가능.',
+      '-- is_parent() 는 step13 에서 만들어 둔 security',
+      '-- definer 함수 — profiles 정책 안에서 profiles 를',
+      '-- 직접 조회하면 RLS 무한재귀가 난다.',
+      'drop policy if exists "parents update children"',
+      '  on public.profiles;',
+      'create policy "parents update children"',
+      '  on public.profiles for update',
+      "  using      (member_key not in ('mom','dad')",
+      '              and is_parent())',
+      "  with check (member_key not in ('mom','dad'));"
+    ].join('\n');
+
+    const files = [
+      ['신규', 'src/data/features.js', '기능 17개 · 그룹 4개 정의 (키, 이름, 아이콘, 라우트, 그룹, 기본 노출)'],
+      ['수정', 'src/context/AuthContext.jsx', 'enabled_features를 읽어 visibleFeatures · visibleGroups 계산해 내려보냄'],
+      ['수정', 'src/components/BottomNav.jsx', '고정 5개 → visibleGroups로 동적 생성 (홈 + 그룹 + 나)'],
+      ['신규', 'src/pages/GroupHub.jsx', '배움 · 집안 · 마음 공용 허브 한 개. 그룹 키만 다르게 받는다'],
+      ['수정', 'src/pages/Dashboard.jsx', '런처 걷어내고 「오늘 할 일」 다이제스트로. 레벨사다리 · 음성데모는 제거'],
+      ['신규', 'src/pages/Manage.jsx', '부모용 화면 설정 — 아이 선택 후 기능별 스위치'],
+      ['수정', 'src/App.jsx', '라우트를 그룹 허브로 재편 + 꺼진 기능 직접 접근 시 홈으로 되돌림']
+    ];
+
+    const steps = [
+      ['1', 'SQL 실행', 'Supabase SQL Editor에서 step15 실행. 실행 여부를 HANDOFF.md에 남긴다.'],
+      ['2', '설정 화면부터', 'Manage.jsx + features.js. 아직 아무 화면도 안 바뀐다 — 값만 쌓인다.'],
+      ['3', '네비 교체', 'AuthContext + BottomNav. 이때부터 아이 화면이 실제로 줄어든다.'],
+      ['4', '허브 · 홈 정리', 'GroupHub 도입, Dashboard를 오늘 다이제스트로 축소.'],
+      ['5', '가족 확인', '부모 미리보기로 세 아이 화면을 각각 열어보고 조정.']
+    ];
+
+    return {
+      sql: sql,
+      files: files.map(function (f) {
+        const isNew = f[0] === '신규';
+        return { tag: f[0], path: f[1], what: f[2],
+                 tagFg: isNew ? '#6ee7b7' : '#fcd34d',
+                 tagBg: isNew ? 'rgba(110,231,183,0.13)' : 'rgba(252,211,77,0.13)' };
+      }),
+      steps: steps.map(function (s) { return { n: s[0], title: s[1], text: s[2] }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

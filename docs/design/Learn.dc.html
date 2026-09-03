@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+      font-family: Pretendard, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    * { box-sizing: border-box; }
+    .scr { width: 390px; height: 844px; overflow: hidden; position: relative; background: #0f172a; }
+    .body { position: absolute; inset: 0 0 76px 0; overflow: hidden; padding: 16px 20px 8px; }
+  </style>
+</helmet>
+
+<div class="scr">
+  <div class="body">
+
+    <header style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px">
+      <span style="display: flex; align-items: center; gap: 9px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5.2A2 2 0 0 1 6 3.2h12v14H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12"/></svg>
+        <span style="font-size: 20px; font-weight: 800">배움</span>
+      </span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px; border-radius: 999px; background: #1e293b; border: 1px solid #334155">
+        <span style="width: 20px; height: 20px; border-radius: 999px; background: #84cc16; display: flex; align-items: center; justify-content: center; font-size: 12px">🧑</span>
+        <span style="font-size: 12px; font-weight: 700; color: #e2e8f0">하울 · E</span>
+      </span>
+    </header>
+
+    <div style="border-radius: 24px; padding: 18px; margin-bottom: 18px; background: linear-gradient(135deg,#1e3a8a 0%,#7c3aed 100%)">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px">
+        <span style="font-size: 15px; font-weight: 800; color: #fff">오늘의 학습</span>
+        <span style="font-size: 11.5px; color: rgba(255,255,255,0.8)">학습한 단어 412 / 1,860</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-bottom: 13px">
+        <div style="border-radius: 15px; padding: 11px 13px; background: rgba(0,0,0,0.22); display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 11.5px; color: rgba(255,255,255,0.75)">복습 대기</span>
+          <span style="font-size: 25px; font-weight: 800; color: #fbbf24; line-height: 1.1">12</span>
+        </div>
+        <div style="border-radius: 15px; padding: 11px 13px; background: rgba(0,0,0,0.22); display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 11.5px; color: rgba(255,255,255,0.75)">새 단어</span>
+          <span style="font-size: 25px; font-weight: 800; color: #6ee7b7; line-height: 1.1">6</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 16px; padding: 14px; background: #f8fafc">
+        <span style="font-size: 15px; font-weight: 800; color: #0f172a">학습 시작</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5"/></svg>
+      </div>
+    </div>
+
+    <span style="display: block; font-size: 13px; font-weight: 800; color: #cbd5e1; margin-bottom: 9px">하울에게 열린 학습</span>
+    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px">
+      <sc-for list="{{items}}" as="it" hint-placeholder-count="7">
+        <div style="display: flex; align-items: center; gap: 11px; padding: 11px 13px; border-radius: 16px; background: rgba(30,41,59,0.6); border: 1px solid #334155">
+          <span style="width: 32px; height: 32px; flex: none; border-radius: 11px; background: {{it.wash}}; display: flex; align-items: center; justify-content: center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{it.tint}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{it.d}}"/></svg>
+          </span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+            <span style="font-size: 13.5px; font-weight: 700">{{it.name}}</span>
+            <span style="font-size: 11.5px; color: #a8b4c4">{{it.sub}}</span>
+          </span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.5 5 7 7-7 7"/></svg>
+        </div>
+      </sc-for>
+    </div>
+
+    <span style="display: block; font-size: 13px; font-weight: 800; color: #cbd5e1; margin-bottom: 9px">관심사로 배우기</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px">
+      <sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+        <span style="padding: 8px 13px; border-radius: 999px; background: #1e293b; border: 1px solid #334155; font-size: 12.5px; font-weight: 600; color: #e2e8f0">{{t.label}}</span>
+      </sc-for>
+    </div>
+
+  </div>
+
+  <nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 76px; border-top: 1px solid #1e293b; background: rgba(15,23,42,0.97); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 13px">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="{{n.color}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d}}"/></svg>
+        <span style="font-size: 11px; font-weight: 600; color: {{n.color}}">{{n.label}}</span>
+        <span style="height: 2px; width: 22px; border-radius: 999px; background: {{n.bar}}"></span>
+      </span>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{}'>
+const ICON = {
+  home:  'M3 10.6 12 3.2l9 7.4M5.6 9.4V20h12.8V9.4',
+  learn: 'M4 19V5.2A2 2 0 0 1 6 3.2h12v14H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12',
+  house: 'M9 4.2h6v2.6H9zM7 5.4H5.6A1.6 1.6 0 0 0 4 7v12.6a1.6 1.6 0 0 0 1.6 1.6h12.8a1.6 1.6 0 0 0 1.6-1.6V7a1.6 1.6 0 0 0-1.6-1.6H17M8.6 13l2.4 2.4 4.4-4.4',
+  heart: 'M12 20.2s-7-4.5-7-9.3A3.8 3.8 0 0 1 12 8.1a3.8 3.8 0 0 1 7 2.8c0 4.8-7 9.3-7 9.3Z',
+  me:    'M12 12.2a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.6 20.4a7.4 7.4 0 0 1 14.8 0',
+  study: 'M12 6.6A4.4 4.4 0 0 0 7.6 3H3.2v14.4h4.4A4 4 0 0 1 12 21m0-14.4A4.4 4.4 0 0 1 16.4 3h4.4v14.4h-4.4A4 4 0 0 0 12 21m0-14.4V21',
+  words: 'M6.4 3.2h11a1.8 1.8 0 0 1 1.8 1.8v15.8H6.4a1.8 1.8 0 0 1-1.8-1.8V5a1.8 1.8 0 0 1 1.8-1.8Zm0 13.6h12.8M9.2 7.4h7',
+  quiz:  'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.9-.9 1.5v.6M12 17.2h.01',
+  sent:  'M4.2 6.6h15.6M4.2 12h15.6M4.2 17.4h9',
+  chat:  'M20 15.2a2 2 0 0 1-2 2H8.4l-4.4 4V5.4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9.8Z',
+  math:  'M4.4 7.2h6M7.4 4.2v6M13.6 16.2h6M13.6 20h6M4.4 16.6l4.4 4.4M8.8 16.6l-4.4 4.4',
+  toefl: 'M12 3.6 2.6 8.4 12 13.2l9.4-4.8L12 3.6Zm7 7.4v4.6c0 1.7-3.1 3-7 3s-7-1.3-7-3V11'
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['단어 학습', '복습 12 · 새 단어 6', ICON.study, '#818cf8', 'rgba(129,140,248,0.14)'],
+      ['단어장',    '내가 배운 단어 412개', ICON.words, '#818cf8', 'rgba(129,140,248,0.14)'],
+      ['복습 퀴즈', '혼자 풀기 · 퀴즈로 하기', ICON.quiz, '#818cf8', 'rgba(129,140,248,0.14)'],
+      ['문장 읽기', '레벨 E 예문 24개', ICON.sent, '#818cf8', 'rgba(129,140,248,0.14)'],
+      ['AI 회화',   '패미와 영어로 대화', ICON.chat, '#22d3ee', 'rgba(34,211,238,0.14)'],
+      ['수학 연습', '중3 · 이차방정식', ICON.math, '#22d3ee', 'rgba(34,211,238,0.14)'],
+      ['TOEFL',     'Speaking · Writing AI 채점', ICON.toefl, '#c4b5fd', 'rgba(196,181,253,0.16)']
+    ];
+    const nav = [
+      ['홈', ICON.home, false], ['배움', ICON.learn, true], ['집안', ICON.house, false],
+      ['마음', ICON.heart, false], ['나', ICON.me, false]
+    ];
+    return {
+      items: rows.map(function (r) {
+        return { name: r[0], sub: r[1], d: r[2], tint: r[3], wash: r[4] };
+      }),
+      tags: [
+        { label: 'SAT 단어' }, { label: '수학 영어' }, { label: '과학 영어' },
+        { label: '축구 영어' }, { label: '랩·음악 영어' }
+      ],
+      nav: nav.map(function (n) {
+        return { label: n[0], d: n[1],
+                 color: n[2] ? '#ffffff' : '#a8b4c4',
+                 bar: n[2] ? '#818cf8' : 'transparent' };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -10,3 +10,6 @@ __pycache__/
 .venv/
 
 supabase/.temp/
+
+# 디자인 캔버스 생성물 (docs/design/*.dc.html 에서 재생성 — docs/design/README.md 참고)
+docs/design/famtalk-layout-plan.html

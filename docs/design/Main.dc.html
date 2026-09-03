@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+      font-family: Pretendard, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    * { box-sizing: border-box; }
+    .scr { width: 390px; height: 844px; overflow: hidden; position: relative; background: #0f172a; }
+    .body { position: absolute; inset: 0 0 76px 0; overflow: hidden; padding: 16px 20px 8px; }
+  </style>
+</helmet>
+
+<div class="scr">
+  <div class="body">
+
+    <sc-if value="{{isParent}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px">
+        <div style="display: flex; align-items: center; gap: 6px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a8b4c4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+          <span style="font-size: 12px; color: #a8b4c4">화면 미리보기 · 부모에게만 보입니다</span>
+        </div>
+        <div style="display: flex; gap: 6px">
+          <sc-for list="{{members}}" as="m" hint-placeholder-count="5">
+            <button onClick="{{ m.pick }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 0 6px; border-radius: 14px; border: 1px solid {{m.bd}}; background: {{m.bg}}; cursor: pointer; font-family: inherit">
+              <span style="width: 26px; height: 26px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 15px; background: {{m.color}}">{{m.emoji}}</span>
+              <span style="font-size: 11.5px; font-weight: 700; color: {{m.ink}}">{{m.name}}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{viewing}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 12px; border-radius: 14px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.4); margin-bottom: 14px">
+        <span style="font-size: 12.5px; color: #c7d2fe">{{me.name}} 화면을 보는 중</span>
+        <button onClick="{{ backToMe }}" style="font-size: 11.5px; font-weight: 700; color: #fff; background: #4f46e5; border: 0; border-radius: 999px; padding: 5px 11px; cursor: pointer; font-family: inherit">내 화면</button>
+      </div>
+    </sc-if>
+
+    <header style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px">
+      <div style="display: flex; align-items: center; gap: 11px">
+        <span style="width: 44px; height: 44px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 23px; background: {{me.color}}">{{me.emoji}}</span>
+        <div style="display: flex; flex-direction: column; gap: 1px">
+          <span style="font-size: 12px; color: #a8b4c4">{{me.hello}}</span>
+          <span style="font-size: 21px; font-weight: 800; line-height: 1.15">{{me.name}}</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 6px">
+        <span style="display: flex; align-items: center; gap: 4px; background: #1e293b; border-radius: 999px; padding: 6px 10px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c3.9 0 6.5-2.5 6.5-6 0-4.5-4.5-6.5-4-11C11 5 9 8.5 9.8 11.5 8.8 11 8 9.8 8 8.5 6.4 10 5.5 12 5.5 15c0 3.5 2.6 6 6.5 6Z"/></svg>
+          <span style="font-size: 12.5px; font-weight: 700">{{me.streak}}</span>
+        </span>
+        <span style="display: flex; align-items: center; gap: 4px; background: #1e293b; border-radius: 999px; padding: 6px 10px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8Z"/><path d="M8.5 8V6a3.5 3.5 0 0 1 7 0v2"/></svg>
+          <span style="font-size: 12.5px; font-weight: 700">{{me.points}}</span>
+        </span>
+      </div>
+    </header>
+
+    <div style="border-radius: 24px; padding: 18px 18px 8px; margin-bottom: 16px; background: {{me.grad}}">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px">
+        <span style="font-size: 16px; font-weight: 800; color: #fff">오늘 할 일</span>
+        <span style="font-size: 11.5px; color: rgba(255,255,255,0.8)">{{me.badge}}</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-bottom: 12px">
+        <sc-for list="{{todos}}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.tap }}" style="display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 11px 12px; border-radius: 15px; border: 0; background: {{t.bg}}; cursor: pointer; font-family: inherit">
+            <span style="width: 21px; height: 21px; flex: none; border-radius: 7px; border: 1.8px solid rgba(255,255,255,0.65); display: flex; align-items: center; justify-content: center; background: {{t.boxBg}}">
+              <sc-if value="{{t.done}}" hint-placeholder-val="{{ false }}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>
+              </sc-if>
+            </span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; color: #fff; text-decoration: {{t.line}}; opacity: {{t.op}}">{{t.label}}</span>
+              <span style="font-size: 11.5px; color: rgba(255,255,255,0.75)">{{t.sub}}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px">
+      <span style="font-size: 14px; font-weight: 800">바로가기</span>
+      <span style="font-size: 11.5px; color: #a8b4c4">{{groupNote}}</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+        <div style="border-radius: 20px; padding: 13px 14px; background: rgba(30,41,59,0.6); border: 1px solid #334155; display: flex; flex-direction: column; gap: 8px">
+          <span style="display: flex; align-items: center; gap: 7px">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{g.tint}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{g.d}}"/></svg>
+            <span style="font-size: 14px; font-weight: 800">{{g.label}}</span>
+          </span>
+          <span style="font-size: 11.5px; color: #a8b4c4; line-height: 1.45">{{g.summary}}</span>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+
+  <nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 76px; border-top: 1px solid #1e293b; background: rgba(15,23,42,0.97); display: grid; grid-template-columns: {{navCols}}">
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 13px">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="{{n.color}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d}}"/></svg>
+        <span style="font-size: 11px; font-weight: 600; color: {{n.color}}">{{n.label}}</span>
+        <span style="height: 2px; width: 22px; border-radius: 999px; background: {{n.bar}}"></span>
+      </span>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"startMember":{"editor":"enum","options":["mom","dad","haeum","haul","haram"],"default":"dad","section":"데모"}}'>
+const ICON = {
+  home:  'M3 10.6 12 3.2l9 7.4M5.6 9.4V20h12.8V9.4',
+  learn: 'M4 19V5.2A2 2 0 0 1 6 3.2h12v14H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12',
+  house: 'M9 4.2h6v2.6H9zM7 5.4H5.6A1.6 1.6 0 0 0 4 7v12.6a1.6 1.6 0 0 0 1.6 1.6h12.8a1.6 1.6 0 0 0 1.6-1.6V7a1.6 1.6 0 0 0-1.6-1.6H17M8.6 13l2.4 2.4 4.4-4.4',
+  heart: 'M12 20.2s-7-4.5-7-9.3A3.8 3.8 0 0 1 12 8.1a3.8 3.8 0 0 1 7 2.8c0 4.8-7 9.3-7 9.3Z',
+  me:    'M12 12.2a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.6 20.4a7.4 7.4 0 0 1 14.8 0'
+};
+
+const FAM = [
+  { key: 'mom',   name: '엄마', emoji: '👩', color: '#ec4899', ink: '#4a1528', parent: true },
+  { key: 'dad',   name: '아빠', emoji: '👨', color: '#8b5cf6', ink: '#2e1065', parent: true },
+  { key: 'haeum', name: '하음', emoji: '👧', color: '#eab308', ink: '#422006', parent: false },
+  { key: 'haul',  name: '하울', emoji: '🧑', color: '#84cc16', ink: '#1a2e05', parent: false },
+  { key: 'haram', name: '하람', emoji: '👦', color: '#3b82f6', ink: '#0a2540', parent: false }
+];
+
+const ON = {
+  mom:   'ALL',
+  dad:   'ALL',
+  haeum: ['study','words','quiz','sentences','chat','chores','meals','shop','counsel','talk','family'],
+  haul:  ['study','words','quiz','sentences','chat','math','toefl','chores','meals','shop','counsel','talk','family'],
+  haram: ['study','words','quiz','sentences','math','chores','meals','shop','schedule']
+};
+
+const GROUPS = [
+  { key: 'learn', label: '배움', d: ICON.learn, tint: '#818cf8',
+    items: [['study','단어 학습'],['words','단어장'],['quiz','복습 퀴즈'],['sentences','문장 읽기'],['chat','AI 회화'],['math','수학 연습'],['toefl','TOEFL']] },
+  { key: 'home',  label: '집안', d: ICON.house, tint: '#2dd4bf',
+    items: [['chores','집안일'],['meals','식단표'],['schedule','계획표'],['shop','보상 상점']] },
+  { key: 'heart', label: '마음', d: ICON.heart, tint: '#f472b6',
+    items: [['counsel','마음 상담'],['talk','가족 대화'],['family','가족 현황']] }
+];
+
+const PROFILE = {
+  mom:   { hello: '안녕하세요',        streak: '9일',  points: '520P', badge: '가족 전체',       grad: 'linear-gradient(135deg,#6366f1 0%,#ec4899 100%)' },
+  dad:   { hello: '안녕하세요',        streak: '6일',  points: '480P', badge: '가족 전체',       grad: 'linear-gradient(135deg,#6366f1 0%,#ec4899 100%)' },
+  haeum: { hello: '레벨 D · B1 소통',  streak: '14일', points: '310P', badge: '3개 중 1개 완료', grad: 'linear-gradient(135deg,#d946ef 0%,#f97316 100%)' },
+  haul:  { hello: '레벨 E · B2 심화',  streak: '21일', points: '640P', badge: '3개 중 1개 완료', grad: 'linear-gradient(135deg,#1e3a8a 0%,#7c3aed 100%)' },
+  haram: { hello: '레벨 B · A1 기초',  streak: '5일',  points: '270P', badge: '3개 중 1개 완료', grad: 'linear-gradient(135deg,#3b82f6 0%,#06b6d4 100%)' }
+};
+
+const TODOS = {
+  mom:   [['오늘 저녁 식단 비어 있음','식단표 · 온 가족', false],['하람 집안일 미완료','분리수거 · 오후 6시까지', false],['하울 마음검사 결과 공유됨','가족 나눔에 올라옴', true]],
+  dad:   [['오늘 저녁 식단 비어 있음','식단표 · 온 가족', false],['하람 집안일 미완료','분리수거 · 오후 6시까지', false],['하울 마음검사 결과 공유됨','가족 나눔에 올라옴', true]],
+  haeum: [['복습 9개','어제 배운 단어', false],['빨래 개기','오늘 내 당번', false],['감사일기 쓰기','가족 대화', true]],
+  haul:  [['복습 12개 · 새 단어 6개','SAT 단어', false],['TOEFL Speaking 1문항','AI 채점까지', false],['설거지','저녁 후', true]],
+  haram: [['새 단어 8개','게임 영어', false],['분리수거','하울이랑 같이', false],['수학 학습지','주간 계획표', true]]
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const who = this.state && this.state.who ? this.state.who : (this.props.startMember || 'dad');
+    const me = FAM.filter(function (f) { return f.key === who; })[0] || FAM[1];
+    const p = PROFILE[who];
+    const on = ON[who];
+    const all = on === 'ALL';
+    const has = function (k) { return all || on.indexOf(k) >= 0; };
+    const self = this;
+
+    const groups = GROUPS.map(function (g) {
+      const live = g.items.filter(function (it) { return has(it[0]); }).map(function (it) { return it[1]; });
+      return { key: g.key, label: g.label, d: g.d, tint: g.tint, count: live.length, summary: live.join(' · ') };
+    }).filter(function (g) { return g.count > 0; });
+
+    const nav = [{ label: '홈', d: ICON.home, cur: true }]
+      .concat(groups.map(function (g) { return { label: g.label, d: g.d, cur: false }; }))
+      .concat([{ label: '나', d: ICON.me, cur: false }])
+      .map(function (n) {
+        return { label: n.label, d: n.d,
+                 color: n.cur ? '#ffffff' : '#a8b4c4',
+                 bar: n.cur ? '#818cf8' : 'transparent' };
+      });
+
+    return {
+      me: Object.assign({}, me, p),
+      isParent: true,
+      viewing: !me.parent,
+      backToMe: function () { self.setState({ who: 'dad' }); },
+      members: FAM.map(function (f) {
+        return Object.assign({}, f, {
+          bg: f.key === who ? f.color : '#1e293b',
+          bd: f.key === who ? '#f8fafc' : '#334155',
+          ink: f.key === who ? f.ink : '#cbd5e1',
+          pick: function () { self.setState({ who: f.key }); }
+        });
+      }),
+      todos: (TODOS[who] || []).map(function (t) {
+        return { label: t[0], sub: t[1], done: t[2],
+                 bg: t[2] ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.18)',
+                 boxBg: t[2] ? 'rgba(255,255,255,0.28)' : 'transparent',
+                 line: t[2] ? 'line-through' : 'none',
+                 op: t[2] ? '0.65' : '1',
+                 tap: function () {} };
+      }),
+      groups: groups,
+      groupNote: all ? '부모 · 전체 열람' : groups.length + '개 그룹 열림',
+      nav: nav,
+      navCols: 'repeat(' + nav.length + ', minmax(0, 1fr))'
+    };
+  }
+}
+</script>
+</body>
+</html>
