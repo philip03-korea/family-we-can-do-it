@@ -327,3 +327,48 @@ export const ASK = [
   { q: '실기 학원을 다닐 것인가, 독학인가?', why: '고3 남은 기간을 어떻게 쓸지가 갈린다' },
   { q: '하음도 학력 인정에 문제가 없는가?', why: '일반고면 문제없다. 만약 학력 인정이 안 되는 학교라면 검정고시가 먼저다' },
 ]
+
+// ── 입시박사에게 넘길 컨텍스트 (웹툰 입시용)
+export function tutorContext() {
+  const lines = []
+  lines.push('[전형 유형]')
+  for (const a of ADMISSION_TYPES) {
+    lines.push(`- ${a.title} (${a.weight}): ${a.summary}`)
+    for (const d of a.detail) lines.push(`  · ${d}`)
+  }
+  lines.push('', '[웹툰·만화 학과가 있는 대학]')
+  for (const s of SCHOOLS) {
+    lines.push(`- ${s.name} / ${s.dept} (${s.type}, ${s.tier})`)
+    lines.push(`  전공: ${s.majors.join(', ')}`)
+    lines.push(`  전형: ${s.exam} · 성격: ${s.focus}`)
+    lines.push(`  메모: ${s.note}`)
+    lines.push(`  물어볼 것: ${s.check.join(' / ')}`)
+  }
+  lines.push('', '[웹툰 특성화 고등학교]')
+  for (const h of HIGH_SCHOOLS) lines.push(`- ${h.name} (${h.where}) ${h.depts.join(', ')} — ${h.note}`)
+  lines.push('', '[실기 유형]')
+  for (const p of PRACTICAL) {
+    lines.push(`- ${p.name}: ${p.what} (예: ${p.example})`)
+    for (const t of p.tips) lines.push(`  · ${t}`)
+  }
+  lines.push('', '[포트폴리오]')
+  lines.push(`- ${PORTFOLIO.intro}`)
+  for (const i of PORTFOLIO.items) lines.push(`- ${i.name}${i.must ? ' (필수)' : ''}: ${i.why}`)
+  lines.push(`- 도구: ${PORTFOLIO.tools.join(', ')}`)
+  lines.push(`- 주의: ${PORTFOLIO.caution}`)
+  lines.push('', '[고3 일정]')
+  for (const t of TIMELINE) lines.push(`- ${t.when}: ${t.items.join(' / ')}`)
+  lines.push('', '[데뷔·연재 경로]')
+  for (const d of DEBUT) lines.push(`- ${d.name}: ${d.how} — ${d.note}`)
+  lines.push('', '[아직 정해지지 않은 것]')
+  for (const a of ASK) lines.push(`- ${a.q} — ${a.why}`)
+  return lines.join('\n')
+}
+
+export const TUTOR_PRESETS = [
+  '실기는 뭐부터 연습해야 해?',
+  '포트폴리오에 뭘 넣어야 해?',
+  '내신이 안 좋은데 갈 수 있는 곳이 있어?',
+  '지원할 6개 학교를 어떻게 고르지?',
+  '지금 고3인데 남은 기간에 뭘 해야 해?',
+]

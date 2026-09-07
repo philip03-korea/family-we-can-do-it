@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   DISCLAIMER, ADMISSION_TYPES, SCHOOLS, HIGH_SCHOOLS,
-  PRACTICAL, PORTFOLIO, TIMELINE, DEBUT, ASK,
+  PRACTICAL, PORTFOLIO, TIMELINE, DEBUT, ASK, tutorContext, TUTOR_PRESETS,
 } from '../data/webtoon'
 import BottomNav from '../components/BottomNav'
+import TutorBubble from '../components/TutorBubble'
 
 const TABS = [
   { key: 'school', label: '학교', emoji: '🏫' },
@@ -59,6 +60,7 @@ export default function Webtoon() {
       {tab === 'plan' && <PlanTab />}
       {tab === 'debut' && <DebutTab />}
 
+      <TutorBubble who="하음" topic="웹툰 입시" context={tutorContext()} presets={TUTOR_PRESETS} accent="#d946ef" />
       <BottomNav />
     </div>
   )
@@ -180,6 +182,13 @@ function SchoolDetail({ schoolKey, onBack }) {
         </div>
       </div>
 
+      <TutorBubble
+        who="하음"
+        topic={`웹툰 입시 — ${s.name}`}
+        context={tutorContext()}
+        presets={[`${s.name}는 나한테 맞을까?`, '여기 실기는 뭘 준비해야 해?', '포트폴리오는 어떻게 내?']}
+        accent="#d946ef"
+      />
       <BottomNav />
     </div>
   )
