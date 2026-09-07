@@ -14,7 +14,7 @@ import BottomNav from '../components/BottomNav'
 // 홈에 쌓여 있던 설정 뭉치를 여기로 옮겨 홈을 「오늘」만 남겼다.
 export default function Me() {
   const navigate = useNavigate()
-  const { user, profile, ownProfile, signOut, isParent, isViewing, viewUserId, setViewAs } = useAuth()
+  const { user, profile, ownProfile, signOut, isParent, isViewing, viewUserId, setViewAs, canSee } = useAuth()
   const ownKey = ownProfile?.member_key
 
   const [game, setGame] = useState(null)
@@ -134,7 +134,9 @@ export default function Me() {
         </div>
       )}
 
-      {/* 레벨 사다리 */}
+      {/* 레벨 사다리 — /study 로 보내므로 단어 학습이 켜진 사람에게만
+          (꺼진 아이에게 보여주면 눌러도 홈으로 되돌아가 혼란스럽다) */}
+      {canSee('study') && (<>
       <h2 className="text-lg font-bold mb-1">레벨 사다리</h2>
       <p className="text-slate-500 text-xs mb-3">레벨을 눌러 그 레벨 단어로 학습할 수 있어요</p>
       <div className="space-y-2 mb-6">
@@ -161,6 +163,7 @@ export default function Me() {
           )
         })}
       </div>
+      </>)}
 
       {/* 알림 · 효과음 */}
       <div className="bg-slate-800/60 border border-slate-700 rounded-3xl p-5 mb-5">
