@@ -439,3 +439,191 @@ export const GLOSSARY = [
   ['TOEFL iBT', '영어 시험. 한국 글로벌학부와 미국 대학 양쪽에 쓰인다'],
   ['GPA / Transcript', '고교 내신 평균과 학교가 발급하는 공식 성적증명서. 미국대 지원의 핵심 서류'],
 ]
+
+// ── 대학별 입시 조건 (상세)
+//
+// ⚠️ 아래는 「국제계열 수시가 대체로 이렇게 굴러간다」는 구조 설명이다.
+//    모집인원·반영비율·어학 커트라인은 해마다 바뀌고 대학마다 다르므로
+//    숫자는 범위로만 적고, 확정이 필요한 항목은 ask 에 넣어 입학처에 묻게 했다.
+export const ADMISSION = {
+  yonsei: {
+    track: '수시 국제계열 전형 (연도별 명칭이 바뀐다 — 특기자/국제형/학생부종합 계열)',
+    when: '9월 원서 접수 · 10~11월 서류·면접 · 12월 발표',
+    docs: ['학교 성적증명서(또는 검정고시 합격증·성적증명서)', '자기소개서 또는 학업계획서', '공인 어학성적', '활동증빙(수상·봉사·프로젝트)'],
+    english: 'TOEFL iBT 100 안팎이 경쟁력. 지원자격으로 최저를 요구하는 해도 있다',
+    eval: '서류 비중이 가장 크고, 면접이 따라온다. 내신 실질 반영은 낮은 편',
+    interview: '영어 면접이 흔하다. 제출 서류 기반 질문 + 시사·전공 관심 확인',
+    minimum: '수능 최저는 전형에 따라 없는 경우가 많다 — 그해 요강 확인',
+    tuition: '사립 · 국제대학은 일반 학과보다 등록금이 높은 편',
+    key: '전공이 13개로 넓어 「왜 UIC인가」를 학과 단위로 구체적으로 써야 한다. 영어 에세이 완성도가 결정적',
+  },
+  korea: {
+    track: '수시 국제계열 전형 (국제인재/글로벌 계열)',
+    when: '9월 원서 접수 · 10~11월 서류·면접 · 12월 발표',
+    docs: ['성적증명서(또는 검정고시 서류)', '자기소개서', '공인 어학성적', '활동증빙'],
+    english: 'TOEFL iBT 100 안팎이 경쟁력',
+    eval: '서류 + 면접. 국제학 단일 학부라 지원 동기의 초점이 분명해야 한다',
+    interview: '영어 면접 비중이 크다. 국제이슈에 대한 견해를 묻는 편',
+    minimum: '전형에 따라 수능 최저가 붙기도 한다 — 반드시 확인',
+    tuition: '사립 · 국제학부는 일반 학과보다 높은 편',
+    key: '국제통상·개발협력·평화안보 중 어디에 관심이 있는지 사례로 보여줄 것',
+  },
+  skku: {
+    track: '수시 글로벌 계열 전형 (학부마다 다르다)',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '자기소개서(요구 시)', '공인 어학성적(학부별)', '활동증빙'],
+    english: '학부마다 기준이 다르다. 글로벌바이오메디컬공학·글로벌융합은 이공 성격이 강해 수학·과학이 함께 본다',
+    eval: '학부별 편차가 크다 — 어학 중심인 곳과 교과 중심인 곳이 갈린다',
+    interview: '학부에 따라 있음/없음이 갈린다',
+    minimum: '학부별로 다름 — 지원할 학부 요강을 개별 확인',
+    tuition: '사립. 이공계 학부는 등록금이 더 높다',
+    key: '「글로벌」이 붙은 학부가 여럿이라 이름만 보고 고르면 안 된다. 커리큘럼과 영어 강의 비중을 학부별로 비교할 것',
+  },
+  hanyang: {
+    track: '수시 국제계열 전형',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '자기소개서(요구 시)', '공인 어학성적', '활동증빙'],
+    english: 'TOEFL iBT 90~100 안팎 (참고)',
+    eval: '서류 + 면접',
+    interview: '영어 면접이 있는 편',
+    minimum: '전형별 상이 — 확인 필요',
+    tuition: '사립',
+    key: '공대가 강한 학교라 이중전공으로 이공계를 얹는 그림을 그리면 지원 동기가 선명해진다',
+  },
+  sogang: {
+    track: '수시 국제계열 전형',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '자기소개서(요구 시)', '공인 어학성적', '활동증빙'],
+    english: '전형별 상이',
+    eval: '서류 + 면접. 어문·문화 성격이 강하다',
+    interview: '있는 편',
+    minimum: '전형별 상이 — 확인 필요',
+    tuition: '사립',
+    key: '이공 지망이면 우선순위가 낮다. 문학·문화 쪽 관심이 분명할 때 쓸 카드',
+  },
+  hufs: {
+    track: '수시 국제계열 전형 (국제학부 / LD·LT 학부는 별도 선발)',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '자기소개서(요구 시)', '공인 어학성적', '활동증빙'],
+    english: '전형별 상이. 제2외국어 역량을 함께 보는 트랙이 있다',
+    eval: '서류 + 면접',
+    interview: '영어 면접. LD·LT는 소수정예라 경쟁률이 높다',
+    minimum: '전형별 상이 — 확인 필요',
+    tuition: '사립',
+    key: '영어에 제2외국어를 얹을 생각이 있는지가 이 학교를 쓸 이유가 된다',
+  },
+  khu: {
+    track: '수시 국제계열 전형',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '자기소개서(요구 시)', '공인 어학성적', '활동증빙'],
+    english: '전형별 상이',
+    eval: '서류 + 면접',
+    interview: '있는 편',
+    minimum: '전형별 상이 — 확인 필요',
+    tuition: '사립',
+    key: '안정 지원 후보. 국제캠퍼스(용인)라 통학·기숙 여건을 먼저 따져볼 것',
+  },
+  cau: {
+    track: '수시 국제계열 전형',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '자기소개서(요구 시)', '공인 어학성적', '활동증빙'],
+    english: '전형별 상이',
+    eval: '서류 + 면접. 물류·금융은 실무 색이 강하다',
+    interview: '있는 편',
+    minimum: '전형별 상이 — 확인 필요',
+    tuition: '사립',
+    key: '국제물류·글로벌금융은 취업 트랙이 뚜렷하다. 진로가 분명하면 강한 카드',
+  },
+  kaist: {
+    track: '수시 일반전형·특기자전형 (외국인 전형은 하울 해당 없음)',
+    when: '수시 원서는 다른 대학보다 이른 편 — 그해 일정 확인 필수',
+    docs: ['성적증명서', '학업계획서·자기소개서', '수학·과학 활동 증빙(경시·연구·프로젝트)', '추천서(요구 시)'],
+    english: '별도 어학 커트라인보다 「전 과목 영어 강의를 따라갈 수 있는가」가 실질 기준',
+    eval: '수학·과학 역량이 핵심. 서류 + 면접(구술고사 성격)',
+    interview: '수학·과학 구술 면접이 큰 비중',
+    minimum: '수능 최저 없이 자체 전형으로 뽑는 구조 — 그해 요강 확인',
+    tuition: '국가 지원으로 등록금 부담이 매우 낮다 (장학 제도가 강함)',
+    key: '앱의 「수학 경시」가 그대로 준비가 된다. 경시 실적을 어떻게 반영하는지 입학처에 꼭 물어볼 것',
+  },
+  unist: {
+    track: '수시 일반전형',
+    when: '9월 원서 접수 · 10~11월 전형 · 12월 발표',
+    docs: ['성적증명서', '학업계획서', '수학·과학 활동 증빙'],
+    english: '전 과목 영어 강의를 따라갈 수준이 전제',
+    eval: '수학·과학 중심 서류 + 면접',
+    interview: '있는 편',
+    minimum: '전형별 상이 — 확인 필요',
+    tuition: '국립대 성격으로 등록금 부담이 낮고 기숙사·장학이 강하다',
+    key: 'KAIST 와 구조가 같고 문턱이 조금 낮다. 이공 지망의 안정 후보로 묶어두면 좋다',
+  },
+}
+
+// ── 국제계열 수시 공통 절차 (대학이 달라도 큰 틀은 같다)
+export const COMMON_PROCESS = [
+  { step: '1', name: '지원자격 확보', what: '검정고시 합격증. 수시 원서 접수(9월) 전에 나와 있어야 한다', when: '늦어도 8월 회차까지' },
+  { step: '2', name: '어학성적 확보', what: 'TOEFL 등 공인성적. 성적표 유효기간(대개 2년)을 원서 접수일 기준으로 확인', when: '여름 전까지' },
+  { step: '3', name: '서류 준비', what: '자기소개서·학업계획서·활동증빙. 학교마다 양식과 분량이 다르다', when: '7~8월' },
+  { step: '4', name: '원서 접수', what: '수시는 6회 제한. 안정·적정·도전으로 나눠 배치', when: '9월 초중순' },
+  { step: '5', name: '면접', what: '국제계열은 영어 면접이 흔하다. 제출 서류 기반 질문이 많다', when: '10~11월' },
+  { step: '6', name: '발표·등록', what: '12월 합격 발표. 불합격 시 정시로 넘어간다', when: '12월' },
+]
+
+// ── 서류 체크리스트 (미리 만들어 두면 9월에 안 쫓긴다)
+export const DOC_CHECKLIST = [
+  { name: '고졸 검정고시 합격증·성적증명서', note: '지원자격의 근거. 발급까지 시간이 걸리니 미리 떼둘 것', must: true },
+  { name: '공인 어학성적표 (TOEFL 등)', note: '유효기간을 원서 접수일 기준으로 확인. 재응시 여유를 두고 일정을 잡을 것', must: true },
+  { name: '자기소개서 / 학업계획서', note: '학교마다 문항과 분량이 다르다. 공통 뼈대를 만들고 학교별로 고쳐 쓴다', must: true },
+  { name: '활동 증빙 (수상·봉사·프로젝트)', note: '앱의 수학 경시 기록, 교내외 활동을 정리해 둘 것', must: false },
+  { name: '추천서', note: '요구하는 학교만. 최소 3~4주 전에 부탁드릴 것', must: false },
+  { name: '여권·신분 서류', note: '외국 교육과정 관련 서류를 요구하는 경우 대비', must: false },
+]
+
+// ── 입시박사에게 넘길 컨텍스트
+// 화면에 실제로 실린 내용만 문자열로 만들어 넘긴다. 박사는 이걸 근거로만 답한다.
+export function tutorContext() {
+  const lines = []
+  lines.push('[지원자격]')
+  for (const e of ELIGIBILITY) {
+    lines.push(`- ${e.title} (${e.mine ? '하울 해당' : '해당 없음'}): ${e.summary}`)
+    for (const d of e.detail) lines.push(`  · ${d}`)
+  }
+  lines.push('', '[대학별 정보]')
+  for (const u of UNIVERSITIES) {
+    const a = ADMISSION[u.key] || {}
+    lines.push(`- ${u.name} / ${u.college} (${u.campus}, ${u.lang}, ${u.tier})`)
+    lines.push(`  학과: ${u.majors.map((m) => m.name).join(', ')}`)
+    lines.push(`  하울에게: ${u.fit}`)
+    if (a.track) lines.push(`  전형: ${a.track}`)
+    if (a.when) lines.push(`  일정: ${a.when}`)
+    if (a.docs) lines.push(`  서류: ${a.docs.join(', ')}`)
+    if (a.english) lines.push(`  어학: ${a.english}`)
+    if (a.eval) lines.push(`  평가: ${a.eval}`)
+    if (a.interview) lines.push(`  면접: ${a.interview}`)
+    if (a.minimum) lines.push(`  수능최저: ${a.minimum}`)
+    if (a.tuition) lines.push(`  학비: ${a.tuition}`)
+    if (a.key) lines.push(`  준비 포인트: ${a.key}`)
+    lines.push(`  입학처에 물어볼 것: ${u.check.join(' / ')}`)
+  }
+  lines.push('', '[수시 공통 절차]')
+  for (const s of COMMON_PROCESS) lines.push(`- ${s.step}. ${s.name} (${s.when}): ${s.what}`)
+  lines.push('', '[서류 체크리스트]')
+  for (const d of DOC_CHECKLIST) lines.push(`- ${d.name}${d.must ? ' (필수)' : ''}: ${d.note}`)
+  lines.push('', '[검정고시]')
+  lines.push(`- ${GED_INFO.pass}`)
+  lines.push(`- 시행: ${GED_INFO.rounds.join(' / ')}`)
+  lines.push(`- 과목: ${GED_INFO.subjects.join(', ')}`)
+  lines.push(`- ${GED_INFO.note}`)
+  lines.push('', '[미국 대학 (두 번째 경로)]')
+  for (const s of SCHOOLS_USA) lines.push(`- ${s.name} (${s.type}) SAT ${s.sat} / TOEFL ${s.toefl} / GPA ${s.gpa} — ${s.note}`)
+  lines.push('', '[아직 확인되지 않은 것]')
+  for (const a of ASK_SCHOOL) lines.push(`- ${a.q} (${a.to}) — ${a.why}`)
+  return lines.join('\n')
+}
+
+export const TUTOR_PRESETS = [
+  '나는 어떤 전형으로 지원할 수 있어?',
+  '검정고시는 언제까지 붙어야 해?',
+  '수학을 좋아하는데 어느 학과가 맞을까?',
+  'TOEFL 점수는 얼마나 필요해?',
+  '지금부터 뭘 먼저 해야 해?',
+]

@@ -4,8 +4,10 @@ import {
   DISCLAIMER, KEY_WARNING, ELIGIBILITY, WHY_GLOBAL, MAJOR_GROUPS,
   UNIVERSITIES, majorsByGroup, universityOf,
   SCHOOLS_USA, TIMELINE, GED_INFO, ASK_SCHOOL, GLOSSARY,
+  ADMISSION, COMMON_PROCESS, DOC_CHECKLIST, tutorContext, TUTOR_PRESETS,
 } from '../data/career'
 import BottomNav from '../components/BottomNav'
+import TutorBubble from '../components/TutorBubble'
 
 const TABS = [
   { key: 'univ', label: '대학', emoji: '🏛' },
@@ -65,8 +67,56 @@ export default function Career() {
       {tab === 'plan' && <PlanTab />}
       {tab === 'todo' && <TodoTab />}
 
+      <TutorBubble who="하울" topic="대학 가이드" context={tutorContext()} presets={TUTOR_PRESETS} accent="#7c3aed" />
       <BottomNav />
     </div>
+  )
+}
+
+// 대학별 입시 조건
+function AdmissionBlock({ a }) {
+  const rows = [
+    ['전형', a.track],
+    ['일정', a.when],
+    ['어학', a.english],
+    ['평가', a.eval],
+    ['면접', a.interview],
+    ['수능 최저', a.minimum],
+    ['학비', a.tuition],
+  ].filter(([, v]) => v)
+
+  return (
+    <>
+      <h2 className="font-bold mb-1">📋 입시 조건</h2>
+      <p className="text-xs text-slate-500 mb-3">해마다 바뀌어요. 방향만 잡고 요강으로 확인하세요.</p>
+
+      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 mb-3">
+        {rows.map(([k, v], i) => (
+          <div key={k} className={`py-2.5 ${i ? 'border-t border-slate-700/60' : ''}`}>
+            <p className="text-[11px] text-slate-500">{k}</p>
+            <p className="text-sm text-slate-100 leading-relaxed mt-0.5">{v}</p>
+          </div>
+        ))}
+      </div>
+
+      {a.docs && (
+        <>
+          <p className="text-xs text-slate-400 mb-1.5">제출 서류</p>
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {a.docs.map((d) => (
+              <span key={d} className="text-[11px] bg-slate-900 border border-slate-700 rounded-full px-2.5 py-1">{d}</span>
+            ))}
+          </div>
+        </>
+      )}
+
+      {a.key && (
+        <div className="bg-indigo-500/10 border border-indigo-500/35 rounded-2xl p-4 mb-5">
+          <p className="text-xs font-bold text-indigo-300 mb-1">준비 포인트</p>
+          <p className="text-sm text-indigo-50 leading-relaxed">{a.key}</p>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -229,6 +279,8 @@ function UnivDetail({ univKey, onBack }) {
           ))}
         </div>
 
+        {ADMISSION[u.key] && <AdmissionBlock a={ADMISSION[u.key]} />}
+
         <h2 className="font-bold mb-2">❓ 이 대학에 물어볼 것</h2>
         <div className="space-y-1.5">
           {u.check.map((c, i) => (
@@ -240,6 +292,13 @@ function UnivDetail({ univKey, onBack }) {
         </div>
       </div>
 
+      <TutorBubble
+        who="하울"
+        topic={`대학 가이드 — ${u.name} ${u.college}`}
+        context={tutorContext()}
+        presets={[`${u.name}는 나한테 맞을까?`, '여기 지원하려면 뭐가 필요해?', '이 학교 학과 중에 뭐가 좋을까?']}
+        accent="#7c3aed"
+      />
       <BottomNav />
     </div>
   )
@@ -382,6 +441,42 @@ function PlanTab() {
                 {x}
               </p>
             ))}
+          </div>
+        ))}
+      </div>
+
+      <h2 className="font-bold mt-6 mb-1">🧾 수시 공통 절차</h2>
+      <p className="text-xs text-slate-500 mb-3">대학이 달라도 큰 틀은 같아요.</p>
+      <div className="space-y-1.5 mb-6">
+        {COMMON_PROCESS.map((s2) => (
+          <div key={s2.step} className="flex gap-3 bg-slate-800/60 border border-slate-700 rounded-2xl px-4 py-3">
+            <span className="w-6 h-6 rounded-full bg-slate-900 text-xs font-black text-slate-300 flex items-center justify-center shrink-0 mt-0.5">
+              {s2.step}
+            </span>
+            <span className="min-w-0">
+              <span className="flex items-baseline gap-2">
+                <span className="font-bold text-sm">{s2.name}</span>
+                <span className="ml-auto text-[11px] text-indigo-300 shrink-0">{s2.when}</span>
+              </span>
+              <span className="block text-xs text-slate-400 leading-relaxed mt-0.5">{s2.what}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <h2 className="font-bold mb-1">📁 서류 체크리스트</h2>
+      <p className="text-xs text-slate-500 mb-3">미리 만들어 두면 9월에 안 쫓겨요.</p>
+      <div className="space-y-1.5 mb-6">
+        {DOC_CHECKLIST.map((d) => (
+          <div
+            key={d.name}
+            className={`rounded-2xl px-4 py-3 border ${d.must ? 'bg-rose-500/10 border-rose-500/35' : 'bg-slate-800/60 border-slate-700'}`}
+          >
+            <div className="flex items-baseline gap-2">
+              <span className="font-bold text-sm">{d.name}</span>
+              {d.must && <span className="text-[10px] text-rose-200 bg-rose-500/25 rounded-full px-2 py-0.5 shrink-0">필수</span>}
+            </div>
+            <p className="text-xs text-slate-400 mt-1 leading-relaxed">{d.note}</p>
           </div>
         ))}
       </div>
