@@ -135,18 +135,63 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* 이 사람의 첫 화면을 홈 맨 위에도 — 앱을 열면 여기부터 보고, 홈에 와도 한 번에 간다 */}
+      {/* 이 사람의 첫 화면 — 홈에서 가장 크고 눈에 띄는 자리.
+          입체감은 네 겹으로 만든다:
+            ① 레벨 그라데이션 바닥
+            ② 위에서 빛이 드는 오버레이 (위 밝게 / 아래 어둡게)
+            ③ 안쪽 테두리 하이라이트 — 카드가 떠 있는 것처럼 가장자리가 빛난다
+            ④ 카드 색과 같은 계열의 색 그림자 (glow) */}
       {landing && (
         <button
           onClick={() => navigate(landing.route)}
-          className={`w-full text-left ${landing.bg} rounded-3xl p-5 mb-6 shadow-lg active:scale-[0.99] transition`}
+          className="relative w-full text-left rounded-[28px] p-6 mb-6 overflow-hidden
+                     active:scale-[0.975] transition-transform duration-150"
+          style={{ boxShadow: `0 22px 48px -14px ${landing.glow}, 0 6px 16px rgba(0,0,0,0.4)` }}
         >
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{landing.emoji}</span>
-            <span className="font-black text-white text-lg">{landing.title}</span>
-            <span className="ml-auto text-white/70 text-xl">›</span>
-          </div>
-          <p className="text-white/85 text-sm mt-1.5 leading-relaxed">{landing.desc}</p>
+          {/* ① 바닥 */}
+          <span className={`absolute inset-0 ${landing.bg}`} aria-hidden="true" />
+          {/* ② 빛 */}
+          <span
+            className="absolute inset-0"
+            aria-hidden="true"
+            style={{
+              background:
+                'linear-gradient(to bottom, rgba(255,255,255,0.30), rgba(255,255,255,0) 45%, rgba(0,0,0,0.28))',
+            }}
+          />
+          {/* 큰 이모지 워터마크 — 뒤로 깔려 깊이를 만든다 */}
+          <span
+            className="absolute -right-4 -bottom-8 text-[128px] leading-none opacity-20 select-none pointer-events-none"
+            aria-hidden="true"
+          >
+            {landing.emoji}
+          </span>
+          {/* ③ 가장자리 하이라이트 */}
+          <span
+            className="absolute inset-0 rounded-[28px] ring-1 ring-inset ring-white/30 pointer-events-none"
+            aria-hidden="true"
+          />
+
+          <span className="relative block">
+            <span className="inline-block text-[12px] font-bold text-white/95 bg-black/25 rounded-full px-3 py-1 mb-3">
+              {landing.badge}
+            </span>
+            <span className="flex items-center gap-3">
+              <span className="text-5xl leading-none" style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.35))' }}>
+                {landing.emoji}
+              </span>
+              <span
+                className="text-[30px] font-black text-white leading-tight tracking-tight"
+                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.30)' }}
+              >
+                {landing.title}
+              </span>
+            </span>
+            <span className="block text-white/90 text-sm mt-3 leading-relaxed text-pretty">{landing.desc}</span>
+            <span className="inline-flex items-center gap-1 mt-4 bg-white/25 rounded-full pl-4 pr-3 py-2 font-bold text-white text-sm">
+              바로 가기 <span className="text-lg leading-none">›</span>
+            </span>
+          </span>
         </button>
       )}
 
@@ -158,8 +203,13 @@ export default function Dashboard() {
             <button
               key={g.key}
               onClick={() => navigate(`/g/${g.key}`)}
-              className="bg-slate-800/60 border border-slate-700 rounded-2xl px-3 py-3.5 text-left"
+              className="relative overflow-hidden bg-slate-800/60 border border-slate-700 rounded-2xl px-3 py-3.5 text-left
+                         shadow-[0_6px_16px_-8px_rgba(0,0,0,0.7)] active:scale-[0.97] transition-transform duration-150"
             >
+              <span
+                className="absolute inset-x-0 top-0 h-px bg-white/15"
+                aria-hidden="true"
+              />
               <div className="text-2xl leading-none mb-1.5">{g.emoji}</div>
               <div className="font-bold text-sm">{g.label}</div>
               <div className="text-[11px] text-slate-400">{items.length}개</div>
