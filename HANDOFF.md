@@ -48,10 +48,9 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 ### ⚠️ 대기 중 (다음 사람이 해야 할 일)
 
-- **`database/step15_visibility.sql` 을 Supabase SQL Editor에서 실행해야 한다** (2026-09-07).
-  실행 전까지 부모용 「화면 설정」 저장이 실패한다(앱이 안내 메시지를 띄운다).
-  나머지 화면은 앱 기본값으로 정상 동작하니 급히 막히는 건 없다.
-  실행하면 이 항목을 지우고 아래 로그에 "실행 완료"라고 적을 것.
+- **Supabase 조직 쿼터 초과** — 대시보드에 "Organization exceeded its quota in the previous
+  billing cycle · Projects will be restricted from 17 Sep, 2026" 경고가 떠 있다.
+  9/17 전에 사용량을 줄이거나 요금제를 확인하지 않으면 프로젝트가 제한된다.
 
 - **하울 진학 가이드의 「확인」 탭 7가지**를 등대글로벌스쿨(031-971-2731)에 물어봐야
   플랜을 확정할 수 있다. 특히 **하울이 미국 학제로 몇 학년인지**(Grade 10/11)에 따라
@@ -73,6 +72,18 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 ---
 
 ## 2. 작업 로그 (최신이 위)
+
+### 2026-09-07 — step15 Supabase 실행 완료 ✅
+
+- **조치**: `database/step15_visibility.sql` 을 Supabase SQL Editor 에서 실행했다.
+- **확인** (MCP 로 DB 직접 조회):
+  - `profiles.enabled_features` — 생성됨 (`text[]`, nullable)
+  - 정책 `parents update children` — 생성됨, `is_parent()` 사용 (무한재귀 아님)
+  - `is_parent()` 의 `prosecdef = true` (security definer) 확인
+  - 가족 5명(mom·dad·haeum·haul·haram) 모두 `enabled_features = NULL`
+    → 앱이 `features.js` 의 나이별 기본값을 쓴다. 정상 상태다.
+- **남은 것**: 없음. 부모 계정으로 「나 → 화면 설정」에서 저장이 되는지 한 번 눌러보면 끝.
+
 
 ### 2026-09-07 — 아이별 화면 노출 + 하울 입시 3종 + 하람 요리 코너
 
