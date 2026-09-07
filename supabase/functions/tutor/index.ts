@@ -4,17 +4,25 @@
 // 앱 안에서 떠다니는 「입시박사」 대화창의 서버. API 키는 서버 시크릿에만 있고
 // 브라우저에는 절대 내려가지 않는다 (chat 함수와 같은 원칙).
 //
-// 제공자는 두 가지를 지원하고, 시크릿이 있는 쪽을 자동으로 고른다.
-//   1) OPENAI_API_KEY 가 있으면 → OpenAI
-//   2) 없으면 → GEMINI_API_KEY (이미 앱에서 쓰고 있는 무료 키)
+// 제공자는 TUTOR_PROVIDER 로 **명시적으로** 고른다. 기본값은 gemini(무료 등급)다.
+//   TUTOR_PROVIDER=gemini  (기본) → GEMINI_API_KEY. 무료 등급 안에서 쓰면 추가 비용이 없다
+//   TUTOR_PROVIDER=openai        → OPENAI_API_KEY. 종량제로 과금된다
+//
+// ⚠️ 유료 제공자로 **자동 전환하지 않는다.** 다른 용도로 OPENAI_API_KEY 를 넣어 두더라도
+//    TUTOR_PROVIDER 를 바꾸지 않는 한 여기서 돈이 나가지 않는다.
+//
+// 같은 질문은 캐시에서 꺼내 쓴다 → 두 번째부터는 호출 자체가 없다(무료 등급도 아낀다).
 //
 // 배포:
-//   supabase secrets set OPENAI_API_KEY=sk-...        (OpenAI 를 쓸 때만)
-//   supabase secrets set OPENAI_MODEL=gpt-5.1         (기본값을 바꾸고 싶을 때)
 //   supabase functions deploy tutor
+//   (OpenAI 로 바꿀 때만)
+//   supabase secrets set TUTOR_PROVIDER=openai
+//   supabase secrets set OPENAI_API_KEY=sk-...
+//   supabase secrets set OPENAI_MODEL=<계정에서 확인한 모델명>
 // ============================================================
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+const PROVIDER = (Deno.env.get('TUTOR_PROVIDER') ?? 'gemini').toLowerCase()
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') ?? ''
 const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? 'gpt-5.1'
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') ?? ''
@@ -50,6 +58,13 @@ function systemPrompt(who: string, topic: string, context: string) {
 ${context}`
 }
 
+async function sha256(text: string) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   const json = (body: unknown, status = 200) =>
@@ -59,7 +74,10 @@ Deno.serve(async (req) => {
     })
 
   try {
-    if (!OPENAI_API_KEY && !GEMINI_API_KEY) return json({ error: 'AI_NOT_CONFIGURED' }, 503)
+    // 고른 제공자의 키가 없으면 여기서 멈춘다. 유료 쪽으로 몰래 넘어가지 않는다.
+    const useOpenAI = PROVIDER === 'openai'
+    if (useOpenAI && !OPENAI_API_KEY) return json({ error: 'AI_NOT_CONFIGURED', provider: 'openai' }, 503)
+    if (!useOpenAI && !GEMINI_API_KEY) return json({ error: 'AI_NOT_CONFIGURED', provider: 'gemini' }, 503)
 
     const authHeader = req.headers.get('Authorization') ?? ''
     const supabase = createClient(
@@ -73,7 +91,23 @@ Deno.serve(async (req) => {
     const { message = '', history = [], who = '학생', topic = '진학', context = '' } = await req.json()
     if (!message.trim()) return json({ error: 'EMPTY_MESSAGE' }, 400)
 
-    // 일일 쿼터 — AI 회화와 같은 카운터를 쓴다 (가족 전체 폭주 방지)
+    const recent = history.slice(-8) as { role: string; text: string }[]
+    const lastCtx = recent.length ? recent[recent.length - 1]?.text ?? '' : ''
+
+    // 1) 캐시 먼저 — 같은 화면에서 같은 질문이면 호출 자체를 안 한다.
+    //    호출이 없으니 일일 쿼터도 쓰지 않는다 (무료 등급을 아끼는 쪽이 맞다).
+    const hash = await sha256(`tutor|${PROVIDER}|${topic}|${message.trim()}|${lastCtx}`)
+    const { data: cached } = await supabase
+      .from('ai_cache')
+      .select('response')
+      .eq('hash', hash)
+      .maybeSingle()
+    if (cached?.response?.reply) {
+      await supabase.rpc('bump_ai_cache_hit', { p_hash: hash })
+      return json({ reply: cached.response.reply, provider: 'cache', cached: true })
+    }
+
+    // 2) 일일 쿼터 — AI 회화와 같은 카운터 (가족 전체 폭주 방지)
     const { data: usageCount, error: usageErr } = await supabase.rpc('bump_ai_usage')
     if (usageErr) return json({ error: 'USAGE_ERROR', detail: usageErr.message }, 500)
     if (usageCount > DAILY_LIMIT) {
@@ -81,11 +115,10 @@ Deno.serve(async (req) => {
     }
 
     const sys = systemPrompt(who, topic, context.slice(0, 12000))
-    const recent = history.slice(-8) as { role: string; text: string }[]
     let reply = ''
     let provider = ''
 
-    if (OPENAI_API_KEY) {
+    if (useOpenAI) {
       provider = `openai:${OPENAI_MODEL}`
       const res = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -149,7 +182,10 @@ Deno.serve(async (req) => {
     reply = (reply || '').trim()
     if (!reply) return json({ error: 'PROVIDER_ERROR', provider, detail: 'empty reply' }, 200)
 
-    return json({ reply, provider, usageToday: usageCount, limit: DAILY_LIMIT })
+    // 3) 캐시에 저장 — 같은 질문이 다시 오면 공짜로 답한다
+    await supabase.from('ai_cache').insert({ hash, level: 'tutor', prompt: message, response: { reply } })
+
+    return json({ reply, provider, cached: false, usageToday: usageCount, limit: DAILY_LIMIT })
   } catch (e) {
     return json({ error: 'SERVER_ERROR', detail: String(e) }, 500)
   }
