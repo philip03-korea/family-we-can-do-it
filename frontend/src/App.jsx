@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
-import { featureKeyOfPath } from './data/features'
+import { featureKeyOfPath, landingOf } from './data/features'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Study from './pages/Study'
@@ -28,6 +28,7 @@ import Career from './pages/Career'
 import Exams from './pages/Exams'
 import Contest from './pages/Contest'
 import Cooking from './pages/Cooking'
+import Webtoon from './pages/Webtoon'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -54,10 +55,12 @@ function Guarded({ children }) {
   )
 }
 
-// 하울은 앱을 열면 대학 가이드부터 본다 (세션당 1회).
+// 아이마다 앱을 열었을 때 먼저 보는 화면이 다르다 (세션당 1회).
+//   하울 → 대학 가이드 · 하음 → 웹툰 입시 · 하람 → 요리
 // 홈 탭을 누르면 평소 홈이 나오므로 갇히지 않고, 부모 미리보기에는 걸리지 않는다.
+// features.js 의 LANDING 에서 바꾼다.
 function Home() {
-  const { ownProfile, isViewing, canSee } = useAuth()
+  const { ownProfile, isViewing, visibleFeatures } = useAuth()
   const [alreadyLanded] = useState(() => {
     try {
       if (sessionStorage.getItem('famtalk:landed')) return true
@@ -67,8 +70,9 @@ function Home() {
       return true // 저장이 막힌 브라우저에서는 그냥 홈을 보여준다
     }
   })
-  if (!alreadyLanded && !isViewing && ownProfile?.member_key === 'haul' && canSee('career')) {
-    return <Navigate to="/career" replace />
+  const landing = landingOf(ownProfile?.member_key, visibleFeatures)
+  if (!alreadyLanded && !isViewing && landing?.route) {
+    return <Navigate to={landing.route} replace />
   }
   return <Dashboard />
 }
@@ -110,6 +114,7 @@ export default function App() {
       <Route path="/toefl" element={<Guarded><Toefl /></Guarded>} />
       <Route path="/exam" element={<Guarded><Exams /></Guarded>} />
       <Route path="/career" element={<Guarded><Career /></Guarded>} />
+      <Route path="/webtoon" element={<Guarded><Webtoon /></Guarded>} />
 
       {/* ── 집안 */}
       <Route path="/chores" element={<Guarded><Chores /></Guarded>} />

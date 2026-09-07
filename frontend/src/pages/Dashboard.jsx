@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 import { getStudyStats, getStreak } from '../lib/db'
 import { getBalance } from '../lib/rewards'
 import { FAMILY, LEVELS, colorOf, textOnColor } from '../data/family'
-import { featuresOfGroup } from '../data/features'
+import { featuresOfGroup, landingOf } from '../data/features'
 import BottomNav from '../components/BottomNav'
 
 // 아이별 관심사 → 학습 카테고리 바로가기
@@ -56,6 +56,7 @@ export default function Dashboard() {
 
   const member = FAMILY.find((f) => f.key === profile.member_key) || {}
   const level = LEVELS[profile.level] || LEVELS.B
+  const landing = landingOf(profile.member_key, visibleFeatures)
 
   return (
     <div className="min-h-screen max-w-md mx-auto p-5 pb-28">
@@ -134,20 +135,18 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* 대학 가이드 — 켜져 있으면 홈 맨 위 (하울은 앱을 열 때도 여기부터 본다) */}
-      {visibleFeatures.includes('career') && (
+      {/* 이 사람의 첫 화면을 홈 맨 위에도 — 앱을 열면 여기부터 보고, 홈에 와도 한 번에 간다 */}
+      {landing && (
         <button
-          onClick={() => navigate('/career')}
-          className="w-full text-left bg-level-e rounded-3xl p-5 mb-6 shadow-lg active:scale-[0.99] transition"
+          onClick={() => navigate(landing.route)}
+          className={`w-full text-left ${landing.bg} rounded-3xl p-5 mb-6 shadow-lg active:scale-[0.99] transition`}
         >
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🧭</span>
-            <span className="font-black text-white text-lg">대학 가이드</span>
+            <span className="text-2xl">{landing.emoji}</span>
+            <span className="font-black text-white text-lg">{landing.title}</span>
             <span className="ml-auto text-white/70 text-xl">›</span>
           </div>
-          <p className="text-white/85 text-sm mt-1.5 leading-relaxed">
-            글로벌·국제학부 10곳 · 학과 46개 · 지원자격까지
-          </p>
+          <p className="text-white/85 text-sm mt-1.5 leading-relaxed">{landing.desc}</p>
         </button>
       )}
 

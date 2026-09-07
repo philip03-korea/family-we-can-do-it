@@ -23,6 +23,7 @@
 | `Manage.dc.html` | 부모용 화면 설정 (인터랙티브) |
 | `Career.dc.html` | 대학 가이드 — 대학 목록 (하울의 첫 화면) |
 | `Univ.dc.html` | 대학 상세 → 그 대학에서 갈 수 있는 학과 |
+| `Webtoon.dc.html` | 웹툰 입시 — 학교 목록 (하음의 첫 화면) |
 | `Exam.dc.html` | 문제은행 — 검정고시 6과목 + TOEFL 4영역 |
 | `Contest.dc.html` | 수학 경시 — 분야별 문제 풀이 |
 | `Cooking.dc.html` | 요리 목록 |
@@ -53,7 +54,8 @@ node "<SKILL>/seed-canvas.mjs" \
   --out famtalk-new-screens.html \
   --title "FamTalk 새 화면" \
   --artboard Nav.dc.html --artboard Main.dc.html --artboard Manage.dc.html \
-  --artboard Career.dc.html --artboard Univ.dc.html --artboard Exam.dc.html \
-  --artboard Contest.dc.html --artboard Cooking.dc.html --artboard Recipe.dc.html \
+  --artboard Career.dc.html --artboard Univ.dc.html --artboard Webtoon.dc.html \
+  --artboard Exam.dc.html --artboard Contest.dc.html --artboard Cooking.dc.html \
+  --artboard Recipe.dc.html \
   --canvas canvas.json
 ```

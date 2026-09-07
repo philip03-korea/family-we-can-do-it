@@ -25,6 +25,7 @@ export const FEATURES = [
   { key: 'toefl', name: 'TOEFL', emoji: '🎓', route: '/toefl', group: 'learn', desc: 'Speaking · Writing AI 채점' },
   { key: 'exam', name: '문제은행', emoji: '🗂️', route: '/exam', group: 'learn', desc: 'TOEFL · 검정고시 과목별' },
   { key: 'career', name: '대학 가이드', emoji: '🧭', route: '/career', group: 'learn', desc: '글로벌학부 · 학과 · 지원자격' },
+  { key: 'webtoon', name: '웹툰 입시', emoji: '🎨', route: '/webtoon', group: 'learn', desc: '웹툰학과 · 실기 · 포트폴리오' },
 
   // ── 집안
   { key: 'chores', name: '집안일', emoji: '🧹', route: '/chores', group: 'home', desc: '이번 주 당번 · 완료 체크' },
@@ -44,15 +45,36 @@ export const ALL_FEATURE_KEYS = FEATURES.map((f) => f.key)
 
 // 아이별 기본 노출 (enabled_features 가 null 일 때)
 export const DEFAULT_FEATURES = {
-  // 고3 — 기존 그대로. 수학·경시·TOEFL·문제은행·진학가이드는 부담이라 꺼둔다.
-  haeum: ['study', 'words', 'quiz', 'sentences', 'chat', 'chores', 'meals', 'shop', 'counsel', 'talk', 'family'],
+  // 고3 — 웹툰으로 입시를 준비한다. 수학·경시·TOEFL·문제은행은 부담이라 꺼둔다.
+  haeum: ['study', 'words', 'quiz', 'sentences', 'chat', 'webtoon', 'chores', 'meals', 'shop', 'counsel', 'talk', 'family'],
   // 고1 — 입시 트랙: TOEFL · 검정고시 문제은행 · 수학 경시 · 진학 가이드 추가
   haul: [
     'study', 'words', 'quiz', 'sentences', 'chat', 'math', 'contest', 'toefl', 'exam', 'career',
     'chores', 'meals', 'shop', 'counsel', 'talk', 'family',
   ],
-  // 중1 — 기존 + 요리 코너. 마음 그룹은 아직 열지 않는다.
-  haram: ['study', 'words', 'quiz', 'sentences', 'math', 'chores', 'meals', 'cooking', 'shop', 'schedule'],
+  // 중1 — 요리 코너 + 마음 그룹(상담·가족 대화·가족 현황)까지 연다.
+  haram: [
+    'study', 'words', 'quiz', 'sentences', 'math',
+    'chores', 'meals', 'cooking', 'shop', 'schedule',
+    'counsel', 'talk', 'family',
+  ],
+}
+
+// 앱을 열었을 때 먼저 보여줄 화면 (세션당 1회).
+// 아이마다 지금 가장 중요한 것이 다르다 — 하울은 입시, 하음도 입시(웹툰), 하람은 요리.
+// 그 기능이 꺼져 있으면 그냥 평소 홈이 뜬다.
+export const LANDING = {
+  haul: { feature: 'career', title: '대학 가이드', desc: '글로벌·국제학부 10곳 · 학과 46개 · 지원자격까지', emoji: '🧭', bg: 'bg-level-e' },
+  haeum: { feature: 'webtoon', title: '웹툰 입시 가이드', desc: '웹툰학과 10곳 · 실기와 포트폴리오 · 데뷔 경로', emoji: '🎨', bg: 'bg-level-d' },
+  haram: { feature: 'cooking', title: '오늘 뭐 만들까?', desc: '요즘 인기 레시피 16개 · 재료와 만드는 법까지', emoji: '🍳', bg: 'bg-level-f' },
+}
+
+// 이 구성원의 첫 화면 정보 (그 기능이 실제로 켜져 있을 때만)
+export function landingOf(memberKey, featureKeys) {
+  const l = LANDING[memberKey]
+  if (!l) return null
+  if (!featureKeys.includes(l.feature)) return null
+  return { ...l, route: FEATURE_MAP[l.feature]?.route }
 }
 
 export const PARENT_KEYS = ['mom', 'dad']
