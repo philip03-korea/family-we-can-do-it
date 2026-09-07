@@ -65,7 +65,8 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 - **`supabase functions deploy tutor` 를 실행해야 입시박사가 동작한다** (2026-09-07).
   배포 전에는 🎓 버튼을 눌러도 「아직 연결되지 않았어요」만 뜬다.
-  키를 따로 넣지 않으면 이미 쓰고 있는 Gemini 키로 동작한다 — `docs/입시박사_설정.md` 참고.
+  **새 키도 결제수단도 필요 없다** — AI 회화용 Gemini 무료 키를 그대로 쓴다.
+  `docs/입시박사_설정.md` 참고.
 
 - **Supabase 조직 쿼터 초과** — 대시보드에 "Organization exceeded its quota in the previous
   billing cycle · Projects will be restricted from 17 Sep, 2026" 경고가 떠 있다.
@@ -98,6 +99,31 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 ---
 
 ## 2. 작업 로그 (최신이 위)
+
+### 2026-09-07 (밤) — 입시박사를 무료 등급 고정 + 캐시 추가
+
+- **요청**: 「구독료로 진행할 수 있는 걸로. GPT 5.6인 것 같고, 제미나이든 구독료로 되게」
+- **먼저 정리한 사실 — 구독과 API 는 별개다**
+  - ChatGPT Plus/Pro, Gemini Advanced 같은 **구독은 사람이 웹·앱에서 직접 대화하는 요금**이다.
+  - 앱(서버)에서 호출하려면 **API 키**가 필요하고 그건 **별도 종량 과금**이다.
+    구독료 안에 API 가 포함되지 않는다. 이걸 헷갈리면 돈이 새거나 안 되는 걸 붙들게 된다.
+  - **「GPT 5.6」이라는 모델명도 확인되지 않는다.** OpenAI 의 Codex 는 코딩용 에이전트 제품이고
+    대화 모델(GPT)과 별개다. 모델명은 반드시 계정의 `/v1/models` 로 확인해야 한다.
+- **그래서 택한 답 — 이미 쓰고 있는 Gemini 무료 등급**
+  결제수단 없이 무료 한도 안에서 동작한다. 5인 가족 사용량으로는 한도에 닿기 어렵다.
+  (한도는 바뀔 수 있으니 aistudio 에서 확인)
+- **조치** — `supabase/functions/tutor/index.ts`
+  - `TUTOR_PROVIDER` 시크릿으로 제공자를 **명시적으로** 고른다. 기본값 `gemini`.
+    ⚠️ 예전 코드는 `OPENAI_API_KEY` 가 있으면 자동으로 OpenAI 를 썼다 —
+    다른 용도로 키를 넣어 두면 모르는 사이 과금될 수 있는 구조였다. **자동 전환을 없앴다.**
+  - **응답 캐시 추가** (`ai_cache` 재사용, `level='tutor'`). 같은 화면에서 같은 질문이면
+    저장된 답을 꺼내 쓴다 → 호출 자체가 없다.
+  - **캐시 적중은 일일 쿼터를 쓰지 않는다.** 호출이 없으니 한도를 깎을 이유가 없다.
+    (기존 `chat` 함수는 쿼터를 먼저 올리고 캐시를 본다 — 이 함수는 순서를 바꿨다)
+- **문서**: `docs/입시박사_설정.md` 를 「구독 vs API」 표부터 시작하도록 다시 씀.
+  할 일은 `supabase functions deploy tutor` **하나뿐**이라는 걸 앞에 뒀다.
+- **남은 것**: 위 「대기 중」의 배포 한 줄
+
 
 ### 2026-09-07 (밤) — 대학 입시조건 상세화 + 입시박사(플로팅 AI) 추가
 
