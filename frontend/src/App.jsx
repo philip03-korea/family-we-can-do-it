@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { featureKeyOfPath } from './data/features'
@@ -53,6 +54,25 @@ function Guarded({ children }) {
   )
 }
 
+// 하울은 앱을 열면 대학 가이드부터 본다 (세션당 1회).
+// 홈 탭을 누르면 평소 홈이 나오므로 갇히지 않고, 부모 미리보기에는 걸리지 않는다.
+function Home() {
+  const { ownProfile, isViewing, canSee } = useAuth()
+  const [alreadyLanded] = useState(() => {
+    try {
+      if (sessionStorage.getItem('famtalk:landed')) return true
+      sessionStorage.setItem('famtalk:landed', '1')
+      return false
+    } catch {
+      return true // 저장이 막힌 브라우저에서는 그냥 홈을 보여준다
+    }
+  })
+  if (!alreadyLanded && !isViewing && ownProfile?.member_key === 'haul' && canSee('career')) {
+    return <Navigate to="/career" replace />
+  }
+  return <Dashboard />
+}
+
 function FullScreen({ children }) {
   return (
     <div className="min-h-screen flex items-center justify-center text-slate-400">{children}</div>
@@ -73,7 +93,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
 
       {/* 홈 · 그룹 허브 · 나 — 노출 설정과 무관하게 항상 열려 있다 */}
-      <Route path="/" element={<Protected><Dashboard /></Protected>} />
+      <Route path="/" element={<Protected><Home /></Protected>} />
       <Route path="/g/:groupKey" element={<Protected><GroupHub /></Protected>} />
       <Route path="/me" element={<Protected><Me /></Protected>} />
       {/* 화면 설정 — 부모 전용(페이지 안에서 재검증) */}

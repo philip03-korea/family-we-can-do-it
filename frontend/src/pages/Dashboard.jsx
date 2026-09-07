@@ -134,6 +134,23 @@ export default function Dashboard() {
         )}
       </div>
 
+      {/* 대학 가이드 — 켜져 있으면 홈 맨 위 (하울은 앱을 열 때도 여기부터 본다) */}
+      {visibleFeatures.includes('career') && (
+        <button
+          onClick={() => navigate('/career')}
+          className="w-full text-left bg-level-e rounded-3xl p-5 mb-6 shadow-lg active:scale-[0.99] transition"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🧭</span>
+            <span className="font-black text-white text-lg">대학 가이드</span>
+            <span className="ml-auto text-white/70 text-xl">›</span>
+          </div>
+          <p className="text-white/85 text-sm mt-1.5 leading-relaxed">
+            글로벌·국제학부 10곳 · 학과 46개 · 지원자격까지
+          </p>
+        </button>
+      )}
+
       {/* 그룹 바로가기 — 홈은 런처가 아니라 「오늘」만. 기능 목록은 그룹 탭이 맡는다 */}
       <div className="grid grid-cols-3 gap-2 mb-6">
         {visibleGroups.map((g) => {

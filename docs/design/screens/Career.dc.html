@@ -13,86 +13,125 @@
            -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
     * { box-sizing: border-box; }
     a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .tab { padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; }
+    .card { background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 24px; padding: 16px; }
+    .crest { width: 44px; height: 44px; border-radius: 16px; flex-shrink: 0;
+             display: flex; align-items: center; justify-content: center;
+             font-size: 15px; font-weight: 900; color: #fff; }
   </style>
 </helmet>
 
-<div style="width: 390px; height: 900px; background: #0f172a; padding: 20px">
+<div style="width: 390px; height: 980px; background: #0f172a; padding: 20px">
   <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px">
     <span style="color: #cbd5e1; font-size: 12.5px">← 배움</span>
-    <h1 style="font-size: 20px; font-weight: 700; margin: 0">🧭 진학 가이드</h1>
+    <h1 style="font-size: 20px; font-weight: 700; margin: 0">🧭 대학 가이드</h1>
   </div>
-  <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 12px">등대글로벌스쿨 (Lighthouse International School)</p>
+  <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 12px">한국 대학 글로벌·국제학부 중심</p>
 
   <p style="font-size: 12px; line-height: 1.65; color: #fde68a; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 10px 14px; margin: 0 0 16px">
-    ⚠️ 점수·조건은 공개 자료 기준의 대략적인 참고 범위예요. 지원 전에 각 대학 공식 요강으로 꼭 다시 확인하세요.
+    ⚠️ 전형명·어학기준·학과 구성은 해마다 바뀝니다. 지원 전에 그해 모집요강 확인이 꼭 필요해요.
   </p>
 
-  <!-- 탭 -->
-  <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin-bottom: 20px">
-    <div style="padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); color: #fff">
-      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🧭</span>경로</div>
-    <div style="padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
-      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🎯</span>학과</div>
-    <div style="padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
+  <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin-bottom: 16px">
+    <div class="tab" style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); color: #fff">
       <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🏛</span>대학</div>
-    <div style="padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🎯</span>학과</div>
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🎫</span>자격</div>
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
       <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🗓</span>일정</div>
-    <div style="padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
       <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">❓</span>확인</div>
   </div>
 
-  <h2 style="font-weight: 700; margin: 0 0 8px; font-size: 15px">지금 상황</h2>
-  <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px">
-    <div style="border-radius: 16px; padding: 10px 14px; border: 1px solid rgba(165,180,252,0.35); background: rgba(165,180,252,0.12)">
-      <p style="font-size: 12px; font-weight: 700; margin: 0 0 2px; color: #a5b4fc">학사일정</p>
-      <p style="font-size: 12.5px; color: #e2e8f0; margin: 0; line-height: 1.6">1학기 8~12월 / 2학기 1~6월 — 미국식 학년제</p>
-    </div>
-    <div style="border-radius: 16px; padding: 10px 14px; border: 1px solid rgba(252,211,77,0.35); background: rgba(252,211,77,0.12)">
-      <p style="font-size: 12px; font-weight: 700; margin: 0 0 2px; color: #fcd34d">한국 학력</p>
-      <p style="font-size: 12.5px; color: #e2e8f0; margin: 0; line-height: 1.6">LIS 졸업장은 한국에서 고졸 학력이 아니다</p>
-    </div>
-    <div style="border-radius: 16px; padding: 10px 14px; border: 1px solid rgba(251,113,133,0.35); background: rgba(251,113,133,0.12)">
-      <p style="font-size: 12px; font-weight: 700; margin: 0 0 2px; color: #fda4af">재외국민 특례</p>
-      <p style="font-size: 12.5px; color: #e2e8f0; margin: 0; line-height: 1.6">국내 소재 국제학교라 3년·12년 특례 모두 불가</p>
-    </div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 16px">
+    <div style="padding: 10px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); color: #fff">🇰🇷 한국 글로벌학부</div>
+    <div style="padding: 10px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">🇺🇸 미국 대학</div>
   </div>
 
-  <h2 style="font-weight: 700; margin: 0 0 8px; font-size: 15px">갈 수 있는 길 3가지</h2>
-  <div style="display: flex; flex-direction: column; gap: 12px">
-    <div style="background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 24px; padding: 16px">
-      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
-        <span style="font-size: 20px">🇺🇸</span>
-        <h3 style="font-weight: 700; margin: 0; font-size: 15px">A · 미국 대학 (국제반)</h3>
-        <span style="margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: rgba(110,231,183,0.12); color: #6ee7b7">가능</span>
+  <p style="font-size: 12px; line-height: 1.65; color: #fecdd3; background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.35); border-radius: 16px; padding: 10px 14px; margin: 0 0 16px">
+    🎫 검정고시 출신이 그 전형에 지원할 수 있는지는 대학마다 다릅니다. 관심 대학은 입학처에 직접 물어보세요.
+  </p>
+
+  <!-- 대학 카드 목록 -->
+  <div style="display: flex; flex-direction: column; gap: 10px">
+
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #0033a0">연세</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: flex; align-items: baseline; gap: 8px">
+            <span style="font-weight: 700">연세대학교</span>
+            <span style="margin-left: auto; font-size: 12px; color: #a8b4c4">최상위</span>
+          </span>
+          <span style="display: block; font-size: 12.5px; color: #a5b4fc">언더우드국제대학 (UIC)</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">국제캠퍼스(송도) · 전 과목 영어 강의</span>
+        </span>
       </div>
-      <p style="font-size: 12.5px; color: #e2e8f0; margin: 0 0 12px; line-height: 1.6">LIS 성적표 + SAT/ACT + 공인영어 + 에세이로 정상 지원</p>
-      <p style="font-size: 12px; color: #a8b4c4; margin: 0 0 4px">필요한 것</p>
-      <div style="display: flex; flex-wrap: wrap; gap: 6px">
-        <span style="font-size: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 9999px; padding: 4px 10px">LIS transcript</span>
-        <span style="font-size: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 9999px; padding: 4px 10px">SAT / ACT</span>
-        <span style="font-size: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 9999px; padding: 4px 10px">TOEFL</span>
-        <span style="font-size: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 9999px; padding: 4px 10px">에세이 · 추천서</span>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12.5px; color: #cbd5e1">학과 13개</span>
+        <span style="font-size: 12px; color: #6ee7b7; background: rgba(16,185,129,0.12); border-radius: 9999px; padding: 2px 8px">하울 관심 전공 있음</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
       </div>
     </div>
 
-    <div style="background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 24px; padding: 16px">
-      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
-        <span style="font-size: 20px">🇰🇷</span>
-        <h3 style="font-weight: 700; margin: 0; font-size: 15px">B · 한국 대학</h3>
-        <span style="margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: rgba(252,211,77,0.12); color: #fcd34d">검정고시 필수</span>
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #8c1a3d">고려</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: flex; align-items: baseline; gap: 8px">
+            <span style="font-weight: 700">고려대학교</span>
+            <span style="margin-left: auto; font-size: 12px; color: #a8b4c4">최상위</span>
+          </span>
+          <span style="display: block; font-size: 12.5px; color: #a5b4fc">국제학부 (DIS)</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">안암(서울) · 100% 영어 강의</span>
+        </span>
       </div>
-      <p style="font-size: 12.5px; color: #e2e8f0; margin: 0 0 8px; line-height: 1.6">고졸 검정고시 합격이 지원 자격의 전제. 현실적 주력은 수능 정시 또는 논술</p>
-      <p style="font-size: 12px; color: #fda4af; line-height: 1.6; margin: 0">⚠️ 생활기록부·내신이 없어 학생부교과는 사실상 막힌다</p>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12.5px; color: #cbd5e1">학과 4개</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
     </div>
 
-    <div style="background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 24px; padding: 16px">
-      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
-        <span style="font-size: 20px">🚫</span>
-        <h3 style="font-weight: 700; margin: 0; font-size: 15px">C · 재외국민 특례</h3>
-        <span style="margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: rgba(251,113,133,0.12); color: #fda4af">불가능</span>
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #00593f">성균</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: flex; align-items: baseline; gap: 8px">
+            <span style="font-weight: 700">성균관대학교</span>
+            <span style="margin-left: auto; font-size: 12px; color: #a8b4c4">상위</span>
+          </span>
+          <span style="display: block; font-size: 12.5px; color: #a5b4fc">글로벌 계열 학부</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">명륜 · 수원 · 영어 강의 비중 높음</span>
+        </span>
       </div>
-      <p style="font-size: 12.5px; color: #e2e8f0; margin: 0; line-height: 1.6">3년·12년 특례 모두 "해외에서 이수" 요건 — 이 경로는 처음부터 선택지가 아니다</p>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12.5px; color: #cbd5e1">학과 7개</span>
+        <span style="font-size: 12px; color: #6ee7b7; background: rgba(16,185,129,0.12); border-radius: 9999px; padding: 2px 8px">하울 관심 전공 있음</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
     </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #004191">KAIST</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: flex; align-items: baseline; gap: 8px">
+            <span style="font-weight: 700">KAIST</span>
+            <span style="margin-left: auto; font-size: 12px; color: #a8b4c4">최상위 (이공)</span>
+          </span>
+          <span style="display: block; font-size: 12.5px; color: #a5b4fc">무학과 입학 (새내기과정)</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">대전 · 전 과목 영어 강의</span>
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12.5px; color: #cbd5e1">학과 6개</span>
+        <span style="font-size: 12px; color: #6ee7b7; background: rgba(16,185,129,0.12); border-radius: 9999px; padding: 2px 8px">하울 관심 전공 있음</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
+    </div>
+
   </div>
 </div>
 </x-dc>

@@ -24,7 +24,7 @@ export const FEATURES = [
   { key: 'contest', name: '수학 경시', emoji: '🏆', route: '/contest', group: 'learn', desc: '경시대회 대비 문제' },
   { key: 'toefl', name: 'TOEFL', emoji: '🎓', route: '/toefl', group: 'learn', desc: 'Speaking · Writing AI 채점' },
   { key: 'exam', name: '문제은행', emoji: '🗂️', route: '/exam', group: 'learn', desc: 'TOEFL · 검정고시 과목별' },
-  { key: 'career', name: '진학 가이드', emoji: '🧭', route: '/career', group: 'learn', desc: '대학 · 학과 · 입학조건' },
+  { key: 'career', name: '대학 가이드', emoji: '🧭', route: '/career', group: 'learn', desc: '글로벌학부 · 학과 · 지원자격' },
 
   // ── 집안
   { key: 'chores', name: '집안일', emoji: '🧹', route: '/chores', group: 'home', desc: '이번 주 당번 · 완료 체크' },
