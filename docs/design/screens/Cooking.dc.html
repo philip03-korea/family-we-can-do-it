@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .hero { position: relative; overflow: hidden; aspect-ratio: 1 / 1; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; }
+    .dish { font-size: 48px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25)); }
+    .side { position: absolute; font-size: 18px; opacity: 0.7; }
+    .chip { flex-shrink: 0; padding: 8px 14px; border-radius: 9999px; font-size: 12.5px; font-weight: 700; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #0f172a; padding: 20px">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px">
+    <span style="color: #cbd5e1; font-size: 12.5px">← 집안</span>
+    <h1 style="font-size: 20px; font-weight: 700; margin: 0">🍳 요리</h1>
+  </div>
+  <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 16px">요즘 인기 레시피 16개 · 재료와 만드는 법까지</p>
+
+  <div style="display: flex; gap: 6px; margin-bottom: 16px">
+    <div class="chip" style="background: linear-gradient(135deg, #0f766e 0%, #2dd4bf 100%); color: #fff">🍽 전체</div>
+    <div class="chip" style="background: #1e293b; color: #cbd5e1">🔥 요즘 인기</div>
+    <div class="chip" style="background: #1e293b; color: #cbd5e1">🍰 간식</div>
+    <div class="chip" style="background: #1e293b; color: #cbd5e1">🍚 한 끼</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+    <div>
+      <div class="hero" style="background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%)">
+        <span class="side" style="top: 8px; left: 10px">🌶️</span>
+        <span class="dish">🍜</span>
+        <span class="side" style="bottom: 8px; right: 10px">🧀</span>
+      </div>
+      <p style="font-weight: 700; font-size: 12.5px; margin: 8px 0 0">로제 떡볶이</p>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0">20분 · 보통 <span style="color: #fb7185">♥</span></p>
+    </div>
+    <div>
+      <div class="hero" style="background: linear-gradient(135deg, #78350f 0%, #22c55e 100%)">
+        <span class="side" style="top: 8px; left: 10px">🥜</span>
+        <span class="dish">🍫</span>
+        <span class="side" style="bottom: 8px; right: 10px">✨</span>
+      </div>
+      <p style="font-weight: 700; font-size: 12.5px; margin: 8px 0 0">두바이 초콜릿</p>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0">30분 · 보통</p>
+    </div>
+    <div>
+      <div class="hero" style="background: linear-gradient(135deg, #a855f7 0%, #f472b6 100%)">
+        <span class="side" style="top: 8px; left: 10px">🍓</span>
+        <span class="dish">🍦</span>
+        <span class="side" style="bottom: 8px; right: 10px">🥭</span>
+      </div>
+      <p style="font-weight: 700; font-size: 12.5px; margin: 8px 0 0">요거트 아이스크림 컵</p>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0">10분 · 쉬움</p>
+    </div>
+    <div>
+      <div class="hero" style="background: linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)">
+        <span class="side" style="top: 8px; left: 10px">🌶️</span>
+        <span class="dish">🍲</span>
+        <span class="side" style="bottom: 8px; right: 10px">🥬</span>
+      </div>
+      <p style="font-weight: 700; font-size: 12.5px; margin: 8px 0 0">마라탕 (집에서)</p>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0">25분 · 보통</p>
+    </div>
+    <div>
+      <div class="hero" style="background: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%)">
+        <span class="side" style="top: 8px; left: 10px">🍯</span>
+        <span class="dish">🥐</span>
+        <span class="side" style="bottom: 8px; right: 10px">🍨</span>
+      </div>
+      <p style="font-weight: 700; font-size: 12.5px; margin: 8px 0 0">크로플</p>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0">10분 · 쉬움</p>
+    </div>
+    <div>
+      <div class="hero" style="background: linear-gradient(135deg, #fb7185 0%, #fecdd3 100%)">
+        <span class="side" style="top: 8px; left: 10px">🍞</span>
+        <span class="dish">🍓</span>
+        <span class="side" style="bottom: 8px; right: 10px">🥛</span>
+      </div>
+      <p style="font-weight: 700; font-size: 12.5px; margin: 8px 0 0">딸기 산도</p>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0">15분 · 쉬움</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

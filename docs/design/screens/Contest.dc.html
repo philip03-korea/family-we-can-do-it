@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #0f172a; padding: 20px">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px">
+    <span style="color: #cbd5e1; font-size: 12.5px">← 배움</span>
+    <h1 style="font-size: 20px; font-weight: 700; margin: 0">🏆 수학 경시</h1>
+  </div>
+  <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 16px">문제 24개 · 힌트를 먼저 보고 풀이는 마지막에</p>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 20px">
+    <div style="padding: 10px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); color: #fff">✏️ 문제 풀기</div>
+    <div style="padding: 10px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">📋 대회 정보</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px">
+    <div style="padding: 8px 0; border-radius: 12px; font-size: 12px; font-weight: 700; text-align: center; background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); color: #fff">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🔢</span>정수론</div>
+    <div style="padding: 8px 0; border-radius: 12px; font-size: 12px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">➗</span>대수</div>
+    <div style="padding: 8px 0; border-radius: 12px; font-size: 12px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">📐</span>기하</div>
+    <div style="padding: 8px 0; border-radius: 12px; font-size: 12px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🎲</span>조합</div>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px">
+    <p style="font-size: 12.5px; color: #a8b4c4; margin: 0">나머지 · 배수 · 소수</p>
+    <p style="font-size: 12.5px; color: #cbd5e1; margin: 0">3/6 풀이 <span style="color: #34d399">· 67%</span></p>
+  </div>
+
+  <!-- 문제 카드 -->
+  <div style="background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); border-radius: 24px; padding: 24px; margin-bottom: 12px">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px">
+      <span style="color: rgba(255,255,255,0.7); font-size: 12.5px">문제 3 / 6</span>
+      <span style="margin-left: auto; font-size: 12.5px; font-weight: 700; background: rgba(0,0,0,0.25); padding: 2px 8px; border-radius: 9999px; color: #fff">중급</span>
+    </div>
+    <p style="font-size: 18px; font-weight: 700; color: #fff; margin: 0; line-height: 1.6">2<sup>100</sup> 의 일의 자리 숫자는?</p>
+  </div>
+
+  <div style="display: flex; gap: 8px; margin-bottom: 12px">
+    <div style="flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 14px 16px; font-size: 16px; color: #a8b4c4">답을 입력하세요</div>
+    <div style="padding: 14px 20px; border-radius: 16px; background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); font-weight: 700">확인</div>
+  </div>
+
+  <div style="display: flex; gap: 8px; margin-bottom: 12px">
+    <div style="flex: 1; padding: 12px 0; border-radius: 16px; background: #1e293b; border: 1px solid #334155; font-size: 12.5px; font-weight: 500; text-align: center">💡 힌트</div>
+    <div style="flex: 1; padding: 12px 0; border-radius: 16px; background: #1e293b; border: 1px solid #334155; font-size: 12.5px; font-weight: 500; text-align: center">🧩 풀이</div>
+  </div>
+
+  <div style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 16px">
+    <p style="font-size: 12px; font-weight: 700; color: #fcd34d; margin: 0 0 4px">힌트</p>
+    <p style="font-size: 12.5px; color: #fef3c7; margin: 0; line-height: 1.6">2의 거듭제곱의 일의 자리를 나열해 보자. 반복되는 주기가 보인다.</p>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

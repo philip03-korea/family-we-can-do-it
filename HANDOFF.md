@@ -48,37 +48,67 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 ### ⚠️ 대기 중 (다음 사람이 해야 할 일)
 
-- **화면 재구성 기획안 검토 대기** (2026-09-03). 코드는 아직 한 줄도 안 바꿨다.
-  가족이 아래 3가지를 정해야 착수 가능 — `docs/design/README.md` 참고.
-  1. 아이별로 어떤 기능을 열지 (캔버스에 적힌 건 논의용 예시값)
-  2. 홈에서 음성 데모(TTS/STT)·레벨 사다리 A~F 를 빼도 되는지
-  3. `database/step15_visibility.sql` 은 **아직 파일도 안 만들었다** (기획안 안에 내용만 있음)
+- **`database/step15_visibility.sql` 을 Supabase SQL Editor에서 실행해야 한다** (2026-09-07).
+  실행 전까지 부모용 「화면 설정」 저장이 실패한다(앱이 안내 메시지를 띄운다).
+  나머지 화면은 앱 기본값으로 정상 동작하니 급히 막히는 건 없다.
+  실행하면 이 항목을 지우고 아래 로그에 "실행 완료"라고 적을 것.
+
+- **하울 진학 가이드의 「확인」 탭 7가지**를 등대글로벌스쿨(031-971-2731)에 물어봐야
+  플랜을 확정할 수 있다. 특히 **하울이 미국 학제로 몇 학년인지**(Grade 10/11)에 따라
+  남은 시간이 1년 차이 난다.
 
 - **하울 진로 가이드플랜** — `docs/하울_진로_조사.md` 의 「5. 학교에 확인해야 할 것」 7가지를
   등대글로벌스쿨(031-971-2731)에 문의해 채워야 플랜 작성 착수 가능.
   특히 **하울이 미국 학제로 몇 학년인지**(Grade 10/11)에 따라 남은 시간이 1년 차이 난다.
 
-### 🔜 다음에 코드로 손댈 지점 (기획 승인 후)
+### 🔜 앞으로 손볼 만한 지점
 
-`docs/design/Spec.dc.html` 의 「적용 순서」 1~5 를 그대로 따른다. 요약:
-
-| 순서 | 파일 | 할 일 |
+| 항목 | 어디 | 메모 |
 |---|---|---|
-| 1 | `database/step15_visibility.sql` (신규) | `profiles.enabled_features text[]` + 부모 update 정책. **`is_parent()` 사용 필수** (아래 지뢰 참고). Supabase에서 수동 실행 후 여기 기록 |
-| 2 | `src/data/features.js` (신규) | 기능 17개 · 그룹 4개 정의 (키/이름/아이콘/라우트/그룹/기본노출) |
-| 2 | `src/pages/Manage.jsx` (신규) | 부모용 화면 설정. 이 단계까진 화면이 안 바뀐다 — 값만 쌓인다 |
-| 3 | `src/context/AuthContext.jsx` | `enabled_features` 읽어 `visibleFeatures` · `visibleGroups` 계산해 내려보냄 |
-| 3 | `src/components/BottomNav.jsx` | 고정 5개 → `visibleGroups` 로 동적 생성. **이때부터 아이 화면이 실제로 줄어든다** |
-| 4 | `src/pages/GroupHub.jsx` (신규) | 배움·집안·마음 공용 허브 하나. 그룹 키만 다르게 받음 |
-| 4 | `src/pages/Dashboard.jsx` | 런처 걷어내고 「오늘 할 일」 다이제스트로 축소 |
-| 4 | `src/App.jsx` | 라우트 재편 + 꺼진 기능 직접 접근 시 홈으로 되돌림 |
-| 5 | — | 부모 미리보기로 세 아이 화면 각각 열어보고 조정 |
-
-기획안 캔버스: https://claude.ai/code/artifact/a3bb3659-48aa-491e-a60e-615cea4ba362
+| 홈 「오늘 할 일」 다이제스트 | `src/pages/Dashboard.jsx` | 지금은 단어 학습만 요약한다. 집안일·식단 미완료까지 한 줄씩 끌어오면 홈이 진짜 「오늘」이 된다 |
+| 문제은행·경시 기록을 서버로 | `src/lib/localProgress.js` | 지금은 localStorage라 기기를 바꾸면 초기화된다. 가족이 서로 보게 하려면 테이블로 올릴 것 |
+| 요리 사진 | `src/data/recipes.js` | 각 레시피에 `image: 'https://…'` 를 넣으면 그라데이션 카드 대신 그 사진이 뜬다 (Cooking.jsx 의 Hero 가 이미 처리) |
+| 문항 늘리기 | `src/data/exambank.js`, `mathcontest.js` | 지금은 검정고시 48 · TOEFL 19 · 경시 24문항. 형식은 그대로 두고 배열에 추가만 하면 된다 |
 
 ---
 
 ## 2. 작업 로그 (최신이 위)
+
+### 2026-09-07 — 아이별 화면 노출 + 하울 입시 3종 + 하람 요리 코너
+
+- **증상**: 기능이 17개가 됐는데 아이 화면에도 남의 기능이 다 보였다. 하단 탭 5개는
+  하드코딩이라 정작 「학습」이 없었고, 홈은 타일 12개 + 레벨사다리 + 음성데모 + 설정이
+  전부 쌓인 런처였다. 하울은 입시 준비를 앱 밖에서 따로 하고 있었고, 하람은 열어볼 게 없었다.
+- **원인**: 노출 제어 개념이 코드에 아예 없었다. 2026-09-03 기획안(`docs/design/`)이
+  방향은 잡아 뒀지만 코드는 한 줄도 안 바뀐 상태였다.
+- **조치**
+  - **노출 설정** — `database/step15_visibility.sql`(신규, **아직 실행 안 함**),
+    `src/data/features.js`(기능 18개 · 그룹 4개 · 아이별 기본값),
+    `AuthContext`(visibleFeatures/visibleGroups/canSee), `BottomNav`(고정 5개 → 동적 생성),
+    `GroupHub.jsx`·`Me.jsx`·`Manage.jsx`(신규), `App.jsx`(라우트 재편 + 꺼진 기능 직접 접근 차단),
+    `Dashboard.jsx`(런처 타일 12개 → 그룹 카드 3개, 레벨사다리·음성데모·설정은 「나」 탭으로 이동)
+  - **하울** — `Career.jsx` + `data/career.js`(진학 경로 3가지, 학과 6개, 미국대 10 · 국내대 8,
+    타임라인, 학교 확인사항 7가지, 용어집), `Exams.jsx` + `data/exambank.js`(검정고시 6과목 48문항,
+    TOEFL 4영역 19문항 — Listening은 TTS로 들려준다), `Contest.jsx` + `data/mathcontest.js`
+    (대회 4개, 정수·대수·기하·조합 24문항 + 힌트·풀이)
+  - **하람** — `Cooking.jsx` + `data/recipes.js`(레시피 16개, 재료·단계·팁·안전등급)
+  - `src/lib/localProgress.js`(신규) — 풀이 기록·즐겨찾기를 localStorage에 저장
+  - 디자인 캔버스 8장 — `docs/design/screens/`, 발행본
+    https://claude.ai/code/artifact/6285b461-1c51-4752-9b45-10abe15e04ff
+- **아이별 노출 (기본값, `data/features.js` DEFAULT_FEATURES)**
+  - 엄마·아빠 → 전체 (설정과 무관, 항상)
+  - 하음 → **기존 그대로** (수학·경시·TOEFL·문제은행·진학가이드 꺼둠)
+  - 하울 → 기존 + 진학 가이드 · 문제은행 · 수학 경시
+  - 하람 → 기존 + 요리 (마음 그룹은 꺼져 있어 탭이 4개)
+- **지뢰 하나 피해 둠**: `enabled_features` 컬럼이 없는 상태에서 그 컬럼을 달라는 select 를
+  던지면 쿼리가 통째로 실패해 **가족 목록이 비어 버린다**(부모 미리보기 줄이 사라짐).
+  `AuthContext.loadAllProfiles()` 가 실패하면 컬럼 없이 한 번 더 부르도록 했다.
+  step15 를 실행하기 전에도 앱이 정상 동작하는 건 이 때문이다.
+- **검증**: `cd frontend && npm run build` 통과 (137 modules)
+- **커밋**: 이 커밋
+- **남은 것**: 위 「대기 중」 2가지 — step15 실행, 학교 확인 7가지.
+  진학 가이드의 성적 숫자는 전부 **대략적 참고 범위**이고 화면 상단에 그 경고를 띄워 뒀다.
+
 
 ### 2026-09-03 — 화면 재구성 기획안 + 하울 진로 조사 (문서만, 코드 변경 없음)
 
@@ -163,6 +193,9 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 - **`profiles` 의 RLS 정책 안에서 `profiles` 를 직접 조회하면 무한재귀가 난다.** 부모 여부를 확인할 땐
   step13 에서 만들어 둔 `is_parent()` (security definer) 를 쓴다. step15 를 쓸 때 그대로 적용될 함정이라
   기획안에도 반영해 뒀다.
+- **새 컬럼을 쓰는 select 는 마이그레이션 실행 전까지 쿼리 전체를 실패시킨다.** 컬럼 하나를
+  더 달라고 했을 뿐인데 그 select 가 통째로 죽어서 무관한 화면이 빈다.
+  `AuthContext.loadAllProfiles()` 처럼 실패 시 컬럼 없이 재시도하는 길을 열어 둘 것.
 - `database/` 의 마이그레이션 **번호가 겹쳐 있다** — `step11_fixed_chores` / `step11_schedule`,
   `step12_counsel_church` / `step12_schedule_progress`. 서로 다른 PC에서 같은 번호를 쓴 흔적이라
   파일명만으로는 실행 순서를 알 수 없다. 새로 만들 땐 `git pull` 후 가장 큰 번호 +1 을 쓸 것 (다음은 15).
