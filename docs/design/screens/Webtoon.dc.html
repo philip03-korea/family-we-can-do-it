@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .tab { padding: 8px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; }
+    .card { background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 24px; padding: 16px; }
+    .crest { width: 44px; height: 44px; border-radius: 16px; flex-shrink: 0;
+             display: flex; align-items: center; justify-content: center;
+             font-size: 15px; font-weight: 900; color: #fff; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 940px; background: #0f172a; padding: 20px">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px">
+    <span style="color: #cbd5e1; font-size: 12.5px">← 배움</span>
+    <h1 style="font-size: 20px; font-weight: 700; margin: 0">🎨 웹툰 입시</h1>
+  </div>
+  <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 12px">웹툰학과 · 실기 · 포트폴리오</p>
+
+  <p style="font-size: 12px; line-height: 1.65; color: #fde68a; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 10px 14px; margin: 0 0 16px">
+    ⚠️ 모집인원·실기 유형·전형명은 해마다 바뀝니다. 지원 전에 그해 모집요강을 꼭 확인하세요.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin-bottom: 16px">
+    <div class="tab" style="background: linear-gradient(135deg, #d946ef 0%, #f97316 100%); color: #fff">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🏫</span>학교</div>
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🎫</span>전형</div>
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">✏️</span>실기</div>
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🗓</span>일정</div>
+    <div class="tab" style="background: #1e293b; color: #cbd5e1">
+      <span style="display: block; font-size: 16px; line-height: 1; margin-bottom: 2px">🚀</span>데뷔</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 16px">
+    <div style="padding: 10px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: linear-gradient(135deg, #d946ef 0%, #f97316 100%); color: #fff">🎓 대학</div>
+    <div style="padding: 10px 0; border-radius: 12px; font-size: 12.5px; font-weight: 700; text-align: center; background: #1e293b; color: #cbd5e1">🏫 특성화고</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #e2231a">청강</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: block; font-weight: 700; font-size: 12.5px">청강문화산업대학교</span>
+          <span style="display: block; font-size: 12.5px; color: #f0abfc">만화콘텐츠스쿨</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">3년제 · 경기 이천</span>
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12px; color: #fcd34d; background: rgba(251,191,36,0.12); border-radius: 9999px; padding: 2px 8px">업계 인지도 1순위</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #00539f">공주</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: block; font-weight: 700; font-size: 12.5px">공주대학교</span>
+          <span style="display: block; font-size: 12.5px; color: #f0abfc">만화애니메이션학부</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">4년제 국립 · 충남 공주</span>
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12px; color: #fcd34d; background: rgba(251,191,36,0.12); border-radius: 9999px; padding: 2px 8px">국립 · 학비 부담 적음</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #004b8d">동서</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: block; font-weight: 700; font-size: 12.5px">동서대학교</span>
+          <span style="display: block; font-size: 12.5px; color: #f0abfc">웹툰학과</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">4년제 · 부산</span>
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12px; color: #fcd34d; background: rgba(251,191,36,0.12); border-radius: 9999px; padding: 2px 8px">학과명이 웹툰 그 자체</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span class="crest" style="background: #00408b">세종</span>
+        <span style="min-width: 0; flex: 1">
+          <span style="display: block; font-weight: 700; font-size: 12.5px">세종대학교</span>
+          <span style="display: block; font-size: 12.5px; color: #f0abfc">만화애니메이션텍전공</span>
+          <span style="display: block; font-size: 12px; color: #cbd5e1; margin-top: 2px">4년제 · 서울 광진</span>
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="font-size: 12px; color: #fcd34d; background: rgba(251,191,36,0.12); border-radius: 9999px; padding: 2px 8px">서울 소재 4년제</span>
+        <span style="margin-left: auto; color: #a8b4c4; font-size: 18px">›</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

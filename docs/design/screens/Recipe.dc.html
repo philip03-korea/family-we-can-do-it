@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .cell { background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 12px;
+            padding: 8px 6px; text-align: center; }
+    .step { width: 100%; display: flex; gap: 12px; text-align: left; border-radius: 16px;
+            padding: 16px; border: 1px solid; }
+    .num { width: 28px; height: 28px; border-radius: 9999px; flex-shrink: 0;
+           display: flex; align-items: center; justify-content: center;
+           font-size: 12px; font-weight: 900; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 980px; background: #0f172a">
+  <!-- 상단 큰 카드 -->
+  <div style="height: 208px; background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
+              position: relative; display: flex; align-items: center; justify-content: center">
+    <span style="position: absolute; top: 12px; left: 14px; font-size: 24px; opacity: 0.7">🌶️</span>
+    <span style="font-size: 72px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25))">🍜</span>
+    <span style="position: absolute; bottom: 12px; right: 14px; font-size: 24px; opacity: 0.7">🧀</span>
+  </div>
+
+  <div style="padding: 20px; margin-top: -24px; position: relative">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px">
+      <span style="color: #cbd5e1; font-size: 12.5px">← 목록</span>
+      <span style="margin-left: auto; font-size: 12.5px; padding: 6px 12px; border-radius: 9999px;
+                   background: rgba(244,63,94,0.2); border: 1px solid rgba(244,63,94,0.5); color: #fecdd3">♥ 저장됨</span>
+    </div>
+
+    <h1 style="font-size: 24px; font-weight: 900; margin: 0 0 4px">로제 떡볶이</h1>
+    <p style="font-size: 12.5px; color: #e2e8f0; margin: 0 0 16px; line-height: 1.6">매운맛을 우유·생크림으로 눌러 부드럽게. 매운 걸 잘 못 먹어도 먹을 수 있어요.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 20px">
+      <div class="cell"><div style="font-size: 11.5px; color: #a8b4c4">시간</div><div style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 2px">20분</div></div>
+      <div class="cell"><div style="font-size: 11.5px; color: #a8b4c4">난이도</div><div style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 2px">보통</div></div>
+      <div class="cell"><div style="font-size: 11.5px; color: #a8b4c4">분량</div><div style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 2px">2인분</div></div>
+      <div class="cell"><div style="font-size: 11.5px; color: #a8b4c4">불</div><div style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 2px">가스</div></div>
+    </div>
+
+    <div style="border-radius: 16px; padding: 12px 16px; margin-bottom: 20px; font-size: 12.5px;
+                background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.35); color: #fef3c7">
+      🧑‍🍳 <span style="font-weight: 700">어른과 함께</span> — 불·기름·칼을 쓰는 단계는 어른과 같이 하세요
+    </div>
+
+    <h2 style="font-weight: 700; font-size: 15px; margin: 0 0 8px">🧺 재료</h2>
+    <div style="background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 16px; padding: 16px; margin-bottom: 20px">
+      <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 12.5px">
+        <span style="color: #e2e8f0">밀떡 or 쌀떡</span><span style="color: #cbd5e1">300g</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 12.5px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="color: #e2e8f0">우유</span><span style="color: #cbd5e1">200ml</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 12.5px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="color: #e2e8f0">고추장</span><span style="color: #cbd5e1">1큰술</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 12.5px; border-top: 1px solid rgba(51,65,85,0.6)">
+        <span style="color: #e2e8f0">모차렐라 치즈</span><span style="color: #cbd5e1">한 줌</span></div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+      <h2 style="font-weight: 700; font-size: 15px; margin: 0">👩‍🍳 만드는 법</h2>
+      <span style="font-size: 12.5px; color: #cbd5e1">2 / 5 단계</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div class="step" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.4)">
+        <span class="num" style="background: #10b981; color: #fff">✓</span>
+        <span style="font-size: 12.5px; line-height: 1.6; color: #cbd5e1; text-decoration: line-through">떡이 딱딱하면 따뜻한 물에 10분 담가 둔다.</span>
+      </div>
+      <div class="step" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.4)">
+        <span class="num" style="background: #10b981; color: #fff">✓</span>
+        <span style="font-size: 12.5px; line-height: 1.6; color: #cbd5e1; text-decoration: line-through">팬에 우유와 생크림을 붓고 약불로 데운다.</span>
+      </div>
+      <div class="step" style="background: rgba(30,41,59,0.6); border-color: #334155">
+        <span class="num" style="background: #0f172a; color: #cbd5e1">3</span>
+        <span style="font-size: 12.5px; line-height: 1.6; color: #f1f5f9">고추장·고춧가루·설탕·간장·다진 마늘을 넣고 잘 풀어준다.</span>
+      </div>
+      <div class="step" style="background: rgba(30,41,59,0.6); border-color: #334155">
+        <span class="num" style="background: #0f172a; color: #cbd5e1">4</span>
+        <span style="font-size: 12.5px; line-height: 1.6; color: #f1f5f9">떡과 소시지·어묵을 넣고 중약불에서 8~10분 저으며 끓인다.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

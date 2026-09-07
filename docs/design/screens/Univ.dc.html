@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .tag { font-size: 12px; background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.9);
+           border-radius: 9999px; padding: 4px 10px; }
+    .info { background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 16px; padding: 10px 16px; }
+    .major { border-radius: 16px; padding: 12px 16px; border: 1px solid; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 1080px; background: #0f172a">
+  <!-- 대학 헤더 -->
+  <div style="padding: 20px 20px 24px; background: linear-gradient(160deg, #0033a0 0%, #0f172a 100%)">
+    <div style="color: rgba(255,255,255,0.7); font-size: 12.5px; margin-bottom: 12px">← 대학 목록</div>
+    <h1 style="font-size: 24px; font-weight: 900; color: #fff; margin: 0">연세대학교</h1>
+    <p style="color: rgba(255,255,255,0.9); font-weight: 700; margin: 2px 0 0">언더우드국제대학 (UIC)</p>
+    <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin: 2px 0 0">Underwood International College</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px">
+      <span class="tag">국제캠퍼스(송도) · 신촌</span>
+      <span class="tag">전 과목 영어 강의</span>
+      <span class="tag">최상위</span>
+    </div>
+  </div>
+
+  <div style="padding: 20px">
+    <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.35); border-radius: 16px; padding: 16px; margin-bottom: 16px">
+      <p style="font-size: 12px; font-weight: 700; color: #6ee7b7; margin: 0 0 4px">하울에게</p>
+      <p style="font-size: 12.5px; color: #ecfdf5; margin: 0; line-height: 1.6">1순위. 인문사회부터 이공까지 다 있어서 전공을 늦게 정해도 된다</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px">
+      <div class="info">
+        <div style="font-size: 12px; color: #a8b4c4">지원 전형</div>
+        <div style="font-size: 12.5px; color: #f1f5f9; margin-top: 2px; line-height: 1.6">수시 국제계열 전형 · 재외국민·외국인 특별전형(하울은 해당 없음)</div>
+      </div>
+      <div class="info">
+        <div style="font-size: 12px; color: #a8b4c4">어학</div>
+        <div style="font-size: 12.5px; color: #f1f5f9; margin-top: 2px">TOEFL iBT 100 안팎이 경쟁력 (참고)</div>
+      </div>
+    </div>
+
+    <h2 style="font-weight: 700; font-size: 15px; margin: 0 0 2px">🎓 이 대학에서 갈 수 있는 학과</h2>
+    <p style="font-size: 12px; color: #a8b4c4; margin: 0 0 12px">13개 · 계열별로 묶었어요</p>
+
+    <p style="font-size: 12px; font-weight: 700; color: #cbd5e1; margin: 0 0 6px">📈 경제·경영</p>
+    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px">
+      <div class="major" style="background: rgba(30,41,59,0.6); border-color: #334155">
+        <div style="font-weight: 700; font-size: 12.5px">경제학</div>
+        <div style="font-size: 12px; color: #a8b4c4; margin-top: 2px">Economics</div>
+      </div>
+      <div class="major" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.4)">
+        <div style="display: flex; align-items: baseline; gap: 8px">
+          <span style="font-weight: 700; font-size: 12.5px">계량위험관리</span>
+          <span style="font-size: 11.5px; color: #a5b4fc; background: rgba(99,102,241,0.2); border-radius: 9999px; padding: 2px 8px">관심 전공</span>
+        </div>
+        <div style="font-size: 12px; color: #a8b4c4; margin-top: 2px">Quantitative Risk Management</div>
+        <div style="font-size: 12.5px; color: #e2e8f0; margin-top: 6px; line-height: 1.6">수학·통계로 금융 위험을 다룬다 — 하울 수학 관심과 직결</div>
+      </div>
+    </div>
+
+    <p style="font-size: 12px; font-weight: 700; color: #cbd5e1; margin: 0 0 6px">🔬 이공·융합</p>
+    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px">
+      <div class="major" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.4)">
+        <div style="display: flex; align-items: baseline; gap: 8px">
+          <span style="font-weight: 700; font-size: 12.5px">나노과학공학</span>
+          <span style="font-size: 11.5px; color: #a5b4fc; background: rgba(99,102,241,0.2); border-radius: 9999px; padding: 2px 8px">관심 전공</span>
+        </div>
+        <div style="font-size: 12px; color: #a8b4c4; margin-top: 2px">Nano Science &amp; Engineering</div>
+      </div>
+      <div class="major" style="background: rgba(30,41,59,0.6); border-color: #334155">
+        <div style="font-weight: 700; font-size: 12.5px">에너지환경융합</div>
+        <div style="font-size: 12px; color: #a8b4c4; margin-top: 2px">Energy &amp; Environmental Science</div>
+      </div>
+      <div class="major" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.4)">
+        <div style="display: flex; align-items: baseline; gap: 8px">
+          <span style="font-weight: 700; font-size: 12.5px">생명융합</span>
+          <span style="font-size: 11.5px; color: #a5b4fc; background: rgba(99,102,241,0.2); border-radius: 9999px; padding: 2px 8px">관심 전공</span>
+        </div>
+        <div style="font-size: 12px; color: #a8b4c4; margin-top: 2px">Bio-convergence</div>
+      </div>
+    </div>
+
+    <h2 style="font-weight: 700; font-size: 15px; margin: 0 0 8px">❓ 이 대학에 물어볼 것</h2>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; gap: 8px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 10px 14px">
+        <span style="font-size: 12px; font-weight: 900; color: #94a3b8">1</span>
+        <p style="font-size: 12.5px; color: #e2e8f0; margin: 0; line-height: 1.6">검정고시 출신이 UIC 국제계열 수시에 지원 가능한지</p>
+      </div>
+      <div style="display: flex; gap: 8px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 10px 14px">
+        <span style="font-size: 12px; font-weight: 900; color: #94a3b8">2</span>
+        <p style="font-size: 12.5px; color: #e2e8f0; margin: 0; line-height: 1.6">어학성적을 지원자격으로 요구하는지, 반영 요소인지</p>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

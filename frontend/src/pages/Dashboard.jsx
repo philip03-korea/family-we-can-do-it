@@ -2,13 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
-import { getStudyStats, getStreak, getLifetimeReviews } from '../lib/db'
+import { getStudyStats, getStreak } from '../lib/db'
 import { getBalance } from '../lib/rewards'
-import { computeXP, computeBadges } from '../lib/gamify'
-import { isPushSupported, getPushEnabled, enablePush, disablePush, sendTestPush } from '../lib/push'
-import { isSoundOn, setSoundOn, playSuccess } from '../lib/sound'
-import { FAMILY, LEVELS, LEVEL_ORDER, colorOf, textOnColor } from '../data/family'
-import VoiceDemo from '../components/VoiceDemo'
+import { FAMILY, LEVELS, colorOf, textOnColor } from '../data/family'
+import { featuresOfGroup, landingOf } from '../data/features'
 import BottomNav from '../components/BottomNav'
 
 // 아이별 관심사 → 학습 카테고리 바로가기
@@ -28,46 +25,13 @@ const INTEREST_LINKS = {
 }
 
 export default function Dashboard() {
-  const { user, profile, ownProfile, signOut, refreshProfile, isParent, allProfiles, isViewing, viewKey, setViewAs, viewUserId } = useAuth()
+  const { user, profile, ownProfile, refreshProfile, isParent, allProfiles, isViewing, viewKey, setViewAs, viewUserId, visibleFeatures, visibleGroups } = useAuth()
   const ownKey = ownProfile?.member_key
   const navigate = useNavigate()
   const [saving, setSaving] = useState(false)
   const [stats, setStats] = useState(null)
   const [streak, setStreak] = useState(null)
-  const [game, setGame] = useState(null)
   const [points, setPoints] = useState(null)
-  const [pushOn, setPushOn] = useState(false)
-  const [soundOnState, setSoundOnState] = useState(isSoundOn())
-  const [pushMsg, setPushMsg] = useState('')
-
-  useEffect(() => {
-    getPushEnabled().then(setPushOn).catch(() => {})
-  }, [])
-
-  async function togglePush() {
-    setPushMsg('')
-    try {
-      if (pushOn) {
-        await disablePush()
-        setPushOn(false)
-      } else {
-        await enablePush({ userId: user.id, memberKey: ownProfile?.member_key })
-        setPushOn(true)
-        setPushMsg('알림이 켜졌어요! 🔔')
-      }
-    } catch (e) {
-      setPushMsg('⚠️ ' + e.message)
-    }
-  }
-  async function testPush() {
-    setPushMsg('보내는 중…')
-    try {
-      const r = await sendTestPush()
-      setPushMsg(r?.sent ? '테스트 알림을 보냈어요! 📩' : '구독이 없어요. 먼저 알림을 켜주세요.')
-    } catch (e) {
-      setPushMsg('⚠️ ' + e.message)
-    }
-  }
 
   useEffect(() => {
     if (!profile) return
@@ -75,15 +39,12 @@ export default function Dashboard() {
     Promise.all([
       getStudyStats(uid, profile.level),
       getStreak(uid),
-      getLifetimeReviews(uid),
       getBalance(profile.member_key).catch(() => 0),
     ])
-      .then(([st, sk, totalReviews, bal]) => {
+      .then(([st, sk, bal]) => {
         setStats(st)
         setStreak(sk)
         setPoints(bal)
-        const merged = { totalReviews, learned: st.learned, total: st.total, streak: sk.streak }
-        setGame({ xp: computeXP(merged), badges: computeBadges(merged) })
       })
       .catch(() => {})
   }, [viewUserId, user?.id, profile])
@@ -95,6 +56,7 @@ export default function Dashboard() {
 
   const member = FAMILY.find((f) => f.key === profile.member_key) || {}
   const level = LEVELS[profile.level] || LEVELS.B
+  const landing = landingOf(profile.member_key, visibleFeatures)
 
   return (
     <div className="min-h-screen max-w-md mx-auto p-5 pb-28">
@@ -155,11 +117,6 @@ export default function Dashboard() {
               🔥 {streak.streak}일
             </span>
           )}
-          {!isViewing && (
-            <button onClick={signOut} className="text-sm text-slate-400 hover:text-slate-200">
-              로그아웃
-            </button>
-          )}
         </div>
       </header>
 
@@ -178,67 +135,41 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* 게임화: XP/레벨/배지 */}
-      {game && (
-        <div className="bg-slate-800/60 border border-slate-700 rounded-3xl p-5 mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-bold">⭐ Lv.{game.xp.level}</span>
-            <span className="text-xs text-slate-400">{game.xp.intoLevel}/{game.xp.perLevel} XP</span>
-          </div>
-          <div className="h-2.5 bg-slate-900 rounded-full overflow-hidden mb-4">
-            <div className="bg-level-c h-full transition-all" style={{ width: `${game.xp.progress * 100}%` }} />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {game.badges.map((b) => (
-              <div
-                key={b.id}
-                title={b.name}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs ${
-                  b.earned ? 'bg-slate-700 text-white' : 'bg-slate-900 text-slate-600'
-                }`}
-              >
-                <span className={b.earned ? '' : 'grayscale opacity-50'}>{b.emoji}</span>
-                <span>{b.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 바로가기 */}
-      <div className="grid grid-cols-3 gap-2 mb-6">
-        {[
-          ['/words', '📒 단어장'],
-          ['/sentences', '📖 문장읽기'],
-          ['/math', '📐 수학'],
-          ['/chat', '💬 AI 회화'],
-          ['/family', '👨‍👩‍👧‍👦 가족'],
-          ['/chores', '🧹 집안일'],
-          ['/shop', '🛒 보상 상점'],
-          ['/meals', '🍚 식단표'],
-          ['/schedule', '🗓️ 하람 계획표'],
-          ['/counsel', '🧠 마음 상담'],
-          ['/talk', '💬 가족 대화'],
-          // 교회 교육기획 — 아빠 계정에서만 노출(서버에서도 재검증)
-          ...(ownKey === 'dad' ? [['/church', '⛪ 교회 교육기획']] : []),
-        ].map(([to, label]) => (
-          <button key={to} onClick={() => navigate(to)} className="bg-slate-800/60 border border-slate-700 rounded-2xl py-3 text-sm font-medium">
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* 하울 전용 TOEFL 트랙 */}
-      {profile.toefl_track && (
+      {/* 이 사람의 첫 화면을 홈 맨 위에도 — 앱을 열면 여기부터 보고, 홈에 와도 한 번에 간다 */}
+      {landing && (
         <button
-          onClick={() => navigate('/toefl')}
-          className="bg-level-e w-full rounded-2xl py-3 mb-6 font-bold"
+          onClick={() => navigate(landing.route)}
+          className={`w-full text-left ${landing.bg} rounded-3xl p-5 mb-6 shadow-lg active:scale-[0.99] transition`}
         >
-          🎓 TOEFL 트랙 (영역별 훈련 + AI 채점)
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">{landing.emoji}</span>
+            <span className="font-black text-white text-lg">{landing.title}</span>
+            <span className="ml-auto text-white/70 text-xl">›</span>
+          </div>
+          <p className="text-white/85 text-sm mt-1.5 leading-relaxed">{landing.desc}</p>
         </button>
       )}
 
-      {/* 오늘의 학습 */}
+      {/* 그룹 바로가기 — 홈은 런처가 아니라 「오늘」만. 기능 목록은 그룹 탭이 맡는다 */}
+      <div className="grid grid-cols-3 gap-2 mb-6">
+        {visibleGroups.map((g) => {
+          const items = featuresOfGroup(g.key, visibleFeatures)
+          return (
+            <button
+              key={g.key}
+              onClick={() => navigate(`/g/${g.key}`)}
+              className="bg-slate-800/60 border border-slate-700 rounded-2xl px-3 py-3.5 text-left"
+            >
+              <div className="text-2xl leading-none mb-1.5">{g.emoji}</div>
+              <div className="font-bold text-sm">{g.label}</div>
+              <div className="text-[11px] text-slate-400">{items.length}개</div>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* 오늘의 학습 — 단어 학습이 켜진 사람에게만 */}
+      {visibleFeatures.includes('study') && (
       <div className="bg-slate-800/60 rounded-3xl p-5 mb-6 border border-slate-700">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">오늘의 학습</h2>
@@ -262,6 +193,7 @@ export default function Dashboard() {
             : '학습 시작 →'}
         </button>
         {/* 복습 — 퀴즈로 */}
+        {visibleFeatures.includes('quiz') && (<>
         <p className="text-xs text-slate-500 mt-3 mb-1.5">📚 복습 (학습한 단어로 퀴즈)</p>
         <div className="grid grid-cols-2 gap-2">
           <button
@@ -277,6 +209,7 @@ export default function Dashboard() {
             👥 퀴즈로 하기
           </button>
         </div>
+        </>)}
         <button
           onClick={() => navigate('/study?mode=review')}
           className="w-full py-2.5 mt-2 rounded-2xl font-medium bg-slate-900/60 border border-slate-800 text-slate-400 text-sm"
@@ -284,9 +217,10 @@ export default function Dashboard() {
           🃏 플래시카드로 복습
         </button>
       </div>
+      )}
 
       {/* 내 관심사 영어 — 좋아하는 주제로 단어 학습 */}
-      {INTEREST_LINKS[profile.member_key] && (
+      {INTEREST_LINKS[profile.member_key] && visibleFeatures.includes('study') && (
         <div className="mb-6">
           <h2 className="text-lg font-bold mb-1">🎯 내 관심사 영어</h2>
           <p className="text-slate-500 text-xs mb-3">좋아하는 주제로 단어를 익혀요</p>
@@ -304,81 +238,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* 무료 음성(TTS/STT) 데모 — 비용 0원 동작 확인 */}
-      <VoiceDemo />
-
-      {/* 레벨 사다리 A→F — 탭하면 그 레벨로 학습 */}
-      <h2 className="text-lg font-bold mt-8 mb-1">레벨 사다리</h2>
-      <p className="text-slate-500 text-xs mb-3">레벨을 눌러 그 레벨 단어로 학습할 수 있어요</p>
-      <div className="space-y-2">
-        {LEVEL_ORDER.map((code) => {
-          const lv = LEVELS[code]
-          const isMine = code === profile.level
-          return (
-            <button
-              key={code}
-              onClick={() => navigate(`/study?level=${code}`)}
-              className={`${lv.bg} w-full rounded-2xl px-4 py-3 flex items-center justify-between text-left ${
-                isMine ? 'ring-2 ring-white' : 'opacity-80'
-              }`}
-            >
-              <span className="font-bold text-white text-lg">{code}</span>
-              <span className="text-white/90 text-sm">
-                {lv.name} · {lv.label}
-              </span>
-              <span className="flex items-center gap-1.5">
-                {isMine && <span className="text-white text-xs bg-black/20 px-2 py-0.5 rounded-full">나</span>}
-                <span className="text-white/70 text-lg">›</span>
-              </span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* 알림 · 효과음 설정 */}
-      <div className="bg-slate-800/60 border border-slate-700 rounded-3xl p-5 mt-8">
-        <h2 className="text-lg font-bold mb-3">⚙️ 설정</h2>
-        <div className="flex items-center justify-between py-2">
-          <div>
-            <p className="font-medium">🔔 푸시 알림</p>
-            <p className="text-xs text-slate-400">매일 아침 알림 · 가족 소식 (아이폰은 홈 화면 추가 후)</p>
-          </div>
-          <button
-            onClick={togglePush}
-            disabled={!isPushSupported()}
-            className={`w-14 h-8 rounded-full relative transition ${pushOn ? 'bg-emerald-500' : 'bg-slate-600'} disabled:opacity-40`}
-          >
-            <span className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${pushOn ? 'left-7' : 'left-1'}`} />
-          </button>
-        </div>
-        {pushOn && (
-          <button onClick={testPush} className="text-xs text-indigo-300 underline mb-1">테스트 알림 보내기</button>
-        )}
-        <div className="flex items-center justify-between py-2 border-t border-slate-700 mt-1">
-          <div>
-            <p className="font-medium">🔊 버튼 효과음</p>
-            <p className="text-xs text-slate-400">버튼 누를 때 소리</p>
-          </div>
-          <button
-            onClick={() => { const n = !soundOnState; setSoundOn(n); setSoundOnState(n); if (n) playSuccess() }}
-            className={`w-14 h-8 rounded-full relative transition ${soundOnState ? 'bg-emerald-500' : 'bg-slate-600'}`}
-          >
-            <span className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${soundOnState ? 'left-7' : 'left-1'}`} />
-          </button>
-        </div>
-        {pushMsg && <p className="text-xs text-slate-300 mt-2">{pushMsg}</p>}
-        {!isPushSupported() && <p className="text-xs text-amber-300 mt-2">이 기기는 푸시를 지원하지 않아요. (아이폰: 홈 화면에 추가 후 가능)</p>}
-      </div>
-
-      <div className="text-center mt-8">
-        <button
-          onClick={() => navigate('/guide')}
-          className="text-sm text-slate-400 hover:text-slate-200 underline"
-        >
-          📖 사용설명서
-        </button>
-        <p className="text-xs text-slate-600 mt-3">FamTalk · 우리 가족 영어 🔥</p>
-      </div>
+      <p className="text-center text-xs text-slate-600 mt-8">
+        레벨 사다리 · 알림 설정 · 사용설명서는 「⚙️ 나」 탭에 있어요
+      </p>
 
       <BottomNav />
     </div>

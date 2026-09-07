@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .subj { background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 16px; padding: 14px; }
+    .bar { margin-top: 8px; height: 6px; background: #0f172a; border-radius: 9999px; overflow: hidden; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 900px; background: #0f172a; padding: 20px">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px">
+    <span style="color: #cbd5e1; font-size: 12.5px">← 배움</span>
+    <h1 style="font-size: 20px; font-weight: 700; margin: 0">🗂️ 문제은행</h1>
+  </div>
+  <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 20px">과목을 골라 언제든 풀 수 있어요</p>
+
+  <!-- 검정고시 -->
+  <div style="background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); border-radius: 24px; padding: 20px; margin-bottom: 12px">
+    <h2 style="color: #fff; font-weight: 900; font-size: 18px; margin: 0">📗 고졸 검정고시</h2>
+    <p style="color: rgba(255,255,255,0.85); font-size: 12px; margin: 6px 0 0; line-height: 1.65">각 과목 60점 이상 + 전 과목 평균 60점 이상이면 합격. 과목별 합격이 남으니 나눠서 봐도 된다.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 24px">
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">📖</span><span style="font-weight: 700; font-size: 12.5px">국어</span></div>
+      <div class="bar"><div style="height: 100%; width: 62%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">5/8 풀이 <span style="color: #34d399">· 정답률 80%</span></p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">📐</span><span style="font-weight: 700; font-size: 12.5px">수학</span></div>
+      <div class="bar"><div style="height: 100%; width: 100%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">8/8 풀이 <span style="color: #34d399">· 정답률 88%</span></p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">🔤</span><span style="font-weight: 700; font-size: 12.5px">영어</span></div>
+      <div class="bar"><div style="height: 100%; width: 25%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">2/8 풀이 <span style="color: #34d399">· 정답률 100%</span></p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">🌏</span><span style="font-weight: 700; font-size: 12.5px">사회</span></div>
+      <div class="bar"><div style="height: 100%; width: 0%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">0/8 풀이</p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">🔬</span><span style="font-weight: 700; font-size: 12.5px">과학</span></div>
+      <div class="bar"><div style="height: 100%; width: 0%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">0/8 풀이</p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">🏯</span><span style="font-weight: 700; font-size: 12.5px">한국사</span></div>
+      <div class="bar"><div style="height: 100%; width: 37%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">3/8 풀이 <span style="color: #34d399">· 정답률 67%</span></p>
+    </div>
+  </div>
+
+  <!-- TOEFL -->
+  <div style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); border-radius: 24px; padding: 20px; margin-bottom: 12px">
+    <h2 style="color: #fff; font-weight: 900; font-size: 18px; margin: 0">🎓 TOEFL iBT</h2>
+    <p style="color: rgba(255,255,255,0.85); font-size: 12px; margin: 6px 0 0; line-height: 1.65">4영역 각 30점, 총 120점. 말하기·쓰기는 과제형이라 뼈대를 익히는 게 먼저다.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">📚</span><span style="font-weight: 700; font-size: 12.5px">Reading</span></div>
+      <div class="bar"><div style="height: 100%; width: 100%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">6/6 풀이 <span style="color: #34d399">· 정답률 83%</span></p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">🎧</span><span style="font-weight: 700; font-size: 12.5px">Listening</span></div>
+      <div class="bar"><div style="height: 100%; width: 50%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">3/6 풀이 <span style="color: #34d399">· 정답률 67%</span></p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">🎤</span><span style="font-weight: 700; font-size: 12.5px">Speaking</span></div>
+      <div class="bar"><div style="height: 100%; width: 0%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">0/4 과제</p>
+    </div>
+    <div class="subj">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px">✍️</span><span style="font-weight: 700; font-size: 12.5px">Writing</span></div>
+      <div class="bar"><div style="height: 100%; width: 0%; background: #10b981"></div></div>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 6px 0 0">0/3 과제</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

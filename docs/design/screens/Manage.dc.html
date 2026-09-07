@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; background: #0f172a; color: #f8fafc;
+           font-family: Pretendard, system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    * { box-sizing: border-box; }
+    a { color: #a5b4fc; } a:hover { color: #c7d2fe; }
+    .kid { flex: 1; border-radius: 16px; padding: 10px 0; text-align: center; cursor: pointer; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; }
+    .row { width: 100%; display: flex; align-items: center; gap: 12px; border-radius: 16px; padding: 12px 14px; text-align: left; border: 1px solid; cursor: pointer; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 900px; background: #0f172a; position: relative; overflow: hidden">
+  <div style="padding: 20px">
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px">
+      <span style="color: #cbd5e1; font-size: 12.5px">← 나</span>
+      <h1 style="font-size: 20px; font-weight: 700; margin: 0">🎛 화면 설정</h1>
+    </div>
+    <p style="color: #cbd5e1; font-size: 12.5px; margin: 0 0 16px">아이에게 어떤 탭을 보여줄지 정합니다</p>
+
+    <!-- 아이 선택 -->
+    <div style="display: flex; gap: 6px; margin-bottom: 12px">
+      <sc-for list="{{kids}}" as="k" hint-placeholder-count="3">
+        <div class="kid" onClick="{{k.pick}}" style="{{k.style}}">
+          <div style="font-size: 20px; line-height: 1">{{k.emoji}}</div>
+          <div style="font-size: 12.5px; margin-top: 4px; font-weight: 700">{{k.name}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <p style="font-size: 12.5px; color: #cbd5e1; background: rgba(30,41,59,0.6); border: 1px solid #334155; border-radius: 16px; padding: 10px 14px; margin: 0 0 16px; line-height: 1.6">
+      끈 기능은 {{who}} 화면에서 완전히 사라집니다. 그룹 안이 전부 꺼지면 하단 탭도 함께 사라져요.
+    </p>
+
+    <!-- 그룹별 스위치 -->
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+      <div style="margin-bottom: 16px">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+          <h2 style="font-weight: 700; margin: 0; font-size: 15px">{{g.label}}</h2>
+          <span style="font-size: 12.5px; color: {{g.countColor}}">{{g.countLabel}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <sc-for list="{{g.items}}" as="it" hint-placeholder-count="4">
+            <div class="row" onClick="{{it.toggle}}" style="{{it.rowStyle}}">
+              <span style="font-size: 20px; {{it.iconStyle}}">{{it.emoji}}</span>
+              <span style="min-width: 0">
+                <span style="display: block; font-weight: 700; font-size: 12.5px; color: {{it.nameColor}}">{{it.name}}</span>
+                <span style="display: block; font-size: 12px; color: #a8b4c4">{{it.desc}}</span>
+              </span>
+              <span style="margin-left: auto; width: 48px; height: 28px; border-radius: 9999px; position: relative; flex-shrink: 0; background: {{it.trackColor}}">
+                <span style="position: absolute; top: 4px; {{it.knobPos}} width: 20px; height: 20px; border-radius: 9999px; background: #fff"></span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+
+    <!-- 하단 탭 미리보기 -->
+    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 24px; padding: 16px">
+      <p style="font-size: 12.5px; color: #cbd5e1; margin: 0 0 8px">{{who}}에게 보이는 하단 탭</p>
+      <div style="display: grid; grid-template-columns: {{navCols}}; gap: 4px; background: rgba(30,41,59,0.7); border-radius: 16px; padding: 8px">
+        <sc-for list="{{nav}}" as="n" hint-placeholder-count="4">
+          <div style="text-align: center; padding: 6px 0">
+            <div style="font-size: 18px; line-height: 1">{{n.emoji}}</div>
+            <div style="font-size: 12px; color: #e2e8f0; margin-top: 2px">{{n.label}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script>
+const GROUPS = [
+  { key: 'learn', label: '🎓 배움', tint: '#818cf8', items: [
+    ['study', '📘', '단어 학습', '오늘의 복습 + 새 단어'],
+    ['math', '📐', '수학 연습', '학년별 객관식 + 풀이'],
+    ['contest', '🏆', '수학 경시', '경시대회 대비 문제'],
+    ['toefl', '🎓', 'TOEFL', 'Speaking · Writing AI 채점'],
+    ['exam', '🗂️', '문제은행', 'TOEFL · 검정고시 과목별'],
+    ['career', '🧭', '진학 가이드', '대학 · 학과 · 입학조건'],
+  ]},
+  { key: 'home', label: '🏠 집안', tint: '#2dd4bf', items: [
+    ['chores', '🧹', '집안일', '이번 주 당번 · 완료 체크'],
+    ['cooking', '🍳', '요리', '요즘 인기 레시피 따라하기'],
+    ['schedule', '🗓️', '계획표', '주간 계획 · 오늘 할 일'],
+  ]},
+  { key: 'heart', label: '💗 마음', tint: '#f472b6', items: [
+    ['counsel', '🧠', '마음 상담', '심리검사 · 내 기록'],
+    ['talk', '🗣️', '가족 대화', '대화 카드 · 감정 일기'],
+  ]},
+];
+
+const KIDS = [
+  { key: 'haeum', name: '하음', emoji: '👧', color: '#eab308', ink: '#422006' },
+  { key: 'haul',  name: '하울', emoji: '🧑‍🎓', color: '#84cc16', ink: '#1a2e05' },
+  { key: 'haram', name: '하람', emoji: '👦', color: '#3b82f6', ink: '#0a2540' },
+];
+
+const DEFAULTS = {
+  haeum: ['study', 'chores', 'schedule', 'counsel', 'talk'],
+  haul:  ['study', 'math', 'contest', 'toefl', 'exam', 'career', 'chores', 'counsel', 'talk'],
+  haram: ['study', 'math', 'chores', 'cooking', 'schedule'],
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const self = this;
+    const st = this.state || {};
+    const child = st.child || 'haram';
+    const map = st.map || DEFAULTS;
+    const on = map[child] || [];
+    const me = KIDS.filter(function (k) { return k.key === child; })[0];
+
+    function toggle(key) {
+      const base = (self.state && self.state.map) ? self.state.map : DEFAULTS;
+      const cur = base[child] || [];
+      const next = cur.indexOf(key) >= 0
+        ? cur.filter(function (x) { return x !== key; })
+        : cur.concat([key]);
+      const nextMap = Object.assign({}, base);
+      nextMap[child] = next;
+      self.setState({ child: child, map: nextMap });
+    }
+
+    const groups = GROUPS.map(function (g) {
+      let live = 0;
+      const items = g.items.map(function (it) {
+        const isOn = on.indexOf(it[0]) >= 0;
+        if (isOn) live += 1;
+        return {
+          emoji: it[1], name: it[2], desc: it[3],
+          toggle: function () { toggle(it[0]); },
+          rowStyle: isOn
+            ? 'background: rgba(30,41,59,0.8); border-color: #475569;'
+            : 'background: rgba(15,23,42,0.6); border-color: #1e293b;',
+          iconStyle: isOn ? '' : 'filter: grayscale(1); opacity: 0.4;',
+          nameColor: isOn ? '#ffffff' : '#a8b4c4',
+          trackColor: isOn ? '#10b981' : '#334155',
+          knobPos: isOn ? 'left: 24px;' : 'left: 4px;',
+        };
+      });
+      return {
+        label: g.label,
+        items: items,
+        countLabel: live ? (live + ' / ' + g.items.length + ' 켜짐') : '전부 꺼짐 · 탭 사라짐',
+        countColor: live ? g.tint : '#94a3b8',
+      };
+    });
+
+    const liveGroups = GROUPS.filter(function (g) {
+      return g.items.some(function (it) { return on.indexOf(it[0]) >= 0; });
+    });
+    const nav = [{ emoji: '🏠', label: '홈' }]
+      .concat(liveGroups.map(function (g) {
+        return { emoji: g.label.split(' ')[0], label: g.label.split(' ')[1] };
+      }))
+      .concat([{ emoji: '⚙️', label: '나' }]);
+
+    return {
+      who: me.name,
+      kids: KIDS.map(function (k) {
+        const active = k.key === child;
+        return {
+          name: k.name, emoji: k.emoji,
+          pick: function () { self.setState({ child: k.key, map: map }); },
+          style: active
+            ? 'background: ' + k.color + '; color: ' + k.ink + '; border-color: #ffffff;'
+            : '',
+        };
+      }),
+      groups: groups,
+      nav: nav,
+      navCols: 'repeat(' + nav.length + ', minmax(0, 1fr))',
+    };
+  }
+}
+</script>
+</body>
+</html>
