@@ -71,7 +71,7 @@ function Home() {
     }
   })
   const landing = landingOf(ownProfile?.member_key, visibleFeatures)
-  if (!alreadyLanded && !isViewing && landing?.route) {
+  if (!alreadyLanded && !isViewing && landing?.redirect && landing.route) {
     return <Navigate to={landing.route} replace />
   }
   return <Dashboard />

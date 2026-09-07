@@ -64,9 +64,40 @@ export const DEFAULT_FEATURES = {
 // 아이마다 지금 가장 중요한 것이 다르다 — 하울은 입시, 하음도 입시(웹툰), 하람은 요리.
 // 그 기능이 꺼져 있으면 그냥 평소 홈이 뜬다.
 export const LANDING = {
-  haul: { feature: 'career', title: '대학 가이드', desc: '글로벌·국제학부 10곳 · 학과 46개 · 지원자격까지', emoji: '🧭', bg: 'bg-level-e' },
-  haeum: { feature: 'webtoon', title: '웹툰 입시 가이드', desc: '웹툰학과 10곳 · 실기와 포트폴리오 · 데뷔 경로', emoji: '🎨', bg: 'bg-level-d' },
-  haram: { feature: 'cooking', title: '오늘 뭐 만들까?', desc: '요즘 인기 레시피 16개 · 재료와 만드는 법까지', emoji: '🍳', bg: 'bg-level-f' },
+  // redirect: true  → 앱을 열면 이 화면이 먼저 뜬다 (세션당 1회)
+  // redirect: false → 자동으로 열지는 않고 홈 맨 위 카드로만 보여준다
+  //                   (부모는 관리자라 매번 특정 화면으로 끌고 가면 불편하다)
+  // glow: 카드 아래에 깔리는 색 그림자. 그라데이션과 같은 계열로 맞춘다.
+  haul: {
+    feature: 'career', redirect: true,
+    badge: '진로 · 입시', title: '대학 가이드', emoji: '🧭', bg: 'bg-level-e',
+    desc: '글로벌·국제학부 10곳 · 학과 46개',
+    glow: 'rgba(124,58,237,0.55)',
+  },
+  haeum: {
+    feature: 'webtoon', redirect: true,
+    badge: '진로 · 입시', title: '웹툰 입시 가이드', emoji: '🎨', bg: 'bg-level-d',
+    desc: '웹툰학과 10곳 · 실기 · 포트폴리오',
+    glow: 'rgba(217,70,239,0.5)',
+  },
+  haram: {
+    feature: 'cooking', redirect: true,
+    badge: '오늘의 요리', title: '오늘 뭐 만들까?', emoji: '🍳', bg: 'bg-level-f',
+    desc: '요즘 인기 레시피 16개',
+    glow: 'rgba(45,212,191,0.45)',
+  },
+  mom: {
+    feature: 'study', redirect: false,
+    badge: '오늘의 학습', title: '뭘 배울까?', emoji: '📘', bg: 'bg-level-c',
+    desc: '오늘의 단어 · 복습 · AI 회화',
+    glow: 'rgba(236,72,153,0.5)',
+  },
+  dad: {
+    feature: 'study', redirect: false,
+    badge: '오늘의 학습', title: '뭘 배울까?', emoji: '📘', bg: 'bg-level-c',
+    desc: '오늘의 단어 · 복습 · AI 회화',
+    glow: 'rgba(236,72,153,0.5)',
+  },
 }
 
 // 이 구성원의 첫 화면 정보 (그 기능이 실제로 켜져 있을 때만)
