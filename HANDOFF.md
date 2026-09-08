@@ -63,11 +63,6 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 ### ⚠️ 대기 중 (다음 사람이 해야 할 일)
 
-- **`supabase functions deploy tutor` 를 실행해야 입시박사가 동작한다** (2026-09-07).
-  배포 전에는 🎓 버튼을 눌러도 「아직 연결되지 않았어요」만 뜬다.
-  **새 키도 결제수단도 필요 없다** — AI 회화용 Gemini 무료 키를 그대로 쓴다.
-  `docs/입시박사_설정.md` 참고.
-
 - **Supabase 조직 쿼터 초과** — 대시보드에 "Organization exceeded its quota in the previous
   billing cycle · Projects will be restricted from 17 Sep, 2026" 경고가 떠 있다.
   9/17 전에 사용량을 줄이거나 요금제를 확인하지 않으면 프로젝트가 제한된다.
@@ -99,6 +94,44 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 ---
 
 ## 2. 작업 로그 (최신이 위)
+
+### 2026-09-08 — 입시박사(tutor) Edge Function 실제 배포 완료
+
+- **증상**: 코드는 `main`에 다 들어가 있는데(PR #16·#17) 앱에서 🎓 입시박사를 눌러도
+  「아직 연결되지 않았어요」만 떴다.
+- **원인**: `supabase/functions/tutor/` 는 **저장소에 있을 뿐 Supabase에 배포된 적이 없었다.**
+  Edge Function 은 git push 로 배포되지 않는다 — 별도로 올려야 한다.
+  (프로젝트에 배포돼 있던 함수는 chat / toefl / famichat / send-push / schedule-reminder /
+  church / notify-crisis 7개뿐, tutor 는 목록에 없었다.)
+- **조치**: `tutor` 를 Supabase 프로젝트 `ghmroezwdwkvruygrqzv` 에 배포했다.
+  - 배포 결과: slug `tutor`, status **ACTIVE**, version 1, `verify_jwt: true`
+    (chat·toefl 과 동일. 함수 안에서도 `auth.getUser()` 로 한 번 더 막는다)
+  - 배포 전에 의존물이 실제로 있는지 먼저 확인했다 — 없으면 첫 호출에서 500 이 난다:
+    - 테이블 `ai_cache` (hash / level / prompt / response jsonb / hit_count / created_at) ✅
+    - RPC `bump_ai_usage()`, `bump_ai_cache_hit(p_hash text)`, `is_parent()` ✅
+    - `ai_cache` RLS 정책 3개(select·insert·update, `auth.role() = 'authenticated'`) ✅
+      → 사용자 JWT 로 도는 tutor 함수가 캐시를 읽고 쓸 수 있다
+  - 제공자는 `TUTOR_PROVIDER` 기본값 **gemini**(무료 등급). AI 회화가 쓰던
+    `GEMINI_API_KEY` 를 그대로 쓴다 — **새 키도 결제수단도 추가하지 않았다.**
+- **확인**: 프런트엔드 프로덕션 번들 `index-4ego1wxQ.js` 안에 「입시박사」·「웹툰 입시 가이드」·
+  「대학 가이드」·「오늘 뭐 만들까」 문자열이 모두 들어 있음을 확인했다 (PR #16 내용이 배포돼 있다).
+  PR #17 은 `supabase/functions/tutor/index.ts` · `docs/` · `HANDOFF.md` 만 건드렸으므로
+  **번들 해시가 그대로인 것이 정상이다** — 프런트 파일이 안 바뀌면 해시도 안 바뀐다.
+- **커밋**: 이 항목 (코드 변경 없음, 배포는 저장소 밖의 작업이라 기록으로만 남긴다)
+- **남은 것**: 가족이 실제로 🎓 를 눌러 답이 오는지 한 번 확인.
+  답이 안 오면 증상별로 이렇게 읽는다 —
+  - 「AI 설정이 아직 안 됐어요」 → `GEMINI_API_KEY` 시크릿이 없다 → `supabase secrets set GEMINI_API_KEY=...`
+  - 「오늘 사용량을 다 썼어요」 → 가족 공용 일일 한도(`AI_DAILY_LIMIT`, 기본 100) 초과. 내일 풀린다
+  - 「무료 사용량을 다 썼어요」 → Gemini 무료 등급의 분당/일일 한도. 잠시 뒤 재시도
+
+#### 배운 것 — Edge Function 은 배포가 별개다
+
+`database/*.sql` 이 자동 적용되지 않는 것과 **똑같다.** `supabase/functions/` 아래 코드를
+추가·수정하고 push 해도 서버는 그대로다. 새 함수를 만들었으면 이 두 가지를 같이 확인할 것:
+
+1. 함수가 실제로 배포됐는지 (Supabase 대시보드 → Edge Functions 목록에 slug 가 보이는지)
+2. 그 함수가 쓰는 **테이블·RPC·RLS 정책**이 이미 있는지 (없으면 배포는 되고 호출만 실패한다)
+
 
 ### 2026-09-07 (밤) — 입시박사를 무료 등급 고정 + 캐시 추가
 
