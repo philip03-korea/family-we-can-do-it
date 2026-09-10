@@ -94,6 +94,16 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 ## 2. 작업 로그 (최신이 위)
 
+### 2026-09-10 — 실제 서비스 배포 검증 완료
+
+- **코드 커밋**: `bb7e5ed` — 스튜디오·2027 입시 자료·하울 Grade 10 적용, origin/main push 완료.
+- **배포**: GitHub 커밋 상태 Vercel success / Deployment has completed 확인.
+- **실서비스**: https://family-we-can-do-it.vercel.app/ 에서 새 JS `index-DjmcRc7h.js`, CSS `index-BgYdKdyx.css` 제공 확인.
+- **검증**: JS에 나만의 스튜디오·usGrade:10·자료 버전 2026-09-09-v2 포함. 음식 PNG는 로컬 원본과 SHA-256 동일. sw.js의 음식 이미지 precache 포함 확인. 테스트 3개 및 production/PWA build 통과.
+- **이번 커밋**: 배포 결과 인수인계 기록만 추가. 앱 코드는 위 커밋과 동일.
+- **남은 것**: 휴대폰에서 앱을 완전히 닫고 다시 열어 업데이트 확인. 실제 계정의 저장·유료 AI 기능은 별도 실사용 확인. 학교 서류·졸업 예정일 등 미확정 사항 유지.
+
+
 ### 2026-09-10 — 스튜디오 실제 서비스 반영 요청
 
 - **증상**: 가족이 쓰는 앱은 이전 화면. 9월 9일 변경은 로컬 미리보기까지만 반영됐음.
