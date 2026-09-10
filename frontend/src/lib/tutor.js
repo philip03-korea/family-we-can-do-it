@@ -1,3 +1,4 @@
+import { KNOWLEDGE_VERSION } from '../data/admissions2027'
 import { supabase } from './supabase'
 
 // ============================================================
@@ -31,7 +32,7 @@ async function readPayload(data, error) {
 
 export async function askTutor({ message, history = [], who = '학생', topic = '진학', context = '' }) {
   const { data, error } = await supabase.functions.invoke('tutor', {
-    body: { message, history, who, topic, context },
+    body: { message, history, who, topic: `${topic} [자료 ${KNOWLEDGE_VERSION}]`, context },
   })
   const payload = await readPayload(data, error)
   const code = payload.error || (error ? 'SERVER_ERROR' : null)

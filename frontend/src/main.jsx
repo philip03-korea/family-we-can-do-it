@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext.jsx'
 import { primeTTS } from './lib/tts'
 import { initButtonSound } from './lib/sound'
 import './index.css'
+import './studio.css'
 
 // 버튼 클릭 효과음 전역 연결 (설정에서 끌 수 있음)
 initButtonSound()

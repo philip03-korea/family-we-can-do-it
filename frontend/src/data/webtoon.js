@@ -1,3 +1,4 @@
+import { VERIFIED_SCHOOLS, HAEUM_STEPS, verifiedContext } from './admissions2027.js'
 // 하음 웹툰 입시 가이드.
 //
 // ⚠️ 모집인원·실기 유형·전형명은 해마다 바뀐다. 여기 적힌 건 방향을 잡는 참고이고,
@@ -21,7 +22,7 @@ export const ADMISSION_TYPES = [
     weight: '가장 큰 문',
     summary: '시험장에서 직접 그린다. 웹툰·만화과의 주력 전형',
     detail: [
-      '내신 반영이 있지만 실기 비중이 훨씬 크다 — 성적이 아쉬워도 그림으로 뒤집을 수 있다',
+      '실기와 학생부의 반영 비율을 전형별로 확인한다',
       '학교마다 출제 유형이 다르다: 상황표현 · 인물표현 · 칸만화 · 발상과 표현',
       '보통 4~5시간, 지정된 재료로 현장에서 완성한다',
     ],
@@ -34,9 +35,9 @@ export const ADMISSION_TYPES = [
     weight: '작품이 있으면',
     summary: '미리 만든 작품집을 제출하고 면접을 본다',
     detail: [
-      '실기고사 없이 포트폴리오 + 면접으로 뽑는 학교가 늘고 있다',
+      '포트폴리오와 면접을 활용하는 전형은 해당 학교의 요강에서 확인한다',
       '완성된 단편 웹툰 한 편이 습작 서른 장보다 강하다',
-      '공모전 입상·연재 경력이 있으면 여기가 가장 유리하다',
+      '수상·연재 경력은 해당 전형의 제출 허용 여부를 확인한다',
     ],
   },
   {
@@ -66,7 +67,7 @@ export const ADMISSION_TYPES = [
 ]
 
 // ── 웹툰·만화 학과가 있는 대학
-export const SCHOOLS = [
+const EXPLORATION_SCHOOLS = [
   {
     key: 'ck',
     name: '청강문화산업대학교',
@@ -200,6 +201,13 @@ export const SCHOOLS = [
 ]
 
 // ── 웹툰 특성화 고등학교 (하람이 나중에 볼 수도 있어 함께 정리)
+export const SCHOOLS = EXPLORATION_SCHOOLS.map(s => ({...s,
+ tier:VERIFIED_SCHOOLS[s.key] ? (s.key==='ck'?'공식 Q&A 확인':'2027 요강 확인') : '전공 탐색',
+ dept:s.key==='dongseo'?'계열3(게임·애니메이션·웹툰)':s.dept,
+ exam:VERIFIED_SCHOOLS[s.key]?.title || '지원 연도 모집요강 확인 전',
+ note:VERIFIED_SCHOOLS[s.key]?.next || '교육과정 탐색용 목록입니다. 최신 모집단위·전형·평가 기준은 별도로 확인해야 합니다.',
+}))
+
 export const HIGH_SCHOOLS = [
   {
     name: '한국애니메이션고등학교',
@@ -259,11 +267,11 @@ export const PRACTICAL = [
 
 // ── 포트폴리오 체크리스트
 export const PORTFOLIO = {
-  intro: '실기 없이 뽑는 전형이 늘고 있다. 완성작 한 편이 습작 서른 장보다 강하다.',
+  intro: '아래는 창작 연습용 구성 제안입니다. 실제 제출물의 종류·분량은 지원 전형의 모집요강을 따릅니다.',
   items: [
-    { name: '완성 단편 웹툰 1편', why: '기승전결이 있는 8~20컷. 가장 강력한 한 방', must: true },
-    { name: '캐릭터 시트', why: '한 인물의 정면·측면·표정·전신. 일관성을 보여준다', must: true },
-    { name: '배경·공간 그림', why: '배경을 못 그리는 지원자가 많아서 눈에 띈다', must: true },
+    { name: '완성 단편 웹툰 1편', why: '완결된 이야기 연습용 제안. 실제 제출 컷 수·분량은 학교별 요강을 따른다', must: false },
+    { name: '캐릭터 시트', why: '한 인물의 정면·측면·표정·전신. 일관성을 보여준다', must: false },
+    { name: '배경·공간 그림', why: '공간과 인물의 관계를 표현하는 연습', must: false },
     { name: '크로키·인체 습작', why: '기본기 증명', must: false },
     { name: '컬러 일러스트', why: '채색 감각', must: false },
     { name: '스토리보드·콘티', why: '연출력을 보여준다', must: false },
@@ -273,43 +281,8 @@ export const PORTFOLIO = {
 }
 
 // ── 고3 타임라인
-export const TIMELINE = [
-  {
-    when: '지금 ~ 6월',
-    emoji: '✏️',
-    items: [
-      '지원할 학교 6곳을 먼저 정한다 (수시는 6회 제한)',
-      '그 학교들의 실기 유형을 확인하고 거기에 맞춰 연습',
-      '크로키 매일 30분 — 인물표현은 양이 실력이다',
-    ],
-  },
-  {
-    when: '6~8월',
-    emoji: '📁',
-    items: [
-      '포트폴리오 제작 (완성 단편 1편은 이 기간에)',
-      '학교별 제출 규격 확인 후 그 규격으로 다시 정리',
-      '실기 모의 — 시간 안에 완성하는 연습이 중요하다',
-    ],
-  },
-  {
-    when: '9월',
-    emoji: '📮',
-    items: ['수시 원서 접수 (대개 9월 초중순)', '포트폴리오 제출 마감 확인'],
-  },
-  {
-    when: '10~11월',
-    emoji: '🎤',
-    items: ['실기고사·면접 (학교별로 날짜가 겹칠 수 있으니 미리 배치)', '11월 수능 — 수능 최저가 걸린 전형이 있으면 응시'],
-  },
-  {
-    when: '12월 ~ 이듬해 1월',
-    emoji: '🎉',
-    items: ['수시 합격 발표', '불합격 시 정시 원서 (12월 말~1월 초)'],
-  },
-]
+export const TIMELINE = HAEUM_STEPS.map(([title,text],i)=>({when:`STEP ${i+1} · ${title}`,emoji:'✦',items:[text]}))
 
-// ── 데뷔·연재 경로 (입시와 별개로 지금부터 가능하다)
 export const DEBUT = [
   { name: '네이버 웹툰 도전만화', how: '누구나 올릴 수 있다 → 베스트도전 → 정식연재', note: '가장 넓은 문. 조회수와 별점이 쌓이면 담당자가 연락한다' },
   { name: '카카오웹툰 · 카카오페이지', how: '공모전과 투고', note: '스토리 중심 장편에 유리' },
@@ -320,7 +293,7 @@ export const DEBUT = [
 
 // ── 확인할 것
 export const ASK = [
-  { q: '지원할 6개 학교를 정했는가?', why: '수시는 6회 제한. 학교마다 실기 유형이 달라서 목록이 정해져야 연습 방향이 잡힌다', priority: true },
+  { q: '지원 대학·전형과 실기 일정이 정해졌는가?', why: '일반대 수시 지원 횟수와 전문대 예외를 구분하고 실기 날짜가 겹치는지 확인한다', priority: true },
   { q: '각 학교의 실기 유형과 시간, 지참 재료는?', why: '상황표현인지 칸만화인지에 따라 준비가 완전히 다르다', priority: true },
   { q: '포트폴리오 제출 규격 (장수·형식·용량)', why: '규격을 모르고 만들면 다시 만들어야 한다' },
   { q: '수능 최저가 걸린 전형인가?', why: '걸려 있으면 수능 준비도 병행해야 한다' },
@@ -329,46 +302,12 @@ export const ASK = [
 ]
 
 // ── 입시박사에게 넘길 컨텍스트 (웹툰 입시용)
-export function tutorContext() {
-  const lines = []
-  lines.push('[전형 유형]')
-  for (const a of ADMISSION_TYPES) {
-    lines.push(`- ${a.title} (${a.weight}): ${a.summary}`)
-    for (const d of a.detail) lines.push(`  · ${d}`)
-  }
-  lines.push('', '[웹툰·만화 학과가 있는 대학]')
-  for (const s of SCHOOLS) {
-    lines.push(`- ${s.name} / ${s.dept} (${s.type}, ${s.tier})`)
-    lines.push(`  전공: ${s.majors.join(', ')}`)
-    lines.push(`  전형: ${s.exam} · 성격: ${s.focus}`)
-    lines.push(`  메모: ${s.note}`)
-    lines.push(`  물어볼 것: ${s.check.join(' / ')}`)
-  }
-  lines.push('', '[웹툰 특성화 고등학교]')
-  for (const h of HIGH_SCHOOLS) lines.push(`- ${h.name} (${h.where}) ${h.depts.join(', ')} — ${h.note}`)
-  lines.push('', '[실기 유형]')
-  for (const p of PRACTICAL) {
-    lines.push(`- ${p.name}: ${p.what} (예: ${p.example})`)
-    for (const t of p.tips) lines.push(`  · ${t}`)
-  }
-  lines.push('', '[포트폴리오]')
-  lines.push(`- ${PORTFOLIO.intro}`)
-  for (const i of PORTFOLIO.items) lines.push(`- ${i.name}${i.must ? ' (필수)' : ''}: ${i.why}`)
-  lines.push(`- 도구: ${PORTFOLIO.tools.join(', ')}`)
-  lines.push(`- 주의: ${PORTFOLIO.caution}`)
-  lines.push('', '[고3 일정]')
-  for (const t of TIMELINE) lines.push(`- ${t.when}: ${t.items.join(' / ')}`)
-  lines.push('', '[데뷔·연재 경로]')
-  for (const d of DEBUT) lines.push(`- ${d.name}: ${d.how} — ${d.note}`)
-  lines.push('', '[아직 정해지지 않은 것]')
-  for (const a of ASK) lines.push(`- ${a.q} — ${a.why}`)
-  return lines.join('\n')
-}
+export function tutorContext() { return verifiedContext('haeum') }
 
 export const TUTOR_PRESETS = [
   '실기는 뭐부터 연습해야 해?',
   '포트폴리오에 뭘 넣어야 해?',
   '내신이 안 좋은데 갈 수 있는 곳이 있어?',
-  '지원할 6개 학교를 어떻게 고르지?',
+  '지원 대학과 전형을 어떻게 고르지?',
   '지금 고3인데 남은 기간에 뭘 해야 해?',
 ]

@@ -1,3 +1,4 @@
+import AdmissionGuide, { SchoolEvidence } from '../components/AdmissionGuide'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -10,6 +11,7 @@ import BottomNav from '../components/BottomNav'
 import TutorBubble from '../components/TutorBubble'
 
 const TABS = [
+  { key: 'guide', label: '로드맵', emoji: '✦' },
   { key: 'univ', label: '대학', emoji: '🏛' },
   { key: 'major', label: '학과', emoji: '🎯' },
   { key: 'route', label: '자격', emoji: '🎫' },
@@ -18,17 +20,17 @@ const TABS = [
 ]
 
 const TONE = {
-  ok: { fg: '#6ee7b7', bg: 'rgba(110,231,183,0.12)', bd: 'rgba(110,231,183,0.35)' },
-  warn: { fg: '#fcd34d', bg: 'rgba(252,211,77,0.12)', bd: 'rgba(252,211,77,0.35)' },
-  bad: { fg: '#fda4af', bg: 'rgba(251,113,133,0.12)', bd: 'rgba(251,113,133,0.35)' },
-  info: { fg: '#a5b4fc', bg: 'rgba(165,180,252,0.12)', bd: 'rgba(165,180,252,0.35)' },
+  ok: { fg: '#246348', bg: 'rgba(110,231,183,0.12)', bd: 'rgba(110,231,183,0.35)' },
+  warn: { fg: '#855a12', bg: 'rgba(252,211,77,0.12)', bd: 'rgba(252,211,77,0.35)' },
+  bad: { fg: '#9f374e', bg: 'rgba(251,113,133,0.12)', bd: 'rgba(251,113,133,0.35)' },
+  info: { fg: '#5146a4', bg: 'rgba(165,180,252,0.12)', bd: 'rgba(165,180,252,0.35)' },
 }
 
 // 진학 가이드 — 하울 전용.
 // 첫 화면은 「대학」. 대학을 누르면 그 대학에서 갈 수 있는 학과가 나온다.
 export default function Career() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState('univ')
+  const [tab, setTab] = useState('guide')
   const [openUniv, setOpenUniv] = useState(null) // 상세를 연 대학 키
 
   // 대학 상세는 탭 전체를 덮는다
@@ -48,7 +50,7 @@ export default function Career() {
         ⚠️ {DISCLAIMER}
       </p>
 
-      <div className="grid grid-cols-5 gap-1 mb-5">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 mb-5">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -61,6 +63,7 @@ export default function Career() {
         ))}
       </div>
 
+      {tab === 'guide' && <AdmissionGuide kind="haul" />}
       {tab === 'univ' && <UnivTab onOpen={setOpenUniv} />}
       {tab === 'major' && <MajorTab onOpen={setOpenUniv} />}
       {tab === 'route' && <RouteTab />}
@@ -185,7 +188,7 @@ function UnivTab({ onOpen }) {
       ) : (
         <>
           <p className="text-[12px] leading-relaxed text-slate-300 bg-slate-800/60 border border-slate-700 rounded-2xl px-3.5 py-2.5 mb-4">
-            LIS 성적표 + SAT/ACT + TOEFL + 에세이로 지원. 검정고시가 필요 없는 경로예요. 점수는 대략적 범위입니다.
+            미국 대학은 추가 탐색 목록입니다. 졸업장 인정, 시험 정책, 영어 요건은 지원 연도별 공식 요강 확인 전입니다.
           </p>
           <div className="space-y-2">
             {SCHOOLS_USA.map((s) => (
@@ -234,6 +237,7 @@ function UnivDetail({ univKey, onBack }) {
       </div>
 
       <div className="p-5">
+        <SchoolEvidence schoolKey={univKey}/>
         <div className="bg-emerald-500/10 border border-emerald-500/35 rounded-2xl p-4 mb-4">
           <p className="text-xs font-bold text-emerald-300 mb-1">하울에게</p>
           <p className="text-sm text-emerald-50 leading-relaxed">{u.fit}</p>
@@ -424,7 +428,7 @@ function RouteTab() {
 function PlanTab() {
   return (
     <>
-      <p className="text-sm text-slate-400 mb-3">검정고시 → 글로벌학부 수시 순서예요.</p>
+      <p className="text-sm text-slate-400 mb-3">학력 확인 → 전형 선택 → 필요한 시험과 활동 순서로 준비해요.</p>
       <div className="space-y-2.5">
         {TIMELINE.map((t, i) => (
           <div key={t.when} className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4">
@@ -433,7 +437,7 @@ function PlanTab() {
                 {i + 1}
               </span>
               <h3 className="font-bold text-sm">
-                {t.emoji} {t.when}
+                {t.when} · {t.title}
               </h3>
             </div>
             {t.items.map((x) => (

@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import * as features from '../../../frontend/src/data/features.js';
+import * as career from '../../../frontend/src/data/career.js';
+import * as webtoon from '../../../frontend/src/data/webtoon.js';
+import * as recipes from '../../../frontend/src/data/recipes.js';
+const root = new URL('./', import.meta.url);
+const data = JSON.stringify({features, career, webtoon, recipes}).replaceAll('<', '\\u003c');
+const template = fs.readFileSync(new URL('template.html', root), 'utf8');
+fs.writeFileSync(new URL('famtalk-studio.html', root), template.replace('/*__DATA__*/', 'const DATA = '+data+';'));
+console.log('Built self-contained famtalk-studio.html from existing app content.');

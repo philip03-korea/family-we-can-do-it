@@ -8,13 +8,13 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.svg', 'images/food-studio.png'],
       manifest: {
         name: 'FamTalk — 우리 가족 영어',
         short_name: 'FamTalk',
-        description: '다섯 식구가 함께 오르는 영어 사다리 A→F',
+        description: '배움과 진로, 일상을 함께하는 우리 가족 스튜디오',
         theme_color: '#4f46e5',
-        background_color: '#0f172a',
+        background_color: '#f7f6f2',
         display: 'standalone',
         orientation: 'portrait',
         icons: [
@@ -25,6 +25,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         // 생성된 서비스워커가 푸시 핸들러(public/push-sw.js)를 불러옴
         importScripts: ['push-sw.js'],
         // 한 번 받은 음성 파일은 브라우저에 캐싱 → 서버/네트워크 비용 0

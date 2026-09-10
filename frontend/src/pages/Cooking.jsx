@@ -1,3 +1,4 @@
+import FoodArt from '../components/FoodArt'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -14,12 +15,13 @@ export default function Cooking() {
   const who = profile?.member_key || 'me'
 
   const [cat, setCat] = useState('all')
-  const [open, setOpen] = useState(null) // 열려 있는 레시피 id
+  const [open, setOpen] = useState(() => new URLSearchParams(window.location.search).get('recipe')) // 열려 있는 레시피 id
   const [favs, setFavs] = useState([])
   const [checked, setChecked] = useState({}) // 만드는 중 단계 체크
 
   useEffect(() => {
     setFavs(getFavorites('recipe', who))
+    setChecked({})
   }, [who])
 
   const recipe = open ? RECIPES.find((r) => r.id === open) : null
@@ -177,29 +179,8 @@ export default function Cooking() {
 
 // 사진 자리 — image 가 있으면 사진, 없으면 그라데이션 + 이모지 카드
 function Hero({ recipe, big }) {
-  if (recipe.image) {
-    return (
-      <img
-        src={recipe.image}
-        alt={recipe.name}
-        className={big ? 'w-full h-52 object-cover' : 'w-full aspect-square object-cover rounded-2xl'}
-      />
-    )
-  }
-  return (
-    <div
-      className={`relative overflow-hidden flex items-center justify-center ${
-        big ? 'h-52' : 'aspect-square rounded-2xl'
-      }`}
-      style={{ background: `linear-gradient(135deg, ${recipe.from} 0%, ${recipe.to} 100%)` }}
-    >
-      <span className={big ? 'text-7xl' : 'text-5xl'} style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.25))' }}>
-        {recipe.emoji}
-      </span>
-      <span className={`absolute top-2 left-2.5 opacity-70 ${big ? 'text-2xl' : 'text-lg'}`}>{recipe.side[0]}</span>
-      <span className={`absolute bottom-2 right-2.5 opacity-70 ${big ? 'text-2xl' : 'text-lg'}`}>{recipe.side[1]}</span>
-    </div>
-  )
+  if (recipe.image) return <img src={recipe.image} alt={recipe.name} className="w-full aspect-square object-cover rounded-2xl" />
+  return <FoodArt id={recipe.id} name={recipe.name} className={big ? 'food-detail' : ''} />
 }
 
 function Chip({ label, value }) {

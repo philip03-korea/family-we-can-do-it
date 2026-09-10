@@ -1,3 +1,4 @@
+import AdmissionGuide, { SchoolEvidence } from '../components/AdmissionGuide'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -8,6 +9,7 @@ import BottomNav from '../components/BottomNav'
 import TutorBubble from '../components/TutorBubble'
 
 const TABS = [
+  { key: 'guide', label: '로드맵', emoji: '✦' },
   { key: 'school', label: '학교', emoji: '🏫' },
   { key: 'exam', label: '전형', emoji: '🎫' },
   { key: 'draw', label: '실기', emoji: '✏️' },
@@ -16,15 +18,15 @@ const TABS = [
 ]
 
 const TONE = {
-  ok: { fg: '#6ee7b7', bg: 'rgba(110,231,183,0.12)', bd: 'rgba(110,231,183,0.35)' },
-  warn: { fg: '#fcd34d', bg: 'rgba(252,211,77,0.12)', bd: 'rgba(252,211,77,0.35)' },
-  info: { fg: '#a5b4fc', bg: 'rgba(165,180,252,0.12)', bd: 'rgba(165,180,252,0.35)' },
+  ok: { fg: '#246348', bg: 'rgba(110,231,183,0.12)', bd: 'rgba(110,231,183,0.35)' },
+  warn: { fg: '#855a12', bg: 'rgba(252,211,77,0.12)', bd: 'rgba(252,211,77,0.35)' },
+  info: { fg: '#5146a4', bg: 'rgba(165,180,252,0.12)', bd: 'rgba(165,180,252,0.35)' },
 }
 
 // 웹툰 입시 가이드 — 하음 전용. 첫 화면은 「학교」.
 export default function Webtoon() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState('school')
+  const [tab, setTab] = useState('guide')
   const [open, setOpen] = useState(null)
 
   if (open) return <SchoolDetail schoolKey={open} onBack={() => setOpen(null)} />
@@ -41,7 +43,7 @@ export default function Webtoon() {
         ⚠️ {DISCLAIMER}
       </p>
 
-      <div className="grid grid-cols-5 gap-1 mb-5">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 mb-5">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -54,6 +56,7 @@ export default function Webtoon() {
         ))}
       </div>
 
+      {tab === 'guide' && <AdmissionGuide kind="haeum" />}
       {tab === 'school' && <SchoolTab onOpen={setOpen} />}
       {tab === 'exam' && <ExamTab />}
       {tab === 'draw' && <DrawTab />}
@@ -153,6 +156,7 @@ function SchoolDetail({ schoolKey, onBack }) {
       </div>
 
       <div className="p-5">
+        <SchoolEvidence schoolKey={schoolKey}/>
         <p className="text-sm text-slate-200 leading-relaxed bg-slate-800/60 border border-slate-700 rounded-2xl p-4 mb-4">
           {s.note}
         </p>
@@ -197,7 +201,7 @@ function SchoolDetail({ schoolKey, onBack }) {
 function ExamTab() {
   return (
     <>
-      <p className="text-sm text-slate-400 mb-3">웹툰과는 실기가 중심이에요. 내신이 아쉬워도 그림으로 뒤집을 수 있어요.</p>
+      <p className="text-sm text-slate-400 mb-3">학교마다 실기·학생부·면접의 반영 방식이 달라요. 로드맵의 확인된 요강과 함께 비교해 보세요.</p>
       <div className="space-y-2.5 mb-6">
         {ADMISSION_TYPES.map((a) => {
           const t = TONE[a.tone]

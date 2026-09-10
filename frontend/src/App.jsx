@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
-import { featureKeyOfPath, landingOf } from './data/features'
+import { featureKeyOfPath } from './data/features'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Study from './pages/Study'
@@ -55,27 +55,8 @@ function Guarded({ children }) {
   )
 }
 
-// 아이마다 앱을 열었을 때 먼저 보는 화면이 다르다 (세션당 1회).
-//   하울 → 대학 가이드 · 하음 → 웹툰 입시 · 하람 → 요리
-// 홈 탭을 누르면 평소 홈이 나오므로 갇히지 않고, 부모 미리보기에는 걸리지 않는다.
-// features.js 의 LANDING 에서 바꾼다.
-function Home() {
-  const { ownProfile, isViewing, visibleFeatures } = useAuth()
-  const [alreadyLanded] = useState(() => {
-    try {
-      if (sessionStorage.getItem('famtalk:landed')) return true
-      sessionStorage.setItem('famtalk:landed', '1')
-      return false
-    } catch {
-      return true // 저장이 막힌 브라우저에서는 그냥 홈을 보여준다
-    }
-  })
-  const landing = landingOf(ownProfile?.member_key, visibleFeatures)
-  if (!alreadyLanded && !isViewing && landing?.redirect && landing.route) {
-    return <Navigate to={landing.route} replace />
-  }
-  return <Dashboard />
-}
+// 개인 스튜디오에서 우선 활동을 선택한다. 세션별 강제 이동은 하지 않는다.
+function Home() { return <Dashboard /> }
 
 function FullScreen({ children }) {
   return (
@@ -84,14 +65,17 @@ function FullScreen({ children }) {
 }
 
 export default function App() {
-  const { isConfigured, loading } = useAuth()
+  const { isConfigured, loading, profile } = useAuth()
+  const { pathname } = useLocation()
+  const studio = !['/login', '/guide'].includes(pathname)
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
 
   // Supabase 환경변수가 아직 없으면 셋업 안내 화면
   if (!isConfigured) return <SetupNotice />
   if (loading) return <FullScreen>불러오는 중…</FullScreen>
 
   return (
-    <Routes>
+    <div className={studio ? `studio-app member-${profile?.member_key || 'parent'}` : undefined}><Routes>
       {/* 공개 사용설명서 — 로그인 없이 열람 (카톡 공유용) */}
       <Route path="/guide" element={<Guide />} />
       <Route path="/login" element={<Login />} />
@@ -132,6 +116,6 @@ export default function App() {
       <Route path="/church" element={<Protected><Church /></Protected>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    </Routes></div>
   )
 }

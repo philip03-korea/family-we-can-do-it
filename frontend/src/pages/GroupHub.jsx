@@ -35,7 +35,7 @@ export default function GroupHub() {
         </span>
       </header>
 
-      <div className="space-y-2">
+      <div className="studio-hub-grid">
         {items.map((f) => (
           <button
             key={f.key}
