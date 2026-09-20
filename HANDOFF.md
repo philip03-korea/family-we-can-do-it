@@ -94,6 +94,14 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 ## 2. 작업 로그 (최신이 위)
 
+### 2026-09-20 — Supabase 새 프로젝트로 이전(용량 락 회피)
+
+- 옛 프로젝트(ghmroezwdwkvruygrqzv)가 exceed_db_size_quota로 서비스 제한 → 새 무료 조직에 새 프로젝트(pxwbmandoyuwiivuxoow) 생성해 FamTalk 이전.
+- 이전: 스키마 전체(28테이블·정책56·함수4), auth 계정 6개(비번 해시 그대로), 프로필5, 데이터(단어 등)는 복사 진행.
+- 앱 연결: frontend/src/lib/supabase.js 를 새 프로젝트로 직접 고정(옛 Vercel 환경변수가 옛 프로젝트를 가리켜서). Vercel 환경변수를 새 값으로 바꾸면 그걸 우선 쓰도록 되어있음.
+- Edge Functions(chat/toefl/famichat/tutor/church/notify-crisis/send-push/schedule-reminder)와 시크릿·cron은 새 프로젝트에 아직 미배포 = Phase 2.
+
+
 ### 2026-09-20 — 접근성: 핀치 확대 허용 + 면접 탭 배포
 
 - **index.html 뷰포트**: `maximum-scale=1.0, user-scalable=no` 제거 → 핀치 줌 허용(저시력·부모님 가독성). `viewport-fit=cover`는 유지(노치/홈바).
