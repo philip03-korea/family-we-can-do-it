@@ -4,7 +4,8 @@ import { supabase } from './supabase'
 // 웹 푸시 알림 — 구독/해제 + 구독정보 저장 (push_subscriptions)
 // VAPID 공개키는 노출돼도 안전. 발송은 서버(Edge Function send-push).
 // ============================================================
-const VAPID_PUBLIC = 'BJRx5cvNi-uKdJrgWLAD3V0ZGkxZwb537WyqC4qzEZBIvchxDwLqNqHG1OwfgQGynUvwhYDXd3fHfSriDpJkktM'
+// 2026-09-21 새 Supabase 프로젝트 이전 시 VAPID 키 재발급 (기존 구독은 무효 → 알림 다시 켜기)
+const VAPID_PUBLIC = 'BFEYenhb_PkxhKxpSTF12QSygS2Kl06734ihLFfX0wdQ4LnT8SuT5iNPkTux0NYSN9jCTKM0zezDE9POC5-My20'
 
 export function isPushSupported() {
   return (
