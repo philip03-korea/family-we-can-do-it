@@ -94,6 +94,15 @@ VITE_SUPABASE_ANON_KEY=<Settings → API → anon public 키>
 
 ## 2. 작업 로그 (최신이 위)
 
+### 2026-09-21 — Phase 2 완료: 새 프로젝트 Edge Functions·시크릿·cron·VAPID
+
+- **Edge Functions 8개** 새 프로젝트(pxwbmandoyuwiivuxoow)에 배포·ACTIVE: chat/famichat/toefl/tutor/church/notify-crisis(verify_jwt=true), send-push/schedule-reminder(verify_jwt=false).
+- **시크릿 6개** `supabase secrets set --project-ref`로 설정: GEMINI_API_KEY, OPENAI_API_KEY, VAPID_PUBLIC, VAPID_PRIVATE, VAPID_SUBJECT(mailto:family@famtalk.app), CRON_SECRET.
+- **VAPID 키 재발급**(이전으로 무효화됨) → `frontend/src/lib/push.js` 공개키 교체(커밋 `9d13bfb`). **사용자는 알림을 다시 켜야 함**(기존 구독 무효).
+- **cron**: pg_cron·pg_net 활성화. cron 잡 2개 — `famtalk-morning`(0 22 * * * UTC = 07:00 KST 아침 푸시 send-push), `famtalk-schedule-reminder`(0,30 * * * * = 30분마다 schedule-reminder).
+- **cron 인증**: `alter database ... set app.cron_secret`은 권한 거부 → **Supabase Vault**에 `cron_secret` 저장, cron이 `vault.decrypted_secrets`에서 읽어 `x-cron-secret` 헤더로 전달. (DB 파라미터/평문 하드코딩 안 씀)
+- 로그인: 아빠 정상 확인. 하음 로그인 실패는 auth 행 정상(동일 구조) → 기기 PWA 캐시/비번 가능성 → 폰 완전 재시작 또는 비번 재설정 권장.
+
 ### 2026-09-20 — Supabase 새 프로젝트로 이전(용량 락 회피)
 
 - 옛 프로젝트(ghmroezwdwkvruygrqzv)가 exceed_db_size_quota로 서비스 제한 → 새 무료 조직에 새 프로젝트(pxwbmandoyuwiivuxoow) 생성해 FamTalk 이전.
