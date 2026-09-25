@@ -33,3 +33,16 @@
 @media(min-width:1000px){.preview-toolbar+.studio-app .studio-nav{top:44px}}
 
 @media(min-width:1000px){.studio-app:not(:has(.studio-nav)){padding-left:0}}
+
+/* 히어로 카드 덱 — 옆으로 밀어(스와이프) 다음 카드로. 카드가 하나뿐이면 그냥 한 장으로 보인다. */
+.studio-hero-deck{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.studio-hero-deck::-webkit-scrollbar{display:none}
+.studio-hero-deck>.studio-hero{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always}
+.studio-deck-nav{display:flex;align-items:center;gap:12px;margin-top:12px}
+.studio-deck-hint{font-size:11px;color:var(--muted)}
+.studio-deck-hint:after{content:" →"}
+.studio-deck-dots{display:flex;gap:7px;margin-left:auto}
+.studio-deck-dots button{width:8px;height:8px;border-radius:50%;background:var(--line);border:0;padding:0;transition:width .2s,background .2s}
+.studio-deck-dots button.on{width:22px;border-radius:5px;background:var(--accent)}
+.studio-deck-dots button:hover{background:color-mix(in srgb,var(--accent) 55%,var(--line))}
+@media(max-width:650px){.studio-hero-deck{gap:10px}.studio-deck-nav{margin-top:10px}}

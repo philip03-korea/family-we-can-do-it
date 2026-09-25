@@ -1,3 +1,4 @@
+import { useCallback, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { FAMILY } from '../data/family'
@@ -12,6 +13,36 @@ const THEMES = {
   parent: { eyebrow: 'FAMILY STUDIO', title: '각자의 꿈이 자라는,\n우리 가족의 공간.', text: '하음의 웹툰, 하울의 진학, 하람의 요리. 필요한 순간에 함께해 주세요.', art: 'GROW\nTOGETHER.', feature: 'family', cta: '가족 현황 살펴보기', note: '결과를 묻기 전에, 오늘 재미있었던 일을 물어봐 주세요.', actions: ['webtoon', 'career', 'cooking'] },
 }
 
+// 히어로에서 옆으로 밀면 나오는 추가 카드.
+// 첫 장은 위 THEMES 의 「지금 나에게 중요한 것」이고, 그다음부터 여기 카드가 이어진다.
+// 꺼져 있는 기능(feature)은 자동으로 빠진다.
+const EXTRA_SLIDES = {
+  haul: [
+    {
+      feature: 'notes',
+      route: '/notes?note=haul-worldhistory-ch17',
+      pill: '이번 주 공부',
+      title: '대항해시대를,\n한 장에 정리했어.',
+      text: '교과서 24쪽과 수업 슬라이드를 페이지별로 묶었어. 영어 단어와 시험 질문, 그림까지 한 번에.',
+      cta: '세계사 노트 열기',
+      art: 'CH.17\nNOTE.',
+      sticker: '그림 8장과 함께',
+    },
+  ],
+  parent: [
+    {
+      feature: 'notes',
+      route: '/notes?note=haul-worldhistory-ch17',
+      pill: '아이가 배우는 것',
+      title: '하울이의 세계사,\n같이 들여다볼까요.',
+      text: '지금 배우는 대항해시대를 페이지별로 정리한 노트예요. 무엇을 배우는지 한눈에 보입니다.',
+      cta: '하울이 세계사 노트',
+      art: 'CH.17\nNOTE.',
+      sticker: '함께 보는 공부',
+    },
+  ],
+}
+
 export default function StudioHome({ stats, streak, points, interests = [] }) {
   const { profile, ownProfile, allProfiles, isParent, isViewing, setViewAs, visibleFeatures } = useAuth()
   const navigate = useNavigate()
@@ -20,6 +51,39 @@ export default function StudioHome({ stats, streak, points, interests = [] }) {
   const allowed = FEATURES.filter(f => visibleFeatures.includes(f.key))
   const primary = allowed.find(f => f.key === theme.feature)
   const actions = theme.actions.map(k => allowed.find(f => f.key === k)).filter(Boolean)
+
+  // 히어로 카드들 — 첫 장(기본) + 켜져 있는 추가 카드
+  const slides = [
+    { key: 'primary', pill: '지금 나에게 중요한 것', title: theme.title, text: theme.text, cta: theme.cta, route: primary?.route, art: theme.art, kitchen: key === 'haram', sticker: key === 'haeum' ? '한 컷씩, 나의 이야기' : key === 'haul' ? 'MAKE IT YOURS' : '우리답게, 함께' },
+    // 부모가 자녀 화면을 미리 볼 때는 그 아이의 카드를 그대로 보여준다
+    ...(EXTRA_SLIDES[key] || (key === 'mom' || key === 'dad' ? EXTRA_SLIDES.parent : []))
+      .filter(s => visibleFeatures.includes(s.feature))
+      .map(s => ({ ...s, key: s.feature })),
+  ]
+
+  const deckRef = useRef(null)
+  const [active, setActive] = useState(0)
+
+  // 어느 카드가 가운데 있는지 — 점 표시를 맞춰 준다
+  const onScroll = useCallback(() => {
+    const deck = deckRef.current
+    if (!deck) return
+    const mid = deck.scrollLeft + deck.clientWidth / 2
+    let best = 0
+    for (let i = 0; i < deck.children.length; i++) {
+      const c = deck.children[i]
+      if (c.offsetLeft - deck.offsetLeft <= mid) best = i
+    }
+    setActive(best)
+  }, [])
+
+  function goTo(i) {
+    const deck = deckRef.current
+    const c = deck?.children[i]
+    if (!deck || !c) return
+    deck.scrollTo({ left: c.offsetLeft - deck.offsetLeft, behavior: 'smooth' })
+  }
+
   return <div className="studio-home">
     <header className="studio-topline"><a href="/" className="studio-wordmark">fam<span>talk</span><i> / 나만의 스튜디오</i></a><button className="studio-avatar" onClick={() => navigate('/me')} aria-label="내 정보">{profile.display_name?.slice(0, 1)}<span>{profile.display_name}</span></button></header>
     {isParent && <div className="studio-family-switch" aria-label="가족 화면 미리보기">
@@ -28,12 +92,35 @@ export default function StudioHome({ stats, streak, points, interests = [] }) {
       {isViewing && <small>자녀 화면 미리보기</small>}
     </div>}
     <div className="studio-greeting"><p className="studio-kicker">{theme.eyebrow}</p><h1>{profile.display_name}의 스튜디오<span className="sparkle" aria-hidden="true">✳</span></h1><p>오늘도, 나답게 한 걸음.</p></div>
-    <section className="studio-hero">
-      <div className="studio-hero-copy"><span className="studio-pill">지금 나에게 중요한 것</span><h2>{theme.title}</h2><p>{theme.text}</p>{primary ? <button className="studio-primary" onClick={() => navigate(primary.route)}>{theme.cta}<span>↗</span></button> : <p className="studio-muted">켜진 활동을 아래에서 골라 보세요.</p>}</div>
-      <div className={`studio-hero-art ${key === 'haram' ? 'kitchen' : ''}`} aria-hidden="true">
-        {key === 'haram' ? <><FoodArt id="r5" name="크로플" /><span className="art-sticker">MY LITTLE KITCHEN</span></> : <><span className="art-orbit"/><span className="art-paper back"/><span className="art-paper front">{theme.art}<i>✦</i></span><span className="art-sticker">{key === 'haeum' ? '한 컷씩, 나의 이야기' : key === 'haul' ? 'MAKE IT YOURS' : '우리답게, 함께'}</span></>}
+
+    <div className="studio-hero-deck" ref={deckRef} onScroll={onScroll} aria-label="오늘의 카드 — 옆으로 밀어 넘기기">
+      {slides.map((s) => (
+        <section className="studio-hero" key={s.key}>
+          <div className="studio-hero-copy">
+            <span className="studio-pill">{s.pill}</span>
+            <h2>{s.title}</h2>
+            <p>{s.text}</p>
+            {s.route
+              ? <button className="studio-primary" onClick={() => navigate(s.route)}>{s.cta}<span>↗</span></button>
+              : <p className="studio-muted">켜진 활동을 아래에서 골라 보세요.</p>}
+          </div>
+          <div className={`studio-hero-art ${s.kitchen ? 'kitchen' : ''}`} aria-hidden="true">
+            {s.kitchen
+              ? <><FoodArt id="r5" name="크로플" /><span className="art-sticker">MY LITTLE KITCHEN</span></>
+              : <><span className="art-orbit" /><span className="art-paper back" /><span className="art-paper front">{s.art}<i>✦</i></span><span className="art-sticker">{s.sticker}</span></>}
+          </div>
+        </section>
+      ))}
+    </div>
+    {slides.length > 1 && <div className="studio-deck-nav">
+      <span className="studio-deck-hint">옆으로 밀어 보세요</span>
+      <div className="studio-deck-dots">
+        {slides.map((s, i) => (
+          <button key={s.key} className={i === active ? 'on' : ''} aria-label={`${i + 1}번째 카드 보기`} aria-current={i === active ? 'true' : undefined} onClick={() => goTo(i)} />
+        ))}
       </div>
-    </section>
+    </div>}
+
     <section className="studio-section"><div className="studio-section-head"><h2>{key === 'haram' ? '주방에 들어가기 전' : '오늘 이어갈 활동'}</h2><span>작은 시작이면 충분해요</span></div><div className="studio-actions">{actions.map((f, i) => <button key={f.key} className="studio-action" onClick={() => navigate(f.route)}><span className="action-number">0{i + 1}</span><span className="action-icon">{f.emoji}</span><strong>{f.name}</strong><p>{f.desc}</p><span className="action-arrow">↗</span></button>)}</div></section>
     {key === 'haram' && primary && <section className="studio-section"><div className="studio-section-head"><h2>어떤 맛을 만들어 볼까?</h2><button onClick={() => navigate('/cooking')}>레시피 전체 ↗</button></div><div className="studio-recipe-row">{[['r3', '요거트 아이스크림', '불 없이 차갑게'], ['r8', '에그 샌드위치', '달걀 조리는 어른과'], ['r16', '치즈 콘', '뜨거운 그릇 조심']].map(([id, name, desc]) => <button key={id} onClick={() => navigate(`/cooking?recipe=${id}`)}><FoodArt id={id} name={name}/><strong>{name}</strong><span>{desc}</span></button>)}</div></section>}
     <aside className="studio-note"><span aria-hidden="true">✳</span><p>{theme.note}</p><small>A LITTLE NOTE FOR YOU</small></aside>
