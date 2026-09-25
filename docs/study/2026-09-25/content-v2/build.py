@@ -66,6 +66,26 @@ ART = {
            "cap": "<b>튤립 광풍</b>. 알뿌리 하나가 집 한 채 값까지 갔어. 1637년 거품이 터졌지."},
 }
 
+# ── 3.5 교과서에서 잘라 낸 그림을 figure 블록에 붙인다
+CROPDIR = SP / "crops"
+crops = json.loads((CROPDIR / "crops.json").read_text(encoding="utf-8"))
+byid = {p["id"]: p for p in tb}
+attached = extra = 0
+for pid, items in crops.items():
+    pg = byid.get(pid)
+    if not pg:
+        print(f"  ⚠ {pid} 페이지가 데이터에 없음"); continue
+    figs = [b for b in pg["blocks"] if b.get("kind") == "figure"]
+    pg.setdefault("extrafigs", [])
+    for it in items:
+        at = it.get("at")
+        if at is not None and at < len(figs):
+            figs[at]["img"] = it["f"]; attached += 1
+        else:
+            pg["extrafigs"].append({"f": it["f"], "cap": it.get("cap") or "", "alt": it.get("alt") or ""})
+            extra += 1
+print(f"  교과서 그림 {attached}개를 설명에 붙이고, {extra}개는 페이지 끝에 따로 붙임")
+
 # ── 4. 이미지 복사
 if IMGOUT.exists():
     shutil.rmtree(IMGOUT)
@@ -73,6 +93,9 @@ IMGOUT.mkdir(parents=True)
 n = 0
 for f in sorted(PAGES.glob("*.webp")):
     shutil.copy2(f, IMGOUT / f.name); n += 1
+for f in sorted(CROPDIR.iterdir()):
+    if f.suffix in (".webp", ".jpg") and not f.name.startswith("_"):
+        shutil.copy2(f, IMGOUT / f.name); n += 1
 for i in range(8):
     src = ART_SRC / f"{i}.webp"
     if src.exists():

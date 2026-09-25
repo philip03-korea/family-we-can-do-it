@@ -62,6 +62,8 @@
       case "figure":
         return '<div class="blk-fig"><span class="fw">🖼 그림</span> ' +
           (b.where ? '<span style="font-size:12.5px;color:var(--muted)"> · ' + esc(b.where) + "</span>" : "") +
+          (b.img ? '<figure class="cut"><img src="' + IMG + b.img + '" alt="' +
+            esc(b.ko || b.en || "교과서 그림") + '" loading="lazy" decoding="async"></figure>' : "") +
           (b.en ? paraHTML([{ en: b.en, ko: b.ko, note: b.note, important: !!b.note }])
                 : '<p class="para">' + esc(b.ko || "") + "</p>" +
                   (b.note ? '<div class="senbox note"><span class="lb">여기를 봐</span>' + esc(b.note) + "</div>" : "")) +
@@ -96,6 +98,14 @@
   function pageHTML(pg, slides) {
     var body = (pg.blocks || []).map(blockHTML).join("");
     var art = artHTML(pg.id);
+    // 설명에 붙이지 못한 교과서 그림은 페이지 끝에 모아 준다
+    var extra = (pg.extrafigs || []).map(function (e) {
+      return '<div class="blk-fig"><span class="fw">🖼 그림</span>' +
+        '<figure class="cut"><img src="' + IMG + e.f + '" alt="' + esc(e.alt) +
+        '" loading="lazy" decoding="async"></figure>' +
+        (e.cap ? '<p class="para" style="font-size:14px">' + e.cap + "</p>" : "") + "</div>";
+    }).join("");
+    body += extra;
     var sl = slides.length
       ? slides.map(slideHTML).join("")
       : '<p class="noslide">이 페이지와 짝이 되는 수업 슬라이드는 없어. 교과서만 봐도 충분한 부분이야.</p>';
@@ -233,7 +243,7 @@
       return;
     }
 
-    var zi = e.target.closest(".scan img,.slide img");
+    var zi = e.target.closest(".scan img,.slide img,figure.cut img");
     if (zi) { openZoom(zi); return; }
   });
 

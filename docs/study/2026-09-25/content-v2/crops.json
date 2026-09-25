@@ -1,0 +1,214 @@
+{
+ "tb01": [
+  {
+   "f": "tb01_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 1322,
+   "h": 729
+  }
+ ],
+ "tb02": [
+  {
+   "f": "tb02_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 1308,
+   "h": 393
+  },
+  {
+   "f": "tb02_f2.webp",
+   "at": null,
+   "cap": "<b>바스쿠 다 가마</b>. 위 인용문(1497–1499 항해 일지)을 남긴 사람이야.",
+   "alt": "모자를 쓰고 수염을 기른 바스쿠 다 가마의 초상",
+   "w": 380,
+   "h": 500
+  },
+  {
+   "f": "tb02_f3.webp",
+   "at": null,
+   "cap": "<b>에르난 코르테스</b>. 아래 인용문에서 몬테수마와 말을 주고받는 사람이야.",
+   "alt": "갑옷 차림에 수염을 기른 에르난 코르테스의 초상",
+   "w": 354,
+   "h": 482
+  }
+ ],
+ "tb03": [
+  {
+   "f": "tb03_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 1322,
+   "h": 765
+  },
+  {
+   "f": "tb03_f2.webp",
+   "at": 1,
+   "cap": null,
+   "alt": null,
+   "w": 609,
+   "h": 356
+  },
+  {
+   "f": "tb03_f3.webp",
+   "at": 2,
+   "cap": null,
+   "alt": null,
+   "w": 1322,
+   "h": 392
+  }
+ ],
+ "tb05": [
+  {
+   "f": "tb05_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 556,
+   "h": 925
+  }
+ ],
+ "tb06": [
+  {
+   "f": "tb06_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 589,
+   "h": 784
+  }
+ ],
+ "tb07": [
+  {
+   "f": "tb07_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 688,
+   "h": 623
+  }
+ ],
+ "tb09": [
+  {
+   "f": "tb09_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 925,
+   "h": 676
+  }
+ ],
+ "tb11": [
+  {
+   "f": "tb11_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 886,
+   "h": 623
+  }
+ ],
+ "tb12": [
+  {
+   "f": "tb12_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 824,
+   "h": 784
+  }
+ ],
+ "tb13": [
+  {
+   "f": "tb13_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 583,
+   "h": 623
+  }
+ ],
+ "tb14": [
+  {
+   "f": "tb14_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 393,
+   "h": 962
+  }
+ ],
+ "tb15": [
+  {
+   "f": "tb15_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 1322,
+   "h": 694
+  }
+ ],
+ "tb17": [
+  {
+   "f": "tb17_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 1322,
+   "h": 925
+  }
+ ],
+ "tb18": [
+  {
+   "f": "tb18_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 445,
+   "h": 535
+  }
+ ],
+ "tb19": [
+  {
+   "f": "tb19_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 332,
+   "h": 285
+  }
+ ],
+ "tb20": [
+  {
+   "f": "tb20_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 511,
+   "h": 873
+  }
+ ],
+ "tb21": [
+  {
+   "f": "tb21_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 754,
+   "h": 605
+  }
+ ],
+ "tb24": [
+  {
+   "f": "tb24_f1.webp",
+   "at": 0,
+   "cap": null,
+   "alt": null,
+   "w": 563,
+   "h": 730
+  }
+ ]
+}

@@ -142,6 +142,9 @@ tr.now td{background:var(--now)} tr.now td.era-name{color:var(--gold)}
 .blk-gloss .gw{font-weight:800;color:var(--teal);font-size:15px}
 .blk-fig{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 14px;margin:12px 0;font-size:14px}
 .blk-fig .fw{font-weight:800;font-size:13px;color:var(--gold)}
+/* 교과서에서 잘라 낸 실제 그림 */
+figure.cut{margin:10px 0 6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+figure.cut img{display:block;width:100%;height:auto;cursor:zoom-in}
 .blk-check{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 14px;margin:12px 0;font-size:14px}
 .blk-check .cw{font-weight:800;font-size:13px;color:var(--coral)}
 
