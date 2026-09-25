@@ -1,0 +1,861 @@
+<title>하울이 세계사 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+KR:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  :root{
+    --ground:#ECF0F4;
+    --surface:#FFFFFF;
+    --surface-2:#F4F7FA;
+    --ink:#15233A;
+    --muted:#5A6A80;
+    --line:#D8E0E9;
+    --teal:#0E6E7C;
+    --teal-soft:#DCEEF0;
+    --gold:#A47414;
+    --gold-soft:#F5EBD2;
+    --coral:#C8435A;
+    --coral-soft:#F8E1E5;
+    --now:#FFF6DB;
+    --shadow:0 1px 2px rgba(21,35,58,.05),0 8px 22px rgba(21,35,58,.07);
+    --radius:14px;
+    --maxw:900px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D141D; --surface:#151F2B; --surface-2:#1B2735;
+      --ink:#E3E9EF; --muted:#93A3B6; --line:#2A3848;
+      --teal:#4BB6C3; --teal-soft:#15313A;
+      --gold:#D9A840; --gold-soft:#332A15;
+      --coral:#E8707F; --coral-soft:#3A1E25;
+      --now:#2E2814;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+      --ground:#0D141D; --surface:#151F2B; --surface-2:#1B2735;
+      --ink:#E3E9EF; --muted:#93A3B6; --line:#2A3848;
+      --teal:#4BB6C3; --teal-soft:#15313A;
+      --gold:#D9A840; --gold-soft:#332A15;
+      --coral:#E8707F; --coral-soft:#3A1E25;
+      --now:#2E2814;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:18px}
+  .serif{font-family:"Noto Serif KR","Nanum Myeongjo",Georgia,serif}
+  .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+  /* nav */
+  nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+    background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(10px) saturate(1.3);
+    border-bottom:1px solid var(--line)}
+  nav.top .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:9px;scrollbar-width:none}
+  nav.top .wrap::-webkit-scrollbar{display:none}
+  nav.top a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-weight:700;font-size:13px;
+    padding:7px 12px;border-radius:999px;white-space:nowrap;border:1px solid transparent}
+  nav.top a:hover{color:var(--ink)}
+  nav.top a.active{color:var(--teal);background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 30%,transparent)}
+  nav.top a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+  /* hero */
+  header.hero{padding-block:38px 20px}
+  .eyebrow{font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-size:12px;margin:0 0 10px}
+  h1.title{font-family:"Noto Serif KR",Georgia,serif;font-weight:900;font-size:clamp(34px,8.5vw,56px);line-height:1.08;margin:0;letter-spacing:-.01em;text-wrap:balance}
+  h1.title em{font-style:normal;color:var(--teal)}
+  .lede{color:var(--muted);font-size:16.5px;margin:14px 0 0;max-width:58ch}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{font-weight:700;font-size:12.5px;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+  .chip b{color:var(--teal)}
+
+  /* sections */
+  section{padding-block:28px;scroll-margin-top:66px}
+  .sh{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:6px}
+  .sh .n{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;color:var(--teal)}
+  h2{font-family:"Noto Serif KR",Georgia,serif;font-weight:900;font-size:clamp(22px,5.4vw,30px);margin:0;letter-spacing:-.01em;text-wrap:balance}
+  .sub{color:var(--muted);font-size:14.5px;margin:10px 0 16px}
+  h3{font-family:"Noto Serif KR",Georgia,serif;font-weight:700;font-size:20px;margin:28px 0 10px;text-wrap:balance}
+  h4{font-weight:800;font-size:15px;margin:16px 0 6px;color:var(--teal)}
+  p{margin:9px 0}
+  ul{margin:8px 0;padding-left:20px}
+  li{margin:4px 0}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+  .note{border-left:4px solid var(--gold);background:var(--gold-soft);border-radius:0 12px 12px 0;padding:12px 15px;margin:14px 0;font-size:14.5px}
+  .key{border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:0 12px 12px 0;padding:12px 15px;margin:14px 0;font-size:14.5px}
+  .warn{border-left:4px solid var(--coral);background:var(--coral-soft);border-radius:0 12px 12px 0;padding:12px 15px;margin:14px 0;font-size:14.5px}
+  .grid{display:grid;gap:12px}
+  @media(min-width:680px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+  /* era strip */
+  .eras{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin:14px 0 6px}
+  .era{border-radius:12px;padding:11px 12px;background:var(--surface);border:1px solid var(--line);position:relative}
+  .era .y{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted);font-weight:700}
+  .era .t{font-family:"Noto Serif KR",serif;font-weight:700;font-size:15.5px;line-height:1.3;margin-top:3px}
+  .era .k{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
+  .era.now{background:var(--now);border:2px solid var(--gold)}
+  .era.now::after{content:"📍 지금 여기";position:absolute;top:-10px;right:8px;background:var(--gold);color:#fff;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px}
+
+  /* tables */
+  .tw{overflow-x:auto;margin:12px 0;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:800;font-size:12.5px;color:var(--muted);background:var(--surface-2);letter-spacing:.02em;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  td.era-name{font-family:"Noto Serif KR",serif;font-weight:700;white-space:nowrap}
+  td.yr{font-family:"JetBrains Mono",monospace;font-size:12.5px;white-space:nowrap;color:var(--muted)}
+  tr.now td{background:var(--now)}
+  tr.now td.era-name{color:var(--gold)}
+  .kr{color:var(--teal);font-weight:600}
+
+  /* vertical timeline */
+  .tl{list-style:none;padding:0;margin:12px 0;position:relative}
+  .tl::before{content:"";position:absolute;left:62px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .tl li{display:grid;grid-template-columns:52px 1fr;gap:22px;margin:0 0 10px;position:relative}
+  .tl li::before{content:"";position:absolute;left:57px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--teal)}
+  .tl li.hot::before{border-color:var(--coral);background:var(--coral)}
+  .tl .yy{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:13px;text-align:right;color:var(--teal);padding-top:2px}
+  .tl li.hot .yy{color:var(--coral)}
+  .tl .ev{font-size:14.5px}
+  .tl .ev small{display:block;color:var(--muted);font-size:12.5px}
+
+  /* page cards */
+  .lesson-h{display:flex;align-items:center;gap:10px;margin:26px 0 10px;flex-wrap:wrap}
+  .lesson-h .tag{font-weight:800;font-size:12px;letter-spacing:.06em;padding:4px 10px;border-radius:8px;background:var(--teal);color:#fff}
+  .lesson-h .tag.gold{background:var(--gold)}
+  .lesson-h .tag.coral{background:var(--coral)}
+  .lesson-h .tag.gray{background:var(--muted)}
+  .lesson-h h3{margin:0}
+  .pages{display:grid;gap:12px}
+  @media(min-width:760px){.pages{grid-template-columns:1fr 1fr}}
+  .pg{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .pg .ph{display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+  .pg .no{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:12px;background:var(--ink);color:var(--surface);padding:3px 8px;border-radius:6px;flex:0 0 auto}
+  .pg .bk{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);flex:0 0 auto}
+  .pg .pt{font-weight:800;font-size:14.5px;line-height:1.35}
+  .pg .pb{padding:10px 14px 13px;font-size:14px;flex:1}
+  .pg .sum{font-weight:600;margin:2px 0 6px}
+  .pg ul{margin:4px 0 8px;padding-left:18px}
+  .pg li{margin:3px 0}
+  .words{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .w{font-size:12px;border:1px solid color-mix(in srgb,var(--teal) 35%,transparent);background:var(--teal-soft);color:var(--ink);border-radius:7px;padding:2px 8px;line-height:1.5}
+  .w b{font-weight:700;color:var(--teal)}
+  .pg.blank .pb{color:var(--muted)}
+
+  /* vocab */
+  .vbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  .btn{font-family:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+  .btn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  table.vocab{min-width:560px}
+  table.vocab td.en{font-weight:700;color:var(--teal);white-space:nowrap}
+  table.vocab td.ko{font-weight:600}
+  table.vocab td.ex{color:var(--muted);font-size:13px}
+  .hide-ko table.vocab td.ko,.hide-ko table.vocab td.ex{filter:blur(6px);cursor:pointer;user-select:none;transition:filter .15s}
+  .hide-ko table.vocab td.ko.show,.hide-ko table.vocab td.ex.show{filter:none}
+  tr.grp td{background:var(--surface-2);font-weight:800;font-size:12.5px;color:var(--muted);letter-spacing:.04em}
+
+  /* Q&A */
+  .qa{border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:10px 0;overflow:hidden}
+  .qa .q{padding:11px 14px;background:var(--surface-2);font-weight:700;font-size:14.5px}
+  .qa .q .en{display:block;font-weight:500;font-size:13px;color:var(--muted);font-style:italic}
+  .qa .a{padding:10px 14px 12px;font-size:14px}
+  .qa .a b{color:var(--teal)}
+
+  /* figures (inline SVG diagrams) */
+  figure.fig{margin:18px 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 14px 12px;box-shadow:var(--shadow)}
+  figure.fig .ft{font-family:"Noto Serif KR",serif;font-weight:700;font-size:16px;margin:0 0 8px}
+  figure.fig svg{width:100%;height:auto;display:block}
+  figure.fig figcaption{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6}
+  .fig .land{fill:var(--surface-2);stroke:var(--line);stroke-width:2}
+  .fig .lt{fill:var(--muted);font-family:"Noto Sans KR",sans-serif;font-size:15px;font-weight:700}
+  .fig .tx{fill:var(--ink);font-family:"Noto Sans KR",sans-serif;font-size:14px;font-weight:700}
+  .fig .sm{fill:var(--muted);font-family:"Noto Sans KR",sans-serif;font-size:12.5px}
+  .fig .rt-pt{fill:none;stroke:var(--teal);stroke-width:4;stroke-linecap:round}
+  .fig .rt-sp{fill:none;stroke:var(--coral);stroke-width:4;stroke-linecap:round}
+  .fig .tor{stroke:var(--gold);stroke-width:2.5;stroke-dasharray:8 6}
+  .fig .tor-t{fill:var(--gold);font-family:"Noto Sans KR",sans-serif;font-size:13px;font-weight:800}
+  .fig .ah-pt{fill:var(--teal)} .fig .ah-sp{fill:var(--coral)} .fig .ah-in{fill:var(--ink)}
+  .fig .node{fill:var(--surface-2);stroke:var(--ink);stroke-width:2}
+  .fig .edge{fill:none;stroke:var(--ink);stroke-width:3}
+  .fig .edge-c{fill:none;stroke:var(--coral);stroke-width:3.5}
+  .fig .tc{fill:var(--coral);font-family:"Noto Sans KR",sans-serif;font-size:14px;font-weight:800}
+  .fig .l1{fill:color-mix(in srgb,var(--gold) 60%,var(--surface))}
+  .fig .l2{fill:color-mix(in srgb,var(--gold) 35%,var(--surface))}
+  .fig .l3{fill:color-mix(in srgb,var(--teal) 25%,var(--surface))}
+  .fig .l4{fill:color-mix(in srgb,var(--muted) 25%,var(--surface))}
+  .fig .lv{stroke:var(--surface);stroke-width:3}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;margin-top:8px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:22px;height:4px;border-radius:2px}
+
+  footer{border-top:1px solid var(--line);margin-top:20px;padding-block:22px 40px;color:var(--muted);font-size:13px}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+  @media print{
+    nav.top,.vbar{display:none}
+    body{background:#fff;color:#000;font-size:12px}
+    .card,.pg,.qa{box-shadow:none}
+    .pg{break-inside:avoid}
+    .hide-ko table.vocab td{filter:none!important}
+  }
+</style>
+
+<nav class="top"><div class="wrap">
+  <a href="#home">홈</a>
+  <a href="#bigpicture">큰 틀 (시대표)</a>
+  <a href="#ch17">Ch.17 한눈에</a>
+  <a href="#timeline">대항해 연표</a>
+  <a href="#textbook">교과서 페이지별</a>
+  <a href="#slides">수업 슬라이드별</a>
+  <a href="#vocab">영어 단어장</a>
+  <a href="#exam">시험 대비</a>
+  <a href="#howto">공부법</a>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero" id="home">
+  <p class="eyebrow">등대글로벌학교 · World History</p>
+  <h1 class="title">하울이<br><em>세계사 노트</em></h1>
+  <p class="lede">지금 배우는 <b>Chapter 17 · The Age of Exploration(대항해시대)</b>을 세계사 전체 흐름 속에서 보고, 교과서·수업 슬라이드를 페이지별로 요약하고, 영어 핵심 단어까지 한 번에 정리했어요.</p>
+  <div class="chips">
+    <span class="chip">📘 교과서 <b>Ch.17 · 24쪽</b> (p.381–404)</span>
+    <span class="chip">🖥️ 수업 슬라이드 <b>33장</b></span>
+    <span class="chip">🧭 시대 <b>1400–1800 (근세)</b></span>
+    <span class="chip">🔤 영어 단어 <b>70+</b></span>
+  </div>
+  <div class="key" style="margin-top:18px">
+    <b>이 노트 쓰는 순서</b> — ① <a href="#bigpicture">큰 틀 표</a>에서 "지금 어느 시대인지" 먼저 → ② <a href="#ch17">Ch.17 한눈에</a>로 단원 구조 파악 → ③ 수업 들은 날 <a href="#textbook">페이지별 요약</a> 복습 → ④ <a href="#vocab">단어장</a> "뜻 가리기"로 암기 → ⑤ 시험 전 <a href="#exam">시험 대비</a> 질문에 답해보기.
+  </div>
+</header>
+
+<!-- ============ 1. BIG PICTURE ============ -->
+<section id="bigpicture">
+  <div class="sh"><span class="n">01</span><h2>세계사 전체 큰 틀 — 시대순</h2></div>
+  <p class="sub">세계사는 크게 7개 시대로 나눠 보면 쉬워요. 하울이가 지금 배우는 <b>대항해시대(Ch.17)</b>는 5번째, <b>근세(Early Modern)</b>의 한가운데예요. 같은 시기 한국에서는 무슨 일이 있었는지도 같이 보면 기억이 훨씬 잘 돼요.</p>
+
+  <div class="eras" aria-label="세계사 시대 흐름">
+    <div class="era"><div class="y">~ BC 3000</div><div class="t">① 선사</div><div class="k">Prehistory · 농업혁명</div></div>
+    <div class="era"><div class="y">BC 3000–500</div><div class="t">② 고대 문명</div><div class="k">Ancient Civilizations</div></div>
+    <div class="era"><div class="y">BC 500–AD 500</div><div class="t">③ 고전 고대</div><div class="k">Classical · 그리스·로마·한</div></div>
+    <div class="era"><div class="y">500–1400</div><div class="t">④ 중세</div><div class="k">Middle Ages · 이슬람·몽골</div></div>
+    <div class="era now"><div class="y">1400–1800</div><div class="t">⑤ 근세</div><div class="k">Early Modern · 르네상스·<b>대항해</b></div></div>
+    <div class="era"><div class="y">1750–1914</div><div class="t">⑥ 근대</div><div class="k">Modern · 혁명·산업·제국주의</div></div>
+    <div class="era"><div class="y">1914–현재</div><div class="t">⑦ 현대</div><div class="k">Contemporary · 세계대전·세계화</div></div>
+  </div>
+
+  <h3>시대별 핵심 정리표</h3>
+  <div class="tw"><table>
+    <tr><th>시대</th><th>기간</th><th>세계의 큰 흐름 (특징)</th><th>대표 사건 · 키워드</th><th>🇰🇷 같은 시기 한국</th></tr>
+    <tr><td class="era-name">① 선사시대<br><small class="mono" style="color:var(--muted)">Prehistory</small></td><td class="yr">~ BC 3000</td><td>인류가 등장해 도구를 쓰고, 사냥·채집에서 <b>농사와 정착</b>으로 바뀜</td><td>구석기·신석기, <b>농업혁명</b>(Neolithic Revolution), 마을 형성</td><td class="kr">구석기·신석기 (빗살무늬토기)</td></tr>
+    <tr><td class="era-name">② 고대 문명<br><small class="mono" style="color:var(--muted)">Ancient Civ.</small></td><td class="yr">BC 3000 – 500</td><td>큰 강 주변에서 <b>문자·도시·국가</b>가 탄생</td><td>4대 문명: 메소포타미아·이집트·인더스·황하, 함무라비 법전, 피라미드</td><td class="kr">고조선 (BC 2333 건국 전승)</td></tr>
+    <tr><td class="era-name">③ 고전 고대<br><small class="mono" style="color:var(--muted)">Classical</small></td><td class="yr">BC 500 – AD 500</td><td>거대 제국과 <b>철학·종교</b>의 틀이 완성 (오늘날 사상의 뿌리)</td><td>그리스 민주정, 로마 제국, 페르시아, 인도 마우리아, 중국 진·한, 불교·기독교 확산, 실크로드</td><td class="kr">삼국(고구려·백제·신라) 성립</td></tr>
+    <tr><td class="era-name">④ 중세<br><small class="mono" style="color:var(--muted)">Middle Ages</small></td><td class="yr">500 – 1400</td><td>서유럽은 <b>봉건제·교회</b> 중심, 이슬람·중국·몽골이 세계 교류 주도</td><td>서로마 멸망(476), 비잔틴, 이슬람 제국, 십자군, 당·송, <b>몽골 제국</b>, 마르코 폴로, 흑사병</td><td class="kr">통일신라·발해 → 고려</td></tr>
+    <tr class="now"><td class="era-name">⑤ 근세 ⭐<br><small class="mono">Early Modern</small></td><td class="yr">1400 – 1800</td><td><b>유럽이 바다로 세계를 연결</b> — 최초의 '세계화'. 인간·과학 중심 사고, 절대왕정, 식민지·노예무역 시작</td><td>르네상스, 종교개혁, <b>대항해시대 (Ch.17)</b>, 콜럼버스(1492), 콜럼버스의 교환, 중상주의, 과학혁명, 명→청, 오스만·무굴</td><td class="kr">조선 (세종 1443 한글, 1592 임진왜란, 1636 병자호란)</td></tr>
+    <tr><td class="era-name">⑥ 근대<br><small class="mono" style="color:var(--muted)">Modern</small></td><td class="yr">1750 – 1914</td><td>시민이 주인이 되는 <b>혁명</b>, 기계로 만드는 <b>산업혁명</b>, 유럽이 세계를 지배하는 <b>제국주의</b></td><td>미국 독립(1776), 프랑스 혁명(1789), 산업혁명, 노예제 폐지, 라틴아메리카 독립, 민족주의</td><td class="kr">조선 후기 → 개항(1876) → 대한제국</td></tr>
+    <tr><td class="era-name">⑦ 현대<br><small class="mono" style="color:var(--muted)">Contemporary</small></td><td class="yr">1914 – 현재</td><td>두 번의 <b>세계대전</b>, 냉전, 식민지 독립, 디지털 <b>세계화</b></td><td>1·2차 세계대전, 냉전, UN, 탈식민, 인터넷·AI</td><td class="kr">일제강점기 → 광복(1945) → 대한민국</td></tr>
+  </table></div>
+
+  <div class="note"><b>한 줄로 외우기</b> — 정착(선사) → 문명(고대) → 제국·사상(고전) → 교회·이슬람·몽골(중세) → <b>바다로 세계 연결(근세·지금!)</b> → 혁명·산업(근대) → 세계대전·세계화(현대)</div>
+
+  <h3>왜 대항해시대가 중요할까?</h3>
+  <div class="grid g3">
+    <div class="card"><h4 style="margin-top:0">⬅ 앞 시대와 연결</h4><p style="margin:0;font-size:14px">중세 말 <b>몽골 제국</b> 덕에 동서 교류가 활발 → <b>마르코 폴로</b>가 동양을 소개. 그런데 <b>오스만 제국</b>이 육로를 막자 유럽은 <b>바닷길</b>을 찾기 시작!</p></div>
+    <div class="card"><h4 style="margin-top:0">⭐ 이 시대의 핵심</h4><p style="margin:0;font-size:14px">처음으로 <b>전 세계 대륙이 하나로 연결</b>됨. 사람·물건·생각·질병이 대륙을 오감(= 첫 번째 세계화).</p></div>
+    <div class="card"><h4 style="margin-top:0">➡ 다음 시대로</h4><p style="margin:0;font-size:14px">식민지에서 모은 부 → 유럽 <b>자본주의·산업혁명</b>의 밑거름. 식민지 차별 → 훗날 <b>라틴아메리카 독립 혁명</b>.</p></div>
+  </div>
+</section>
+
+<!-- ============ 2. CH17 OVERVIEW ============ -->
+<section id="ch17">
+  <div class="sh"><span class="n">02</span><h2>Chapter 17 한눈에</h2></div>
+  <p class="sub">단원의 핵심 질문(Essential Question): <b>"What are the effects of political and economic expansion?"</b> — 정치적·경제적 팽창은 어떤 결과를 가져왔을까?</p>
+
+  <div class="grid g3">
+    <div class="card">
+      <h4 style="margin-top:0">Lesson 1 · 17-1</h4>
+      <p style="margin:0 0 6px;font-weight:700">Exploration and Expansion<br><span style="font-weight:500;color:var(--muted)">탐험과 팽창</span></p>
+      <ul style="font-size:13.5px;margin:0">
+        <li>왜 떠났나? <b>God · Glory · Gold</b></li>
+        <li>어떻게? 카라벨·아스트롤라베·나침반</li>
+        <li>포르투갈(동쪽·아프리카 돌기) vs 스페인(서쪽·아메리카)</li>
+        <li>아즈텍·잉카 정복, 네·프·영의 경쟁</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">Lesson 2 · 17-2</h4>
+      <p style="margin:0 0 6px;font-weight:700">The First Global Economic Systems<br><span style="font-weight:500;color:var(--muted)">최초의 세계 경제 체제</span></p>
+      <ul style="font-size:13.5px;margin:0">
+        <li>상업혁명 · 주식회사 · <b>중상주의</b></li>
+        <li><b>콜럼버스의 교환</b> (작물·동물·질병)</li>
+        <li>네덜란드·영국의 아시아 진출</li>
+        <li><b>대서양 노예무역</b> · 삼각무역</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">Lesson 3 · 17-3</h4>
+      <p style="margin:0 0 6px;font-weight:700">Colonial Latin America<br><span style="font-weight:500;color:var(--muted)">식민지 라틴아메리카</span></p>
+      <ul style="font-size:13.5px;margin:0">
+        <li>신분제: 페닌술라르 > 크리오요 > 메스티소·물라토</li>
+        <li>경제: 금은 채굴, 대농장</li>
+        <li>노동: <b>엔코미엔다 · 미타</b></li>
+        <li>국가(부왕)와 가톨릭 교회</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>원인 → 사건 → 결과 한 장 정리</h3>
+  <div class="tw"><table style="min-width:560px">
+    <tr><th>원인 (Why)</th><th>사건 (What)</th><th>결과 (Effects)</th></tr>
+    <tr>
+      <td>• 향신료가 비쌈 (아랍 중개상)<br>• 오스만이 육로 차단<br>• 금·은 욕심<br>• 기독교 전파 열정<br>• 명예·모험심<br>• 새 항해 기술</td>
+      <td>• 포르투갈: 아프리카 돌아 인도 (디아스·다 가마)<br>• 스페인: 서쪽으로 아메리카 (콜럼버스·마젤란)<br>• 아즈텍(코르테스)·잉카(피사로) 정복<br>• 네덜란드·영국·프랑스 경쟁</td>
+      <td>• 👍 세계 무역망·새 작물 → 인구 증가<br>• 👎 원주민 인구 90%+ 감소 (천연두)<br>• 👎 노예 약 1,000만 명 강제 이동<br>• 유럽 부 축적 → 자본주의<br>• 라틴아메리카 혼혈 사회·가톨릭 문화<br>• 환경 파괴 시작</td>
+    </tr>
+  </table></div>
+</section>
+
+<!-- ============ 3. TIMELINE ============ -->
+<section id="timeline">
+  <div class="sh"><span class="n">03</span><h2>대항해시대 연표 (Ch.17 확대판)</h2></div>
+  <p class="sub">위 큰 틀 표의 ⑤번 시대를 확대한 연표예요. <span style="color:var(--coral);font-weight:700">빨간 점</span>은 시험에 꼭 나오는 연도!</p>
+  <ul class="tl">
+    <li><span class="yy">1271</span><span class="ev">마르코 폴로, 원나라 쿠빌라이 칸에게 감 → 『동방견문록(The Travels)』<small>유럽인이 '신비한 동양'을 꿈꾸게 됨</small></span></li>
+    <li><span class="yy">1405</span><span class="ev">명나라 정화(Zheng He)의 대원정 시작 (~1433)<small>콜럼버스보다 먼저 거대 함대로 아프리카까지 — 하지만 무역보다 '중국의 위신'이 목적</small></span></li>
+    <li><span class="yy">1420</span><span class="ev">포르투갈 <b>엔히크 왕자(Prince Henry the Navigator)</b> 후원으로 아프리카 서해안 탐험<small>'Gold Coast(황금 해안)'에서 금 발견</small></span></li>
+    <li class="hot"><span class="yy">1488</span><span class="ev"><b>바르톨로메우 디아스</b>, 아프리카 남쪽 끝 도달 → 희망봉(Cape of Good Hope)</span></li>
+    <li class="hot"><span class="yy">1492</span><span class="ev"><b>콜럼버스</b>, 스페인 이사벨라 여왕 후원으로 아메리카 도착 (쿠바·히스파니올라)<small>죽을 때까지 아시아(인도)라고 믿음 → 그래서 원주민을 'Indians'라 부름</small></span></li>
+    <li class="hot"><span class="yy">1494</span><span class="ev"><b>토르데시야스 조약</b> — 선 동쪽=포르투갈, 서쪽=스페인으로 세계를 나눔</span></li>
+    <li class="hot"><span class="yy">1498</span><span class="ev"><b>바스쿠 다 가마</b>, 아프리카 돌아 인도 캘리컷 도착 → 향신료로 큰 이익</span></li>
+    <li><span class="yy">1500</span><span class="ev">카브랄, 브라질 도착 → 포르투갈령 브라질</span></li>
+    <li><span class="yy">1507</span><span class="ev">독일 지도제작자가 <b>'America'</b> 이름 처음 사용 (아메리고 베스푸치에서)</span></li>
+    <li><span class="yy">1511</span><span class="ev">알부케르크, 멜라카 점령 → 아랍의 향신료 무역 장악 무너뜨림</span></li>
+    <li><span class="yy">1518</span><span class="ev">첫 노예선, 아프리카 → 아메리카 직항</span></li>
+    <li class="hot"><span class="yy">1519</span><span class="ev"><b>코르테스</b>, 멕시코 상륙 → 1521 아즈텍 정복 / <b>마젤란</b> 세계일주 출발 (1519–1522)</span></li>
+    <li class="hot"><span class="yy">1531</span><span class="ev"><b>피사로</b>, 잉카 정복 시작 → 1535 리마 건설</span></li>
+    <li><span class="yy">1535</span><span class="ev">첫 부왕령 누에바에스파냐(멕시코) 설치 / 1543 페루 부왕령</span></li>
+    <li><span class="yy">1595</span><span class="ev">네덜란드 함대, 인도 도착 → 1602 네덜란드 동인도회사(VOC) → 17세기 '네덜란드 황금기'</span></li>
+    <li><span class="yy">1607</span><span class="ev">영국, 버지니아 제임스타운 (담배로 성공)</span></li>
+    <li><span class="yy">1608</span><span class="ev">프랑스 샹플랭, <b>퀘벡</b> 건설 (뉴프랑스·캐나다)</span></li>
+    <li><span class="yy">1637</span><span class="ev">네덜란드 <b>튤립 버블(Tulip Mania)</b> 붕괴 — 최초의 투기 거품</span></li>
+    <li><span class="yy">1644</span><span class="ev">중국 명 → 청 (아메리카 작물로 청나라 인구 폭발)</span></li>
+    <li><span class="yy">1664</span><span class="ev">영국이 네덜란드 '뉴암스테르담'을 빼앗아 <b>뉴욕</b>으로 개명</span></li>
+    <li><span class="yy">1756</span><span class="ev">7년 전쟁 → 영국이 프랑스를 인도에서 몰아냄</span></li>
+    <li class="hot"><span class="yy">1804</span><span class="ev"><b>아이티 혁명</b> — 노예 반란으로 독립, 노예제 최초 폐지 국가</span></li>
+    <li class="hot"><span class="yy">1807</span><span class="ev">영국 노예무역 폐지(윌버포스) → 1833 영국 노예제 폐지</span></li>
+    <li><span class="yy">1861</span><span class="ev">미국 남북전쟁 (~1865, 링컨) → 미국 노예제 폐지</span></li>
+    <li><span class="yy">1869</span><span class="ev">수에즈 운하 / 1914 파나마 운하 — '더 빠른 바닷길' 욕구의 결과</span></li>
+  </ul>
+</section>
+
+<!-- ============ 4. TEXTBOOK PAGE BY PAGE ============ -->
+<section id="textbook">
+  <div class="sh"><span class="n">04</span><h2>교과서 페이지별 분석</h2></div>
+  <p class="sub"><b>European Exploration and Expansion</b> (교과서 p.381–404, PDF 1–24쪽). 각 카드: <b>한 줄 요약 → 핵심 내용 → 🔤 영어 단어</b>. 왼쪽 검은 번호 = PDF 쪽, 오른쪽 = 교과서 쪽.</p>
+
+  <div class="lesson-h"><span class="tag gray">INTRO</span><h3>단원 도입</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">P1</span><span class="pt">단원 표지 — 'America'라는 이름의 탄생</span><span class="bk">p.381</span></div><div class="pb">
+      <p class="sum">대항해시대 유럽인들은 부·땅·기독교 개종자를 찾아 떠났고, 최초의 세계 무역 제국을 세웠다.</p>
+      <ul><li>이탈리아 항해가 <b>아메리고 베스푸치</b> → 1507년 독일 지도제작자가 새 땅을 'America'라 명명</li><li>단원 핵심 질문: 정치·경제적 팽창의 결과는?</li></ul>
+      <div class="words"><span class="w"><b>voyage</b> 항해</span><span class="w"><b>converts</b> 개종자</span><span class="w"><b>navigator</b> 항해가</span><span class="w"><b>Western Hemisphere</b> 서반구</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P2</span><span class="pt">Step Into the Place — 탐험가의 동기 (1차 사료)</span><span class="bk">p.382</span></div><div class="pb">
+      <p class="sum">두 사료로 탐험 동기를 비교: 다 가마(무역·기독교)와 코르테스(종교 강요).</p>
+      <ul><li>다 가마: "금은이 아니라 (향신료·기독교를) 찾아왔다"</li><li>코르테스 ↔ 몬테수마: "너희 신은 악마" vs "우리 신은 비와 풍요를 준다" — <b>문화 충돌</b></li></ul>
+      <div class="words"><span class="w"><b>motivation</b> 동기</span><span class="w"><b>idol</b> 우상</span><span class="w"><b>worship</b> 숭배하다</span><span class="w"><b>sacrifice</b> 제물</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P3</span><span class="pt">세계 탐험 항로 지도 + 연표</span><span class="bk">p.383</span></div><div class="pb">
+      <p class="sum">나라별 항로를 색으로 구분한 지도 — 누가 어디로 갔는지 한눈에.</p>
+      <ul><li>🇵🇹 디아스(1487-88)·다 가마(1497-98)·카브랄(1500) / 🇪🇸 콜럼버스(1492)·코르테스(1519)·마젤란(1519-22)</li><li>🇬🇧 카보트·드레이크·허드슨 / 🇫🇷 베라차노·카르티에 / 🇳🇱 바렌츠</li><li>같은 시기 아시아: 1612 일본 쇄국, 1632 타지마할, 1644 명→청</li></ul>
+      <div class="words"><span class="w"><b>route</b> 항로</span><span class="w"><b>Strait</b> 해협</span><span class="w"><b>dynasty</b> 왕조</span></div>
+    </div></div>
+  </div>
+
+  <div class="lesson-h"><span class="tag">LESSON 1</span><h3>Exploration and Expansion · 탐험과 팽창</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">P4</span><span class="pt">왜 떠났을까? — 탐험의 동기</span><span class="bk">p.384</span></div><div class="pb">
+      <p class="sum">1500–1800년, 포르투갈·스페인 → 네덜란드·영국·프랑스 순으로 바다에 나섬.</p>
+      <ul><li><b>마르코 폴로</b>의 책 → 동양에 대한 환상</li><li><b>오스만 튀르크</b>가 육로 차단 → "바다로 가자!"</li><li><b>경제적 동기</b>: 향신료(음식 보존·맛)는 아랍 중개상 때문에 너무 비쌈 + 귀금속</li></ul>
+      <div class="words"><span class="w"><b>ambition</b> 야망</span><span class="w"><b>zeal</b> 열정</span><span class="w"><b>spices</b> 향신료</span><span class="w"><b>middlemen</b> 중개상</span><span class="w"><b>precious metals</b> 귀금속</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P5</span><span class="pt">Gold · Glory · God + 항해 기술 + 포르투갈 출발</span><span class="bk">p.385</span></div><div class="pb">
+      <p class="sum">"금·영광·신" 3대 동기와, 먼 바다를 가능하게 한 새 기술.</p>
+      <ul><li><b>카라벨(caravel)</b>: 빠르고 작고, 삼각돛(lateen)으로 <b>바람을 거슬러</b> 항해</li><li><b>아스트롤라베</b>(위도 측정, 그리스) · <b>나침반</b>(중국) · 지도 제작술</li><li>무역풍·편서풍·해류 순환(gyre) 이용</li><li>1420 엔히크 왕자 → 서아프리카 'Gold Coast', 1488 디아스 희망봉</li></ul>
+      <div class="words"><span class="w"><b>caravel</b> 카라벨선</span><span class="w"><b>cartography</b> 지도 제작술</span><span class="w"><b>astrolabe</b> 아스트롤라베</span><span class="w"><b>latitude</b> 위도</span><span class="w"><b>trade winds</b> 무역풍</span><span class="w"><b>secular</b> 세속적</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P6</span><span class="pt">포르투갈의 향신료 제국 · 콜럼버스 · 마젤란 · 토르데시야스</span><span class="bk">p.386</span></div><div class="pb">
+      <p class="sum">포르투갈은 '무역 거점', 스페인은 '서쪽 항로'로 경쟁 → 조약으로 세계를 나눔.</p>
+      <ul><li>다 가마 1498 캘리컷 → 알부케르크가 고아·<b>멜라카</b> 점령 → 아랍 독점 붕괴, 몰루카(향료제도)</li><li>포르투갈 = 해안의 <b>trading posts</b>만 (식민지로 만들 힘은 없음)</li><li>콜럼버스 1492 → 4번 항해, 끝까지 아시아라 믿음</li><li>마젤란 1519 출발 → 마젤란 해협 → 필리핀에서 사망, 세계일주 완성</li><li><b>1494 토르데시야스 조약</b>: 동=포르투갈, 서=스페인</li></ul>
+      <div class="words"><span class="w"><b>trading post</b> 무역 거점</span><span class="w"><b>circumference</b> 둘레</span><span class="w"><b>finance</b> 자금을 대다</span><span class="w"><b>expedition</b> 원정</span><span class="w"><b>treaty</b> 조약</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P7</span><span class="pt">다른 나라들의 참여 + 아즈텍 정복 (1)</span><span class="bk">p.387</span></div><div class="pb">
+      <p class="sum">스페인 정복자(콘키스타도르) 코르테스가 소수의 병력으로 아즈텍 수도에 들어감.</p>
+      <ul><li>카보트(영국, 1497) · 카브랄(브라질, 1500) · 베스푸치 → 'America'</li><li>1519 코르테스: 병사 550명·말 16필·통역 2명</li><li>아즈텍에 불만 있던 도시국가 <b>틀락스칼라</b>와 동맹</li><li>말·총·대포·강철검에 아즈텍인들이 놀람 / 1520 봉기로 스페인 쫓겨남</li></ul>
+      <div class="words"><span class="w"><b>conquistador</b> 정복자</span><span class="w"><b>alliance</b> 동맹</span><span class="w"><b>firearms</b> 화기</span><span class="w"><b>oppressive</b> 억압적인</span><span class="w"><b>hostage</b> 인질</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P8</span><span class="pt">아즈텍 멸망 · 잉카 정복 · 네덜란드</span><span class="bk">p.388</span></div><div class="pb">
+      <p class="sum">승부를 가른 건 무기보다 <b>천연두</b>였다. 잉카도 같은 패턴으로 무너짐.</p>
+      <ul><li>면역 없는 아즈텍인이 <b>천연두</b>로 대량 사망 → 4개월 뒤 항복, 테노치티틀란 파괴</li><li>1531 <b>피사로</b>(180명) → 천연두로 황제 사망 → 왕자들 <b>내전</b> → 아타우알파 처형 → 1535 리마</li><li>네덜란드 서인도회사 → 뉴네덜란드(모피 무역) → 1664 영국이 빼앗아 <b>뉴욕</b></li></ul>
+      <div class="words"><span class="w"><b>immunity</b> 면역</span><span class="w"><b>smallpox</b> 천연두</span><span class="w"><b>colony</b> 식민지</span><span class="w"><b>civil war</b> 내전</span><span class="w"><b>surrender</b> 항복하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P9</span><span class="pt">프랑스·영국의 북미 식민지 + Lesson 1 복습</span><span class="bk">p.389</span></div><div class="pb">
+      <p class="sum">프랑스는 캐나다, 영국은 북미 동부 해안을 차지.</p>
+      <ul><li>🇫🇷 1608 샹플랭 <b>퀘벡</b> (뉴프랑스), 루이지애나</li><li>🇬🇧 버지니아·매사추세츠만 → 17세기 말 동부 해안 장악, 카리브 설탕 농장</li><li>그래도 당시엔 스페인의 라틴아메리카가 훨씬 중요</li></ul>
+      <div class="words"><span class="w"><b>settlement</b> 정착지</span><span class="w"><b>eastern seaboard</b> 동부 해안</span><span class="w"><b>fur trade</b> 모피 무역</span></div>
+    </div></div>
+  </div>
+
+  <figure class="fig">
+    <p class="ft">🗺️ 그림으로 보기 — 포르투갈은 동쪽, 스페인은 서쪽</p>
+    <svg viewBox="0 0 720 360" role="img" aria-label="포르투갈은 아프리카를 돌아 인도로, 스페인은 대서양을 건너 아메리카로 간 항로와 토르데시야스 선을 보여주는 개념도">
+      <defs>
+        <marker id="apt" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="ah-pt" d="M0 0L10 5L0 10z"/></marker>
+        <marker id="asp" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="ah-sp" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <rect class="land" x="40" y="40" width="160" height="280" rx="60"/>
+      <text class="lt" x="120" y="190" text-anchor="middle">아메리카</text>
+      <rect class="land" x="330" y="45" width="110" height="70" rx="24"/>
+      <text class="lt" x="385" y="86" text-anchor="middle">유럽</text>
+      <rect class="land" x="335" y="130" width="110" height="170" rx="40"/>
+      <text class="lt" x="390" y="220" text-anchor="middle">아프리카</text>
+      <rect class="land" x="540" y="45" width="160" height="160" rx="40"/>
+      <text class="lt" x="620" y="130" text-anchor="middle">아시아·인도</text>
+      <line class="tor" x1="265" y1="42" x2="265" y2="328"/>
+      <text class="tor-t" x="265" y="352" text-anchor="middle" dy="-2">토르데시야스 선 (1494)</text>
+      <text class="sm" x="255" y="34" text-anchor="end">← 스페인 몫</text>
+      <text class="sm" x="275" y="34">포르투갈 몫 →</text>
+      <path class="rt-pt" d="M345 105 C300 190 315 305 395 322 C470 336 530 260 568 200" marker-end="url(#apt)"/>
+      <text class="sm" x="410" y="342">희망봉</text>
+      <path class="rt-sp" d="M335 90 C290 88 245 120 205 160" marker-end="url(#asp)"/>
+    </svg>
+    <div class="legend"><span><i style="background:var(--teal)"></i><b>포르투갈</b> — 아프리카를 돌아 인도로 (디아스 1488 · 다 가마 1498)</span><span><i style="background:var(--coral)"></i><b>스페인</b> — 서쪽 대서양을 건너 아메리카로 (콜럼버스 1492)</span></div>
+    <figcaption>실제 지도가 아니라 방향을 보여주는 개념도예요. 토르데시야스 선 덕분에 포르투갈은 브라질(선 동쪽에 걸친 부분)을 갖게 됐어요 — 그래서 브라질만 포르투갈어를 써요!</figcaption>
+  </figure>
+
+  <div class="lesson-h"><span class="tag gold">LESSON 2</span><h3>The First Global Economic Systems · 최초의 세계 경제</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">P10</span><span class="pt">상업혁명 (Commercial Revolution)</span><span class="bk">p.390</span></div><div class="pb">
+      <p class="sum">탐험 → 식민지 → 무역 확대 → 유럽 경제가 폭발적으로 성장 = 상업혁명.</p>
+      <ul><li>이탈리아·오스만이 무역로 장악 → 다른 나라들은 새 길이 필요</li><li>300년 탐험이 <b>세계 경제</b>를 새로 짬</li><li>돈이 넘쳐 새 금융 등장: 은행·회계·보험·<b>주식회사</b></li></ul>
+      <div class="words"><span class="w"><b>Commercial Revolution</b> 상업혁명</span><span class="w"><b>plantation</b> 대농장</span><span class="w"><b>exploit</b> 착취하다</span><span class="w"><b>insurance</b> 보험</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P11</span><span class="pt">주식회사 · 중상주의</span><span class="bk">p.391</span></div><div class="pb">
+      <p class="sum">나라의 부 = 금·은의 양 → "수출은 늘리고 수입은 줄여라!"</p>
+      <ul><li><b>주식회사(joint-stock company)</b>: 여러 주주가 돈을 모아 위험한 항해에 투자, 이익을 나눔</li><li><b>중상주의(mercantilism)</b>: 금은(bullion) 확보가 목표 → ① 식민지에서 캐오기 ② <b>무역흑자</b></li><li>정부 정책: 보조금(subsidies), 관세(tariffs), 도로·운하</li><li>식민지 = 원료 공급지 + 상품 판매 시장</li></ul>
+      <div class="words"><span class="w"><b>joint-stock company</b> 주식회사</span><span class="w"><b>mercantilism</b> 중상주의</span><span class="w"><b>bullion</b> 금은괴</span><span class="w"><b>balance of trade</b> 무역수지</span><span class="w"><b>tariff</b> 관세</span><span class="w"><b>subsidy</b> 보조금</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P12</span><span class="pt">콜럼버스의 교환 (Columbian Exchange)</span><span class="bk">p.392</span></div><div class="pb">
+      <p class="sum">두 세계 사이에 작물·동물·질병이 오감 — 좋은 결과와 끔찍한 결과가 동시에.</p>
+      <ul><li>🌎→🌍 신대륙→구대륙: <b>감자·옥수수·토마토·코코아·담배</b></li><li>🌍→🌎 구대륙→신대륙: <b>밀·감귤·꿀벌·말·소</b></li><li>감자 → 유럽 인구 증가 / 옥수수·고구마 → <b>청나라 인구 폭발</b></li><li>말 → 북미 원주민의 들소 사냥 방식 변화</li><li>☠ 히스파니올라 25만(1492) → 500명(1538) / 멕시코 2,500만 → 100만</li></ul>
+      <div class="words"><span class="w"><b>Columbian Exchange</b> 콜럼버스의 교환</span><span class="w"><b>livestock</b> 가축</span><span class="w"><b>staple</b> 주식(主食)</span><span class="w"><b>measles</b> 홍역</span><span class="w"><b>epidemic</b> 전염병</span><span class="w"><b>ravage</b> 황폐화하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P13</span><span class="pt">아시아의 경쟁자들 + 노예무역의 시작</span><span class="bk">p.393</span></div><div class="pb">
+      <p class="sum">네덜란드가 향신료 무역을 빼앗고, 영국이 인도를 차지. 사탕수수 농장이 노예 수요를 폭증시킴.</p>
+      <ul><li>1595 네덜란드 → 동인도회사 → 포르투갈 축출 → <b>네덜란드 황금기</b></li><li>영국: 인도 면직물 ↔ 동인도 향신료 / 7년 전쟁으로 프랑스 축출 → 인도 장악</li><li>원주민이 질병으로 죽자 → <b>아프리카인 노예화</b> (1518 첫 직송)</li><li><b>삼각무역</b>: 유럽(총·천) → 아프리카(노예) → 아메리카(설탕·담배·면화) → 유럽</li></ul>
+      <div class="words"><span class="w"><b>triangular trade</b> 삼각무역</span><span class="w"><b>enslaved</b> 노예가 된</span><span class="w"><b>labor intensive</b> 노동집약적</span><span class="w"><b>molasses</b> 당밀</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P14</span><span class="pt">중간항로 · 노예의 출처 · 아프리카에 미친 영향</span><span class="bk">p.394</span></div><div class="pb">
+      <p class="sum">약 1,000만 명이 끔찍한 '중간항로'로 끌려왔고, 아프리카 사회는 무너져 갔다.</p>
+      <ul><li><b>Middle Passage</b> = 아프리카→아메리카 강제 항해, 많은 사람이 도중에 사망</li><li>원래 노예는 전쟁포로 → 수요 폭증으로 내륙까지 사냥</li><li>콩고 왕 아폰소의 편지(1526): "나라가 텅 비어 간다"</li><li>젊은 인구 손실, 총기 유입으로 <b>전쟁 증가</b></li></ul>
+      <div class="words"><span class="w"><b>Middle Passage</b> 중간항로</span><span class="w"><b>depopulate</b> 인구를 줄이다</span><span class="w"><b>raid</b> 습격</span><span class="w"><b>prisoner of war</b> 전쟁포로</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P15</span><span class="pt">노예무역 지도 · 베냉의 몰락 · 노예제 폐지</span><span class="bk">p.395</span></div><div class="pb">
+      <p class="sum">화려했던 베냉 왕국도 노예무역으로 몰락. 폐지까지는 수백 년이 걸림.</p>
+      <ul><li>서아프리카 '노예 해안'이 최대 공급지</li><li>폐지 순서: 1770s 퀘이커 반대 → 1790s 프랑스 → <b>1807 영국 노예무역 폐지 → 1833 노예제 폐지</b> → 1860s 미국 남북전쟁</li></ul>
+      <div class="words"><span class="w"><b>abolish</b> 폐지하다</span><span class="w"><b>condemn</b> 비난하다</span><span class="w"><b>inferior</b> 열등한</span><span class="w"><b>culture</b> 문화</span></div>
+    </div></div>
+  </div>
+
+  <figure class="fig">
+    <p class="ft">🔺 그림으로 보기 — 삼각무역 (Triangular Trade)</p>
+    <svg viewBox="0 0 720 380" role="img" aria-label="유럽에서 아프리카로 공산품, 아프리카에서 아메리카로 노예(중간항로), 아메리카에서 유럽으로 설탕·담배·면화가 이동하는 삼각무역 도표">
+      <defs>
+        <marker id="ain" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="ah-in" d="M0 0L10 5L0 10z"/></marker>
+        <marker id="aco" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="ah-sp" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <path class="edge" d="M540 122 L553 250" marker-end="url(#ain)"/>
+      <path class="edge-c" d="M492 312 L208 232" marker-end="url(#aco)"/>
+      <path class="edge" d="M198 160 L470 88" marker-end="url(#ain)"/>
+      <circle class="node" cx="520" cy="72" r="50"/><text class="tx" x="520" y="77" text-anchor="middle">유럽</text>
+      <circle class="node" cx="545" cy="305" r="50"/><text class="tx" x="545" y="310" text-anchor="middle">아프리카</text>
+      <circle class="node" cx="150" cy="200" r="55"/><text class="tx" x="150" y="205" text-anchor="middle">아메리카</text>
+      <text class="tx" x="572" y="182">① 총·천·술</text>
+      <text class="sm" x="572" y="202">(유럽 공산품)</text>
+      <text class="tc" x="360" y="312" text-anchor="middle">② 노예 — 중간항로</text>
+      <text class="sm" x="360" y="332" text-anchor="middle">(Middle Passage · 약 1,000만 명)</text>
+      <text class="tx" x="280" y="78" text-anchor="middle">③ 설탕·담배·면화·당밀</text>
+      <text class="sm" x="280" y="97" text-anchor="middle">(농장 작물 → 유럽)</text>
+    </svg>
+    <figcaption>배는 한 번 출발하면 세 구간 모두에서 돈을 벌었어요. 그 한가운데인 ②번 구간이 가장 비극적인 <b>중간항로</b>예요. 원주민이 질병으로 줄자 농장 일손을 채우려고 아프리카인을 강제로 데려온 거예요.</figcaption>
+  </figure>
+
+  <div class="lesson-h"><span class="tag coral">LESSON 3</span><h3>Colonial Latin America · 식민지 라틴아메리카</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">P16</span><span class="pt">라틴아메리카의 탄생 · 신분 피라미드 (1)</span><span class="bk">p.396</span></div><div class="pb">
+      <p class="sum">스페인·포르투갈이 300년간 지배하며 새로운 문명 '라틴아메리카'가 생김.</p>
+      <ul><li>이름 유래: 스페인어·포르투갈어 = <b>라틴어</b>에서 나온 말</li><li>스페인 = 남미 대부분 / 포르투갈 = 브라질</li><li>최상층 <b>페닌술라르</b>: 이베리아 반도(유럽)에서 온 관리 → 요직 독점</li></ul>
+      <div class="words"><span class="w"><b>peninsulare</b> 페닌술라르</span><span class="w"><b>Iberian Peninsula</b> 이베리아 반도</span><span class="w"><b>status</b> 신분</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P17</span><span class="pt">신분 피라미드 (2) — 크리오요·메스티소·물라토</span><span class="bk">p.397</span></div><div class="pb">
+      <p class="sum">태어난 곳과 피부색(혈통)이 신분을 결정한 다인종 사회.</p>
+      <ul><li><b>크리오요</b>: 현지 태생 유럽인 → 페닌술라르에 불만 (→ 훗날 독립운동 주도!)</li><li><b>메스티소</b>: 유럽인+원주민 / <b>물라토</b>: 유럽인+아프리카인</li><li>300년간 아프리카인 약 800만 명 유입</li><li>최하층: 아프리카인·정복된 원주민</li></ul>
+      <div class="words"><span class="w"><b>creole</b> 크리오요</span><span class="w"><b>mestizo</b> 메스티소</span><span class="w"><b>mulatto</b> 물라토</span><span class="w"><b>descent</b> 혈통</span><span class="w"><b>resent</b> 분개하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P18</span><span class="pt">경제 기반 — 금은 채굴 · 엔코미엔다 · 미타</span><span class="bk">p.398</span></div><div class="pb">
+      <p class="sum">원주민 강제노동으로 금은을 캐고 농장을 운영 → 원주민 급감 → 아프리카 노예 증가.</p>
+      <ul><li><b>자원 채취</b>(금·은) → 스페인의 전쟁 자금</li><li>대농장 → 삼림파괴·과방목 등 <b>환경 파괴</b></li><li><b>엔코미엔다</b>: 원주민에게 세금+노동 강요 (대가로 보호·가톨릭 교육 — 실제론 학대)</li><li><b>미타</b>: 페루 은광에 원주민 강제 징발</li><li><b>라스 카사스</b> 신부가 스페인의 잔혹함 고발</li></ul>
+      <div class="words"><span class="w"><b>encomienda</b> 엔코미엔다</span><span class="w"><b>mita</b> 미타</span><span class="w"><b>resource extraction</b> 자원 채취</span><span class="w"><b>deforestation</b> 삼림파괴</span><span class="w"><b>draft</b> 징발하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P19</span><span class="pt">국가와 교회 — 부왕 · 선교 · 후아나 수녀</span><span class="bk">p.399</span></div><div class="pb">
+      <p class="sum">멀어서 왕이 직접 못 다스림 → '부왕'이 대신 통치, 가톨릭 교회가 사회·문화를 장악.</p>
+      <ul><li><b>부왕(viceroy)</b>: 왕의 대리인 — 1535 누에바에스파냐(멕시코), 1543 페루</li><li>도미니코·프란치스코·<b>예수회</b> 선교사 → <b>선교촌(missions)</b>에서 개종·기술 교육</li><li>성당·병원·학교 설립</li><li><b>후아나 이네스 데 라 크루스</b>(1651-1695): 멕시코 수녀 시인, 여성 교육 주장</li></ul>
+      <div class="words"><span class="w"><b>viceroy</b> 부왕</span><span class="w"><b>missionary</b> 선교사</span><span class="w"><b>mission</b> 선교 기지</span><span class="w"><b>bureaucracy</b> 관료제</span><span class="w"><b>convent</b> 수녀원</span></div>
+    </div></div>
+  </div>
+
+  <figure class="fig">
+    <p class="ft">🔻 그림으로 보기 — 식민지 라틴아메리카 신분 피라미드</p>
+    <svg viewBox="0 0 600 360" role="img" aria-label="위에서부터 페닌술라르, 크리오요, 메스티소와 물라토, 원주민과 아프리카인 순서의 신분 피라미드">
+      <polygon class="l1 lv" points="270,20 330,20 392,100 208,100"/>
+      <polygon class="l2 lv" points="208,100 392,100 455,180 145,180"/>
+      <polygon class="l3 lv" points="145,180 455,180 517,260 83,260"/>
+      <polygon class="l4 lv" points="83,260 517,260 580,340 20,340"/>
+      <text class="tx" x="300" y="68" text-anchor="middle">① 페닌술라르</text>
+      <text class="tx" x="300" y="138" text-anchor="middle">② 크리오요</text>
+      <text class="sm" x="300" y="158" text-anchor="middle">현지에서 태어난 유럽인 후손</text>
+      <text class="tx" x="300" y="218" text-anchor="middle">③ 메스티소 · 물라토</text>
+      <text class="sm" x="300" y="238" text-anchor="middle">유럽+원주민 / 유럽+아프리카 혼혈</text>
+      <text class="tx" x="300" y="298" text-anchor="middle">④ 원주민 · 아프리카인</text>
+      <text class="sm" x="300" y="318" text-anchor="middle">강제노동(엔코미엔다·미타)·노예</text>
+    </svg>
+    <figcaption>① 페닌술라르 = 유럽(이베리아 반도)에서 온 관리로, 높은 관직을 모두 차지했어요. 신분을 정한 기준은 <b>어디서 태어났나 + 어떤 혈통인가</b> 두 가지예요. ② 크리오요는 ①에 불만이 컸고, 훗날 <b>라틴아메리카 독립운동</b>을 이끌어요(다음 시대와 연결되는 포인트!).</figcaption>
+  </figure>
+
+  <div class="lesson-h"><span class="tag gray">DBQ · REVIEW</span><h3>사료 분석 · 요약 · 평가</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">P20</span><span class="pt">DBQ — 멕시코 정복, 스페인의 시선</span><span class="bk">p.400</span></div><div class="pb">
+      <p class="sum">같은 사건을 <b>양쪽 시점</b>에서 보기: 스페인 병사 베르날 디아스의 기록.</p>
+      <ul><li>원주민 군대는 수가 훨씬 많았지만 스페인은 머스킷·석궁·대포·기병으로 우위</li><li>1962 『The Broken Spears』 → 아즈텍 측 기록도 공개됨</li><li>👉 역사는 <b>누가 썼는지</b>에 따라 달라진다!</li></ul>
+      <div class="words"><span class="w"><b>eyewitness</b> 목격자</span><span class="w"><b>account</b> 기록·설명</span><span class="w"><b>chronology</b> 연대기</span><span class="w"><b>musket</b> 머스킷총</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P21</span><span class="pt">DBQ — 아즈텍의 시선: "집채만 한 사슴"</span><span class="bk">p.401</span></div><div class="pb">
+      <p class="sum">아즈텍 사자들이 처음 본 대포·철갑옷·말을 두려움 속에 묘사.</p>
+      <ul><li>대포 = "불을 뿜는 돌공", 철 갑옷·철 무기</li><li>"지붕만큼 큰 사슴" = <b>말</b>(처음 봐서 아는 동물로 표현)</li><li>몬테수마가 공포에 빠짐 → 심리적 충격도 정복의 요인</li></ul>
+      <div class="words"><span class="w"><b>intimidated</b> 겁먹은</span><span class="w"><b>resound</b> 울려 퍼지다</span><span class="w"><b>misidentify</b> 잘못 알아보다</span><span class="w"><b>prevail</b> 이기다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P22</span><span class="pt">STUDY GUIDE — 단원 요약 한 장</span><span class="bk">p.402</span></div><div class="pb">
+      <p class="sum">⭐ 시험 직전 이 페이지만 다시 봐도 핵심 정리 완료!</p>
+      <ul><li>L1: 디아스(1488 희망봉)·다 가마(1498 캘리컷)·알부케르크(멜라카) / 콜럼버스(1492)·마젤란</li><li>L2: 중상주의 → 상업혁명 / 콜럼버스의 교환</li><li>L3: 부왕·선교 / 4계급 / 미타·엔코미엔다</li></ul>
+      <div class="words"><span class="w"><b>prosperity</b> 번영</span><span class="w"><b>offspring</b> 자손</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P23</span><span class="pt">Chapter Assessment (1) — 복습 문제</span><span class="bk">p.403</span></div><div class="pb">
+      <p class="sum">레슨별 복습 + 본질적 질문 + 비판적 사고 문제 (답은 <a href="#exam">시험 대비</a> 섹션 참고).</p>
+      <ul><li>중상주의란? 수출 장려를 위해 정부는 무엇을 했나?</li><li>누가 최초의 세계 경제에서 가장 이득/손해를 봤나?</li><li>코르테스·피사로가 이긴 요인은?</li></ul>
+      <div class="words"><span class="w"><b>categorize</b> 분류하다</span><span class="w"><b>significance</b> 중요성</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">P24</span><span class="pt">Chapter Assessment (2) — 라스 카사스 사료 · 에세이</span><span class="bk">p.404</span></div><div class="pb">
+      <p class="sum">라스 카사스의 『인디오를 위한 변론』(1550)을 읽고 스페인 행동을 평가.</p>
+      <ul><li>"원주민은 야만적이지 않다, 배우는 데 재능이 있다"</li><li>에세이: 상업혁명의 원인과 결과 / 탐험은 당시 과학기술의 반영</li><li>그림 분석: 코르테스는 영웅인가 악당인가?</li></ul>
+      <div class="words"><span class="w"><b>barbarism</b> 야만</span><span class="w"><b>plunderer</b> 약탈자</span><span class="w"><b>synthesize</b> 종합하다</span><span class="w"><b>endeavor</b> 노력·시도</span></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============ 5. SLIDES PAGE BY PAGE ============ -->
+<section id="slides">
+  <div class="sh"><span class="n">05</span><h2>수업 슬라이드 페이지별 분석</h2></div>
+  <p class="sub">선생님 수업 슬라이드(33장). 교과서에 없는 <b>추가 내용</b>(튤립 버블, 명칭 논쟁, 콜럼버스의 날, 결론의 환경 문제)이 시험에 나올 수 있으니 꼭 챙기기! 글자 없는 이미지·영상 슬라이드(6·8·12·13·15·17·19·24·28–31쪽)는 생략했어요.</p>
+
+  <div class="lesson-h"><span class="tag gray">OPENING</span><h3>도입 · 크래시코스 요약</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">S1</span><span class="pt">표지 — "돈이 역사를 움직일까?"</span></div><div class="pb">
+      <p class="sum">단원을 여는 두 질문: 세계는 더 세계화되고 있나? 역사를 움직이는 건 돈인가?</p>
+      <ul><li>👉 이 질문을 머릿속에 두고 공부하면 단원 전체가 하나로 꿰어짐</li></ul>
+      <div class="words"><span class="w"><b>globalized</b> 세계화된</span><span class="w"><b>drive</b> 움직이다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S2</span><span class="pt">Crash Course 요약 (1)</span></div><div class="pb">
+      <p class="sum">반 친구들이 영상을 보고 정리한 핵심 — 콜럼버스는 '운 좋은 바보'가 아니었다.</p>
+      <ul><li>콜럼버스·<b>정화</b> = 대양 항해의 주인공들</li><li>엔히크 왕자: 전설의 기독교 왕국 '<b>프레스터 존</b>'을 찾음</li><li>포르투갈 <b>카르타즈</b> = 통행증 (없으면 공격 = 무역 + 해적질)</li><li>다 가마 → 인도양 무역에 유럽 진입</li></ul>
+      <div class="words"><span class="w"><b>cartaz</b> 카르타즈(통행증)</span><span class="w"><b>piracy</b> 해적 행위</span><span class="w"><b>explore</b> 탐험하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S3</span><span class="pt">Crash Course 요약 (2) — 정화</span></div><div class="pb">
+      <p class="sum">명나라 정화: 이슬람교도 중국인, 동물을 싣고 온 '중국판 노아'.</p>
+      <ul><li>항해 목적 = 무역이 아니라 <b>중국의 위신(prestige)</b></li><li>👉 비교 포인트: 중국은 멈췄고, 유럽은 계속 나갔다</li></ul>
+      <div class="words"><span class="w"><b>prestige</b> 위신</span><span class="w"><b>Muslim</b> 이슬람교도</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S4</span><span class="pt">큰 주제 두 가지</span></div><div class="pb">
+      <p class="sum">이 시대를 꿰뚫는 두 테마.</p>
+      <ul><li>① 르네상스·종교개혁 = <b>근대화의 힘</b></li><li>② 탐험 = 사람·물건·생각의 <b>세계적 이동</b></li></ul>
+      <div class="words"><span class="w"><b>Renaissance</b> 르네상스</span><span class="w"><b>Reformation</b> 종교개혁</span><span class="w"><b>modernizing</b> 근대화하는</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S5</span><span class="pt">탐험의 불씨 3가지</span></div><div class="pb">
+      <p class="sum">마르코 폴로 · 향신료 · 젊음의 샘(Fountain of Youth).</p>
+      <ul><li>'젊음의 샘' 같은 <b>전설</b>도 탐험 동기였음 (스페인의 폰세 데 레온 → 플로리다)</li></ul>
+      <div class="words"><span class="w"><b>legend</b> 전설</span><span class="w"><b>Fountain of Youth</b> 젊음의 샘</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S7</span><span class="pt">✍️ 글쓰기 과제</span></div><div class="pb">
+      <p class="sum">나의 모험 경험 / 앞으로 탐험하고 싶은 것 / 지금 인류에게 열리고 있는 새 분야(예: 우주·AI·심해).</p>
+      <ul><li>최소 7문장 한 문단 → 구글 클래스룸 업로드</li><li>💡 팁: 대항해시대와 <b>우주 탐사</b>를 비교하면 좋은 글이 됨</li></ul>
+      <div class="words"><span class="w"><b>adventure</b> 모험</span><span class="w"><b>humanity</b> 인류</span><span class="w"><b>paragraph</b> 문단</span></div>
+    </div></div>
+  </div>
+
+  <div class="lesson-h"><span class="tag">17-1</span><h3>European Expansion</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">S9</span><span class="pt">For God, Glory, and Gold + 기술</span></div><div class="pb">
+      <p class="sum">디아스의 말: "신과 왕을 섬기고, 어둠 속 사람들에게 빛을 주고, 모두가 원하듯 부자가 되려고."</p>
+      <ul><li>아스트롤라베 → <b>육분의(sextant)</b>: 배 위치 측정</li><li>중국에서 온 나침반, 카라벨 조선 기술</li><li><b>메르카토르 세계지도</b></li></ul>
+      <div class="words"><span class="w"><b>sextant</b> 육분의</span><span class="w"><b>Mercator</b> 메르카토르(도법)</span><span class="w"><b>Majesty</b> 폐하</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S10</span><span class="pt">중요 인물</span></div><div class="pb">
+      <p class="sum">꼭 외울 3명과 연도.</p>
+      <ul><li><b>엔히크 왕자</b> "항해왕" — 포르투갈 탐험 주도</li><li><b>1497–98 다 가마</b> → 인도</li><li><b>1492–93 콜럼버스</b>(제노바 출신 이탈리아인) → 서인도제도</li></ul>
+      <div class="words"><span class="w"><b>West Indies</b> 서인도제도</span><span class="w"><b>Genoese</b> 제노바 사람</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S11</span><span class="pt">포르투갈(동쪽) vs 스페인(서쪽)</span></div><div class="pb">
+      <p class="sum">두 나라의 방향·얻은 것·방식 비교 — 시험 단골!</p>
+      <ul><li>🇵🇹 아프리카 돌기 → 인도·동남아 향신료, 노예무역 시작(900–1,200만), <b>카르타즈</b>로 폭력적 지배</li><li>🇪🇸 서쪽 → 아메리카: 콜럼버스·마젤란, 아즈텍·잉카 정복 → 금·은·농장·<b>코치닐</b>(붉은 염료)</li><li>토르데시야스 조약: 동=포르투갈 / 서=스페인</li></ul>
+      <div class="words"><span class="w"><b>cochineal</b> 코치닐(연지벌레 염료)</span><span class="w"><b>violent rule</b> 폭력적 지배</span><span class="w"><b>conquer</b> 정복하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S14</span><span class="pt">프랑스 · 네덜란드 · 영국 · 동아시아</span></div><div class="pb">
+      <p class="sum">후발 주자들의 무대와, 동아시아는 왜 달랐는지.</p>
+      <ul><li>🇫🇷 캐나다 동부 / 🇳🇱 향료제도(인도네시아), <b>VOC</b>: 정부가 준 독점권 — 돈벌이·조약·군대까지</li><li>🇬🇧 버지니아(담배 성공) → 인도로, 영국 동인도회사</li><li>동아시아: 중국 무역 적음, 일본 중단, <b>한국은 거의 없음</b> (주로 중국·일본과만 교류)</li></ul>
+      <div class="words"><span class="w"><b>monopoly</b> 독점</span><span class="w"><b>VOC</b> 네덜란드 동인도회사</span><span class="w"><b>tobacco</b> 담배</span></div>
+    </div></div>
+  </div>
+
+  <div class="lesson-h"><span class="tag gold">17-2</span><h3>The First Global Economic Systems</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">S16</span><span class="pt">대서양 노예무역 (1)</span></div><div class="pb">
+      <p class="sum">900–1,200만 명, 인권이 존재하지 않던 비극.</p>
+      <ul><li>아프리카 인구 급감, 인종 혼합(브라질의 물라토)</li><li>유럽 이전에도 <b>이슬람 대상(隊商)</b>의 노예무역이 있었음</li><li>비무슬림은 노예로 팔릴 수 있었음 (예: 십자군 시대)</li></ul>
+      <div class="words"><span class="w"><b>maltreatment</b> 학대</span><span class="w"><b>human rights</b> 인권</span><span class="w"><b>caravan</b> 대상(隊商)</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S18</span><span class="pt">노예무역 (2) — 결과와 폐지</span></div><div class="pb">
+      <p class="sum">삼각무역·중간항로, 그리고 폐지로 가는 길.</p>
+      <ul><li><b>1804 아이티 혁명</b>: 프랑스에 맞선 노예 반란 → 최초로 노예제 끝낸 나라</li><li>영국 <b>윌버포스</b>: 1807 노예무역 폐지, 1833 노예제 금지</li><li>미국: 남북전쟁·링컨 (1861–65)</li></ul>
+      <div class="words"><span class="w"><b>revolt</b> 반란</span><span class="w"><b>indigenous</b> 토착의</span><span class="w"><b>ban</b> 금지하다</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S20</span><span class="pt">중상주의 · 자본주의의 발달</span></div><div class="pb">
+      <p class="sum">나라의 상업적 성공이 최우선 → 주식·주식회사 등장 → 자본주의.</p>
+      <ul><li>정부에만 이익 되는 규제</li><li>영국에서 특히 주식회사 발달</li><li>유럽에 돈이 넘쳐 <b>인플레이션</b> → 강한 왕국들, 훗날 <b>혁명</b>으로 이어짐</li></ul>
+      <div class="words"><span class="w"><b>capitalism</b> 자본주의</span><span class="w"><b>inflation</b> 물가 상승</span><span class="w"><b>regulation</b> 규제</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S21</span><span class="pt">🌷 튤립 버블 (Tulip Mania)</span></div><div class="pb">
+      <p class="sum">튤립 알뿌리 하나로 집 한 채를 살 수 있었던 네덜란드의 투기 광풍. (교과서엔 없음 — 수업 추가 내용!)</p>
+      <ul><li>원산지는 중앙아시아</li><li>동인도회사로 돈이 넘치자 <b>꽃도 안 핀 알뿌리</b>까지 거래 = <b>투기</b></li><li><b>버블</b>: 가격이 오르다가 더 빠르게 폭락 (1637)</li></ul>
+      <div class="words"><span class="w"><b>speculation</b> 투기</span><span class="w"><b>bubble</b> 거품</span><span class="w"><b>bulb</b> 알뿌리</span><span class="w"><b>botany</b> 식물학</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S22</span><span class="pt">콜럼버스의 교환 · 세계 무역</span></div><div class="pb">
+      <p class="sum">음식·식물·동물(+생각)의 전 지구적 이동.</p>
+      <ul><li>신세계 → 옥수수·감자·담배</li><li>구세계 → 커피·말·<b>질병(천연두·홍역)</b></li></ul>
+      <div class="words"><span class="w"><b>New World</b> 신세계</span><span class="w"><b>Old World</b> 구세계</span><span class="w"><b>transfer</b> 이동</span></div>
+    </div></div>
+  </div>
+
+  <div class="lesson-h"><span class="tag coral">17-3</span><h3>Colonial Latin America</h3></div>
+  <div class="pages">
+    <div class="pg"><div class="ph"><span class="no">S23</span><span class="pt">남긴 것 (Legacy)</span></div><div class="pb">
+      <p class="sum">오늘날까지 남은 흔적 — 언어와 기념일 논쟁.</p>
+      <ul><li>라틴아메리카 = 스페인어권 (+브라질은 포르투갈어) / 카리브해 = 영어·프랑스어</li><li>미국 <b>콜럼버스의 날</b>(10월 둘째 월요일) → 지위를 잃고 <b>원주민의 날</b>로 대체되는 추세</li></ul>
+      <div class="words"><span class="w"><b>legacy</b> 유산</span><span class="w"><b>replacement</b> 대체</span><span class="w"><b>national holiday</b> 국경일</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S25</span><span class="pt">✍️ 숙제: 콜럼버스는 역사의 방향을 어떻게 바꿨나?</span></div><div class="pb">
+      <p class="sum">짧은 문단으로 답하기.</p>
+      <ul><li>💡 구조 예시: ① 두 세계를 처음 연결 → ② 콜럼버스의 교환(작물·질병) → ③ 식민지·노예무역 → ④ 유럽 중심 세계 경제의 시작</li></ul>
+      <div class="words"><span class="w"><b>reflection</b> 성찰</span><span class="w"><b>direction</b> 방향</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S26</span><span class="pt">이름이 가진 힘 — 명칭 논쟁</span></div><div class="pb">
+      <p class="sum">'Indians'는 콜럼버스의 착각에서 나온 말. 이름에는 편견이 담길 수 있다.</p>
+      <ul><li>Native Americans vs (American) Indians / Inuit vs Eskimo</li><li>낮은 문명 수준을 암시하는 명칭 문제</li><li>캐나다 <b>First Nations</b>, 호주 <b>Aboriginals</b>, 세계적으로 <b>Indigenous People</b></li></ul>
+      <div class="words"><span class="w"><b>controversy</b> 논쟁</span><span class="w"><b>imply</b> 암시하다</span><span class="w"><b>Indigenous</b> 원주민의</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S27</span><span class="pt">스페인의 탐험 · 정복자들</span></div><div class="pb">
+      <p class="sum">'America' 이름의 뜻 = 인도가 아닌 '새로운 세계'.</p>
+      <ul><li>콘키스타도르 → 아메리카 대부분 (+지금의 미국 일부) 정복</li><li>스페인이 원한 것: 금·은·돈 되는 작물 농장</li><li>금은이 너무 많이 들어와 <b>인플레이션</b></li><li><b>메스티소</b> = 스페인인 + 원주민</li></ul>
+      <div class="words"><span class="w"><b>Conquistadors</b> 정복자들</span><span class="w"><b>inhabitant</b> 주민</span><span class="w"><b>massive</b> 엄청난</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S32</span><span class="pt">엔코미엔다 → 아시엔다 · 선교</span></div><div class="pb">
+      <p class="sum">이름만 바뀌었을 뿐 노예제와 다를 바 없던 노동 체제.</p>
+      <ul><li><b>엔코미엔다</b>: 왕이 준 땅 + 공납제(금을 받고, 원주민 보호·기독교 교육 — 하지만 폭력)</li><li>→ <b>아시엔다(hacienda)</b>: '임금 노동'이라지만 사실상 노예제</li><li>미션: 스페인 가톨릭의 거점</li></ul>
+      <div class="words"><span class="w"><b>hacienda</b> 아시엔다(대농장)</span><span class="w"><b>tributary</b> 공납의</span><span class="w"><b>the crown</b> 왕실</span></div>
+    </div></div>
+    <div class="pg"><div class="ph"><span class="no">S33</span><span class="pt">결론 — "유럽의 발견"이었을까?</span></div><div class="pb">
+      <p class="sum">'발견'은 유럽의 시각. 원주민에게는 재앙이었다. 결과를 다섯 갈래로 정리.</p>
+      <ul><li>원주민 대학살(질병·노예제) / 다른 대륙 식민지화 / 대서양 노예무역</li><li>더 빠른 항로 욕구 → 북서항로, <b>수에즈(1869)·파나마(1914) 운하</b></li><li><b>환경 파괴의 시작</b>: 외래종, 담배·사탕수수 단일 재배, 금은 채굴</li><li>유럽 경제 발전 — 그리고 경제적 파괴도 함께 퍼뜨림</li></ul>
+      <div class="words"><span class="w"><b>massacre</b> 학살</span><span class="w"><b>invasive species</b> 외래 침입종</span><span class="w"><b>cash crop</b> 환금 작물</span><span class="w"><b>canal</b> 운하</span></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============ 6. VOCAB ============ -->
+<section id="vocab">
+  <div class="sh"><span class="n">06</span><h2>영어 핵심 단어장</h2></div>
+  <p class="sub">교과서와 슬라이드의 핵심 용어를 주제별로 모았어요. <b>"뜻 가리기"</b>를 켜면 뜻이 흐려지고, 칸을 눌러 하나씩 확인하며 외울 수 있어요.</p>
+  <div class="vbar">
+    <button class="btn" id="hideBtn" type="button" aria-pressed="false">🙈 뜻 가리기</button>
+    <span style="font-size:13px;color:var(--muted)">가린 상태에서 뜻 칸을 누르면 하나씩 보여요</span>
+  </div>
+  <div class="tw" id="vocabWrap"><table class="vocab">
+    <tr><th>English</th><th>뜻</th><th>쉬운 설명 / 예시</th></tr>
+    <tr class="grp"><td colspan="3">🧭 탐험 · 항해 (Exploration)</td></tr>
+    <tr><td class="en">Age of Exploration</td><td class="ko">대항해시대</td><td class="ex">1400s–1700s, 유럽이 바다로 세계를 탐험한 시대</td></tr>
+    <tr><td class="en">explorer / expedition</td><td class="ko">탐험가 / 원정</td><td class="ex">Magellan led an expedition around the world.</td></tr>
+    <tr><td class="en">voyage</td><td class="ko">(긴) 항해</td><td class="ex">Columbus made four voyages.</td></tr>
+    <tr><td class="en">motive / motivation</td><td class="ko">동기</td><td class="ex">God, Glory, and Gold were the main motives.</td></tr>
+    <tr><td class="en">caravel</td><td class="ko">카라벨선</td><td class="ex">작고 빠른 포르투갈 배, 삼각돛으로 역풍 항해</td></tr>
+    <tr><td class="en">lateen sail</td><td class="ko">삼각돛</td><td class="ex">아랍에서 온 삼각형 돛</td></tr>
+    <tr><td class="en">astrolabe / sextant</td><td class="ko">아스트롤라베 / 육분의</td><td class="ex">해·별로 위도를 재는 도구</td></tr>
+    <tr><td class="en">compass</td><td class="ko">나침반</td><td class="ex">중국에서 발명</td></tr>
+    <tr><td class="en">cartography</td><td class="ko">지도 제작술</td><td class="ex">the art and science of mapmaking</td></tr>
+    <tr><td class="en">latitude</td><td class="ko">위도</td><td class="ex">적도에서 남북으로 얼마나 떨어졌나</td></tr>
+    <tr><td class="en">trade winds / westerlies</td><td class="ko">무역풍 / 편서풍</td><td class="ex">항해에 이용한 바람</td></tr>
+    <tr><td class="en">circumnavigate</td><td class="ko">세계일주하다</td><td class="ex">Magellan's fleet circumnavigated the globe.</td></tr>
+    <tr><td class="en">strait</td><td class="ko">해협</td><td class="ex">the Strait of Magellan</td></tr>
+    <tr><td class="en">spices</td><td class="ko">향신료</td><td class="ex">후추·계피 등, 음식 보존과 맛</td></tr>
+    <tr><td class="en">prestige</td><td class="ko">위신, 명성</td><td class="ex">Zheng He sailed for China's prestige.</td></tr>
+    <tr class="grp"><td colspan="3">⚔️ 정복 · 식민지 (Conquest & Colonies)</td></tr>
+    <tr><td class="en">conquer / conquest</td><td class="ko">정복하다 / 정복</td><td class="ex">Cortés conquered the Aztec.</td></tr>
+    <tr><td class="en">conquistador</td><td class="ko">(스페인) 정복자</td><td class="ex">Cortés, Pizarro</td></tr>
+    <tr><td class="en">colony / colonization</td><td class="ko">식민지 / 식민지화</td><td class="ex">부모 나라가 무역·정부로 직접 지배하는 정착지</td></tr>
+    <tr><td class="en">settlement</td><td class="ko">정착지</td><td class="ex">Quebec was the first permanent French settlement.</td></tr>
+    <tr><td class="en">indigenous people</td><td class="ko">원주민</td><td class="ex">그 땅에 원래 살던 사람들</td></tr>
+    <tr><td class="en">alliance</td><td class="ko">동맹</td><td class="ex">Cortés made an alliance with Tlaxcala.</td></tr>
+    <tr><td class="en">treaty</td><td class="ko">조약</td><td class="ex">the Treaty of Tordesillas (1494)</td></tr>
+    <tr><td class="en">trading post</td><td class="ko">무역 거점</td><td class="ex">포르투갈은 식민지 대신 해안 거점</td></tr>
+    <tr><td class="en">convert</td><td class="ko">개종시키다 / 개종자</td><td class="ex">to convert people to Christianity</td></tr>
+    <tr><td class="en">missionary / mission</td><td class="ko">선교사 / 선교 기지</td><td class="ex">Jesuits built missions in Paraguay.</td></tr>
+    <tr><td class="en">viceroy</td><td class="ko">부왕 (왕의 대리 통치자)</td><td class="ex">New Spain's first viceroy (1535)</td></tr>
+    <tr><td class="en">zeal</td><td class="ko">열정, 열의</td><td class="ex">religious zeal = 종교적 열정</td></tr>
+    <tr class="grp"><td colspan="3">🦠 콜럼버스의 교환 · 질병 (Columbian Exchange)</td></tr>
+    <tr><td class="en">Columbian Exchange</td><td class="ko">콜럼버스의 교환</td><td class="ex">신·구대륙 간 작물·동물·질병의 이동</td></tr>
+    <tr><td class="en">immunity</td><td class="ko">면역</td><td class="ex">원주민은 유럽 질병에 면역이 없었다</td></tr>
+    <tr><td class="en">smallpox / measles / typhus</td><td class="ko">천연두 / 홍역 / 발진티푸스</td><td class="ex">원주민 인구 급감의 주요 원인</td></tr>
+    <tr><td class="en">epidemic</td><td class="ko">전염병 (유행)</td><td class="ex">Epidemics devastated Native Americans.</td></tr>
+    <tr><td class="en">devastate / ravage</td><td class="ko">황폐화하다</td><td class="ex">Smallpox devastated entire villages.</td></tr>
+    <tr><td class="en">livestock</td><td class="ko">가축</td><td class="ex">horses, cattle</td></tr>
+    <tr><td class="en">staple</td><td class="ko">주식(主食), 기본 식품</td><td class="ex">Potatoes became a staple in Europe.</td></tr>
+    <tr><td class="en">invasive species</td><td class="ko">외래 침입종</td><td class="ex">다른 곳에서 와 생태계를 망치는 종</td></tr>
+    <tr class="grp"><td colspan="3">💰 경제 (Economy)</td></tr>
+    <tr><td class="en">Commercial Revolution</td><td class="ko">상업혁명</td><td class="ex">탐험 이후 유럽 경제의 급성장</td></tr>
+    <tr><td class="en">mercantilism</td><td class="ko">중상주의</td><td class="ex">국부 = 금·은의 양이라는 경제 사상</td></tr>
+    <tr><td class="en">bullion</td><td class="ko">금·은괴</td><td class="ex">gold and silver</td></tr>
+    <tr><td class="en">balance of trade</td><td class="ko">무역수지</td><td class="ex">수출 − 수입; 수출이 많으면 favorable</td></tr>
+    <tr><td class="en">import / export</td><td class="ko">수입 / 수출</td><td class="ex">goods brought in / shipped out</td></tr>
+    <tr><td class="en">tariff</td><td class="ko">관세</td><td class="ex">수입품에 매기는 세금</td></tr>
+    <tr><td class="en">subsidy</td><td class="ko">보조금</td><td class="ex">정부가 유익한 산업에 주는 돈</td></tr>
+    <tr><td class="en">joint-stock company</td><td class="ko">주식회사</td><td class="ex">주주들이 돈을 모아 투자하고 이익을 나눔</td></tr>
+    <tr><td class="en">stock / shareholder</td><td class="ko">주식 / 주주</td><td class="ex">a share of ownership in a company</td></tr>
+    <tr><td class="en">monopoly</td><td class="ko">독점</td><td class="ex">The VOC had a monopoly on the spice trade.</td></tr>
+    <tr><td class="en">capitalism</td><td class="ko">자본주의</td><td class="ex">개인·기업이 이윤을 위해 투자하는 경제</td></tr>
+    <tr><td class="en">inflation</td><td class="ko">인플레이션 (물가 상승)</td><td class="ex">Too much silver caused inflation in Spain.</td></tr>
+    <tr><td class="en">speculation / bubble</td><td class="ko">투기 / 거품</td><td class="ex">Tulip Mania was a speculative bubble.</td></tr>
+    <tr><td class="en">plantation</td><td class="ko">대농장</td><td class="ex">사탕수수·담배를 대규모로 기르는 농장</td></tr>
+    <tr><td class="en">cash crop</td><td class="ko">환금 작물</td><td class="ex">팔아서 돈 벌려고 기르는 작물 (sugar, tobacco)</td></tr>
+    <tr><td class="en">resource extraction</td><td class="ko">자원 채취</td><td class="ex">금·은 등 천연자원을 캐내는 것</td></tr>
+    <tr class="grp"><td colspan="3">⛓️ 노예무역 (Slave Trade)</td></tr>
+    <tr><td class="en">enslaved people</td><td class="ko">노예가 된 사람들</td><td class="ex">'slave'보다 사람을 먼저 보는 요즘 표현</td></tr>
+    <tr><td class="en">triangular trade</td><td class="ko">삼각무역</td><td class="ex">유럽 → 아프리카 → 아메리카 → 유럽</td></tr>
+    <tr><td class="en">Middle Passage</td><td class="ko">중간항로</td><td class="ex">아프리카→아메리카 강제 항해</td></tr>
+    <tr><td class="en">abolish / abolition</td><td class="ko">폐지하다 / 폐지</td><td class="ex">Britain abolished slavery in 1833.</td></tr>
+    <tr><td class="en">revolt</td><td class="ko">반란</td><td class="ex">the Haitian slave revolt (1804)</td></tr>
+    <tr><td class="en">depopulate</td><td class="ko">인구를 줄이다</td><td class="ex">The slave trade depopulated some areas.</td></tr>
+    <tr><td class="en">human rights</td><td class="ko">인권</td><td class="ex">모든 사람이 가진 기본 권리</td></tr>
+    <tr class="grp"><td colspan="3">🏛️ 식민지 라틴아메리카 (Colonial Latin America)</td></tr>
+    <tr><td class="en">peninsulare</td><td class="ko">페닌술라르</td><td class="ex">이베리아 반도 태생 관리 — 최상층</td></tr>
+    <tr><td class="en">creole</td><td class="ko">크리오요</td><td class="ex">라틴아메리카 태생 유럽인 후손</td></tr>
+    <tr><td class="en">mestizo</td><td class="ko">메스티소</td><td class="ex">유럽인 + 원주민 혼혈</td></tr>
+    <tr><td class="en">mulatto</td><td class="ko">물라토</td><td class="ex">유럽인 + 아프리카인 혼혈</td></tr>
+    <tr><td class="en">encomienda</td><td class="ko">엔코미엔다</td><td class="ex">원주민 노동을 쓸 권리 (보호·교육 의무는 무시됨)</td></tr>
+    <tr><td class="en">hacienda</td><td class="ko">아시엔다</td><td class="ex">엔코미엔다 이후의 대농장 (사실상 노예제)</td></tr>
+    <tr><td class="en">mita</td><td class="ko">미타</td><td class="ex">페루 은광에 원주민을 강제 징발한 제도</td></tr>
+    <tr><td class="en">draft</td><td class="ko">징발하다, 징집하다</td><td class="ex">to select for some purpose; conscript</td></tr>
+    <tr><td class="en">descent</td><td class="ko">혈통, 가계</td><td class="ex">of mixed European and African descent</td></tr>
+    <tr><td class="en">legacy</td><td class="ko">유산, 남긴 것</td><td class="ex">Spanish language is a legacy of colonization.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============ 7. EXAM ============ -->
+<section id="exam">
+  <div class="sh"><span class="n">07</span><h2>시험 대비 — 핵심 질문 & 답</h2></div>
+  <p class="sub">교과서 Guiding Questions와 Chapter Assessment에서 뽑은 필수 질문이에요. 먼저 <b>스스로 영어로 답해본 뒤</b> 아래 답과 비교하세요.</p>
+
+  <div class="qa"><div class="q">Q1. 유럽인들이 먼 땅을 탐험한 동기는?<span class="en">What were the motivations behind European exploration?</span></div><div class="a"><b>God, Glory, Gold.</b> ① 경제: 비싼 향신료와 금·은(wealth) ② 종교: 기독교 전파(religious zeal) ③ 명예·모험심(glory, adventure) + 오스만의 육로 차단 + 마르코 폴로의 영향.</div></div>
+  <div class="qa"><div class="q">Q2. 스페인과 포르투갈은 어떻게 먼저 앞서갈 수 있었나?<span class="en">How were Spain and Portugal able to take the lead?</span></div><div class="a">새 <b>항해 기술</b>(caravel, astrolabe, compass, 지도) + <b>왕실의 후원</b>(엔히크 왕자, 이사벨라 여왕) + 대서양 바람에 대한 지식. 포르투갈은 동쪽(아프리카→인도), 스페인은 서쪽(아메리카).</div></div>
+  <div class="qa"><div class="q">Q3. 소수의 스페인군이 아즈텍·잉카를 이긴 이유는?<span class="en">What led to Spanish victories over the Aztec and Inca?</span></div><div class="a">① <b>질병(smallpox)</b> — 가장 결정적 ② 무기(총·대포·강철검)와 말 ③ <b>원주민 동맹</b>(틀락스칼라) ④ 잉카의 <b>내전</b> ⑤ 처음 보는 것에 대한 심리적 충격.</div></div>
+  <div class="qa"><div class="q">Q4. 중상주의란? 정부는 무엇을 했나?<span class="en">What is mercantilism? What did governments do?</span></div><div class="a">국가의 부는 <b>금·은(bullion)의 양</b>에 달렸다는 사상. 방법: 식민지에서 금은 확보 + <b>무역흑자</b>(수출 &gt; 수입). 정부는 <b>보조금</b>, 수입품 <b>관세</b>, 도로·운하 건설. 식민지 = 원료 공급지 + 시장.</div></div>
+  <div class="qa"><div class="q">Q5. 콜럼버스의 교환은 아메리카와 유럽에 어떤 영향을 줬나?<span class="en">How did the Columbian Exchange affect the Americas and Europe?</span></div><div class="a">👍 감자·옥수수로 유럽·중국 <b>인구 증가</b>, 말로 원주민 생활 변화. 👎 천연두·홍역으로 <b>원주민 대량 사망</b>(멕시코 2,500만→100만) → 노동력 부족 → 아프리카 노예 수입.</div></div>
+  <div class="qa"><div class="q">Q6. 원주민의 전염병이 왜 노예무역을 늘렸나?<span class="en">How did epidemics contribute to an increase in the slave trade?</span></div><div class="a">사탕수수 농장은 일손이 많이 필요(labor intensive) → 원주민이 질병으로 죽어 <b>노동력 부족</b> → 유럽인이 아프리카인을 강제로 데려옴 → <b>삼각무역·중간항로</b>.</div></div>
+  <div class="qa"><div class="q">Q7. 라틴아메리카 4계급의 차이와 목적은?<span class="en">Differences among peninsulares, creoles, mestizos, mulattoes?</span></div><div class="a">페닌술라르(유럽 태생 관리, 최상층) &gt; 크리오요(현지 태생 유럽인) &gt; 메스티소(유럽+원주민)·물라토(유럽+아프리카) &gt; 원주민·아프리카인. <b>기준 = 출생지 + 혈통</b>. 목적: 유럽 출신이 권력을 독점하기 위해.</div></div>
+  <div class="qa"><div class="q">Q8. 엔코미엔다와 미타는 무엇이고, 왜 문제였나?<span class="en">What were the encomienda and mita systems?</span></div><div class="a"><b>엔코미엔다</b>: 스페인 지주가 원주민 노동·세금을 받는 권리(보호·가톨릭 교육 의무는 무시). <b>미타</b>: 페루 은광 강제 징발. → 가혹한 노동으로 원주민 인구 급감. 라스 카사스 신부가 고발.</div></div>
+  <div class="qa"><div class="q">Q9. 최초의 세계 경제에서 누가 이득을 보고 누가 손해를 봤나?<span class="en">Who benefited most, and who lost most?</span></div><div class="a">이득: <b>유럽 국가·상인·주주</b>(스페인→네덜란드→영국 순으로 부 축적). 손해: <b>아메리카 원주민</b>(인구·문명 파괴)과 <b>아프리카인</b>(노예화·사회 붕괴). → 오늘날까지 이어지는 불평등의 뿌리.</div></div>
+  <div class="qa"><div class="q">Q10. (수업 질문) 콜럼버스는 역사의 방향을 어떻게 바꿨나?<span class="en">How did Columbus change the direction of history?</span></div><div class="a">두 반구를 처음 연결 → <b>콜럼버스의 교환</b> → 식민지·노예무역 → 유럽 중심 <b>세계 경제</b>의 시작. 동시에 원주민에게는 재앙 → 그래서 요즘은 '발견(discovery)' 대신 '만남(encounter)'이라는 표현도 씀.</div></div>
+
+  <div class="note"><b>에세이 쓸 때 쓰는 연결어</b> — As a result (그 결과) · Therefore (그러므로) · However (그러나) · In addition (게다가) · On the other hand (반면에) · For example (예를 들어) · This led to ~ (이것은 ~로 이어졌다)</div>
+</section>
+
+<!-- ============ 8. HOW TO ============ -->
+<section id="howto">
+  <div class="sh"><span class="n">08</span><h2>하울이 세계사 공부법</h2></div>
+  <div class="grid g2">
+    <div class="card"><h4 style="margin-top:0">1. 큰 틀 → 작은 틀</h4><p style="margin:0;font-size:14px">새 단원을 시작하면 먼저 <a href="#bigpicture">시대표</a>에서 위치를 찾기. "이 시대 앞엔 뭐가 있었고, 이 다음엔 뭐가 오지?"를 늘 연결하면 외울 게 확 줄어요.</p></div>
+    <div class="card"><h4 style="margin-top:0">2. 원인 → 사건 → 결과</h4><p style="margin:0;font-size:14px">모든 사건을 "왜? 무엇이? 그래서?" 3칸으로 정리. 서양 역사 시험은 <b>Cause and Effect</b> 질문이 대부분이에요.</p></div>
+    <div class="card"><h4 style="margin-top:0">3. 단어는 문장째로</h4><p style="margin:0;font-size:14px">단어장 "뜻 가리기"로 하루 10개씩. 예시 문장을 소리 내 읽으면 에세이에 바로 쓸 수 있어요.</p></div>
+    <div class="card"><h4 style="margin-top:0">4. 두 시선으로 보기</h4><p style="margin:0;font-size:14px">유럽에겐 '발견', 원주민에겐 '침략'. DBQ는 늘 <b>누구의 관점인지</b>를 물어요. 양쪽을 다 말할 수 있으면 A+!</p></div>
+  </div>
+  <div class="key" style="margin-top:16px"><b>다음 단원을 받으면</b> — 교과서·슬라이드 PDF를 또 올려주면, 이 노트에 새 챕터를 이어서 붙이고 시대표의 '📍 지금 여기'도 옮겨줄게요.</div>
+</section>
+
+<footer>
+  <p>📘 출처: 하울이 수업 교과서 Chapter 17 <i>European Exploration and Expansion</i> (p.381–404) · 등대글로벌학교 수업 슬라이드 <i>Chapter 17 – The Age of Exploration</i> (33장). 세계사 시대 구분·한국사 대응은 학습 편의를 위한 일반적인 구분이에요(학자·교과서마다 연도 경계는 조금씩 달라요).</p>
+  <p>🖨️ 인쇄: Ctrl/⌘ + P (단어 뜻은 인쇄 시 자동으로 보여요) · 하울이 화이팅! 🌍</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // scroll-spy
+  var links=[].slice.call(document.querySelectorAll('nav.top a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function spy(){
+    var y=window.scrollY+90,best=0;
+    for(var i=0;i<secs.length;i++){if(secs[i]&&secs[i].offsetTop<=y)best=i;}
+    links.forEach(function(l,i){l.classList.toggle('active',i===best);});
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy);spy();
+
+  // vocab hide toggle
+  var btn=document.getElementById('hideBtn'),wrap=document.getElementById('vocabWrap');
+  var KEY='haul-wh-hide';
+  function set(on){
+    wrap.classList.toggle('hide-ko',on);
+    btn.classList.toggle('on',on);
+    btn.setAttribute('aria-pressed',on?'true':'false');
+    btn.textContent=on?'👀 뜻 모두 보기':'🙈 뜻 가리기';
+    if(!on){[].forEach.call(wrap.querySelectorAll('td.show'),function(td){td.classList.remove('show');});}
+  }
+  var init=false;
+  try{init=localStorage.getItem(KEY)==='1';}catch(e){}
+  set(init);
+  btn.addEventListener('click',function(){
+    var on=!wrap.classList.contains('hide-ko');
+    set(on);
+    try{localStorage.setItem(KEY,on?'1':'0');}catch(e){}
+  });
+  wrap.addEventListener('click',function(e){
+    if(!wrap.classList.contains('hide-ko'))return;
+    var td=e.target.closest('td.ko,td.ex');
+    if(!td)return;
+    var tr=td.parentNode;
+    [].forEach.call(tr.querySelectorAll('td.ko,td.ex'),function(c){c.classList.toggle('show');});
+  });
+})();
+</script>
