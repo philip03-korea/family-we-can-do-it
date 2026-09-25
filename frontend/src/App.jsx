@@ -29,6 +29,7 @@ import Exams from './pages/Exams'
 import Contest from './pages/Contest'
 import Cooking from './pages/Cooking'
 import Webtoon from './pages/Webtoon'
+import Notes from './pages/Notes'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -99,6 +100,7 @@ export default function App() {
       <Route path="/exam" element={<Guarded><Exams /></Guarded>} />
       <Route path="/career" element={<Guarded><Career /></Guarded>} />
       <Route path="/webtoon" element={<Guarded><Webtoon /></Guarded>} />
+      <Route path="/notes" element={<Guarded><Notes /></Guarded>} />
 
       {/* ── 집안 */}
       <Route path="/chores" element={<Guarded><Chores /></Guarded>} />

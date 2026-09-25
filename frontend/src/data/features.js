@@ -26,6 +26,7 @@ export const FEATURES = [
   { key: 'exam', name: '문제은행', emoji: '🗂️', route: '/exam', group: 'learn', desc: 'TOEFL · 검정고시 과목별' },
   { key: 'career', name: '대학 가이드', emoji: '🧭', route: '/career', group: 'learn', desc: '글로벌학부 · 학과 · 지원자격' },
   { key: 'webtoon', name: '웹툰 입시', emoji: '🎨', route: '/webtoon', group: 'learn', desc: '웹툰학과 · 실기 · 포트폴리오' },
+  { key: 'notes', name: '학습 노트', emoji: '📓', route: '/notes', group: 'learn', desc: '세계사 · 면접 노트 정리본' },
 
   // ── 집안
   { key: 'chores', name: '집안일', emoji: '🧹', route: '/chores', group: 'home', desc: '이번 주 당번 · 완료 체크' },
@@ -46,10 +47,10 @@ export const ALL_FEATURE_KEYS = FEATURES.map((f) => f.key)
 // 아이별 기본 노출 (enabled_features 가 null 일 때)
 export const DEFAULT_FEATURES = {
   // 고3 — 웹툰으로 입시를 준비한다. 수학·경시·TOEFL·문제은행은 부담이라 꺼둔다.
-  haeum: ['study', 'words', 'quiz', 'sentences', 'chat', 'webtoon', 'chores', 'meals', 'shop', 'counsel', 'talk', 'family'],
+  haeum: ['study', 'words', 'quiz', 'sentences', 'chat', 'webtoon', 'notes', 'chores', 'meals', 'shop', 'counsel', 'talk', 'family'],
   // 고1 — 입시 트랙: TOEFL · 검정고시 문제은행 · 수학 경시 · 진학 가이드 추가
   haul: [
-    'study', 'words', 'quiz', 'sentences', 'chat', 'math', 'contest', 'toefl', 'exam', 'career',
+    'study', 'words', 'quiz', 'sentences', 'chat', 'math', 'contest', 'toefl', 'exam', 'career', 'notes',
     'chores', 'meals', 'shop', 'counsel', 'talk', 'family',
   ],
   // 중1 — 요리 코너 + 마음 그룹(상담·가족 대화·가족 현황)까지 연다.

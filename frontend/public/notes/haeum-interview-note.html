@@ -1,0 +1,987 @@
+<title>하음이 면접 노트</title>
+<style>
+  :root{
+    --paper:#F4EFE6;
+    --surface:#FFFDF8;
+    --surface-2:#F9F3E9;
+    --ink:#22242E;
+    --muted:#6E6656;
+    --line:#E4DCCC;
+    --accent:#E14A31;      /* webtoon vermilion */
+    --accent-soft:#FBE4DD;
+    --teal:#1E7A6C;
+    --teal-soft:#DCEDE9;
+    --gold:#C98A00;
+    --gold-soft:#F6E9C7;
+    --shadow:0 1px 2px rgba(34,36,46,.05),0 8px 24px rgba(34,36,46,.06);
+    --radius:16px;
+    --maxw:820px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#171821;
+      --surface:#20222C;
+      --surface-2:#262936;
+      --ink:#ECE8DE;
+      --muted:#A49B88;
+      --line:#33364444;
+      --line:#343747;
+      --accent:#F26A50;
+      --accent-soft:#3a2620;
+      --teal:#48B7A6;
+      --teal-soft:#1c2f2c;
+      --gold:#E5B23C;
+      --gold-soft:#332f1f;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+      --paper:#171821;
+      --surface:#20222C;
+      --surface-2:#262936;
+      --ink:#ECE8DE;
+      --muted:#A49B88;
+      --line:#343747;
+      --accent:#F26A50;
+      --accent-soft:#3a2620;
+      --teal:#48B7A6;
+      --teal-soft:#1c2f2c;
+      --gold:#E5B23C;
+      --gold-soft:#332f1f;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:18px}
+
+  /* ---------- nav ---------- */
+  nav.top{
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+    background:color-mix(in srgb,var(--paper) 88%,transparent);
+    backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.top .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:9px;scrollbar-width:none}
+  nav.top .wrap::-webkit-scrollbar{display:none}
+  nav.top a{
+    flex:0 0 auto;text-decoration:none;color:var(--muted);font-weight:700;font-size:13px;
+    padding:7px 12px;border-radius:999px;white-space:nowrap;font-family:"Gothic A1",sans-serif;
+    border:1px solid transparent;transition:.15s;
+  }
+  nav.top a:hover{color:var(--ink)}
+  nav.top a.active{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+
+  /* ---------- hero ---------- */
+  header.hero{padding-block:40px 26px}
+  .eyebrow{font-family:"Gothic A1",sans-serif;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);font-size:12px;margin:0 0 12px}
+  h1.title{
+    font-family:"Black Han Sans","Gothic A1",sans-serif;font-weight:400;
+    font-size:clamp(38px,10vw,64px);line-height:1.02;margin:0;letter-spacing:-.01em;text-wrap:balance;
+  }
+  h1.title span{color:var(--accent)}
+  .lede{font-size:17px;color:var(--muted);margin:16px 0 0;max-width:52ch}
+  .pen{font-family:"Nanum Pen Script",cursive;font-size:1.55em;line-height:1.3;color:var(--teal)}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip{font-family:"Gothic A1",sans-serif;font-weight:700;font-size:13px;padding:6px 13px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow)}
+  .chip b{color:var(--accent)}
+
+  /* ---------- section ---------- */
+  section{padding-block:30px;scroll-margin-top:70px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;border-bottom:2px solid var(--ink);padding-bottom:8px}
+  .sec-num{font-family:"Black Han Sans",sans-serif;font-size:22px;color:var(--accent);line-height:1}
+  h2{font-family:"Gothic A1",sans-serif;font-weight:900;font-size:clamp(23px,5.5vw,30px);margin:0;letter-spacing:-.01em}
+  .sec-sub{color:var(--muted);font-size:14.5px;margin:10px 0 18px}
+  h3{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:19px;margin:26px 0 10px}
+  h4{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:15.5px;margin:18px 0 6px;color:var(--teal)}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+
+  /* cards & callouts */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:14px}
+  @media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}}
+
+  .note{border-left:4px solid var(--gold);background:var(--gold-soft);border-radius:0 12px 12px 0;padding:12px 15px;margin:16px 0}
+  .note .pen{font-size:1.5em;color:var(--gold)}
+  .warn{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 12px 12px 0;padding:12px 15px;margin:16px 0;font-size:14.5px}
+  .warn b{color:var(--accent)}
+
+  ul,ol{margin:10px 0;padding-left:22px}
+  li{margin:6px 0}
+  ul.tick{list-style:none;padding-left:0}
+  ul.tick li{position:relative;padding-left:26px}
+  ul.tick li::before{content:"✔";position:absolute;left:0;top:0;color:var(--teal);font-weight:900}
+
+  /* summary table */
+  .tblwrap{overflow-x:auto;margin:14px 0}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:"Gothic A1",sans-serif;font-weight:800;color:var(--muted);font-size:12.5px;letter-spacing:.03em;background:var(--surface-2)}
+  td b{color:var(--accent)}
+
+  /* Q&A */
+  .qa{margin:12px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+  .qa .q{display:flex;gap:10px;padding:13px 15px;background:var(--surface-2);font-weight:700;font-family:"Gothic A1",sans-serif;font-size:15px}
+  .qa .q .mark{color:var(--accent);font-family:"Black Han Sans",sans-serif;flex:0 0 auto}
+  .qa .a{padding:12px 15px 14px 41px;font-size:14.5px;color:var(--ink)}
+  .qa .a .tip{color:var(--muted)}
+  .qa .a b{color:var(--teal)}
+
+  /* school banner */
+  .school-banner{border-radius:var(--radius);padding:20px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .sb-ck{background:linear-gradient(120deg,#B23A24,#E14A31)}
+  .sb-bs{background:linear-gradient(120deg,#155F55,#1E7A6C)}
+  .sb-ys{background:linear-gradient(120deg,#8A5E00,#C98A00)}
+  .school-banner .kicker{font-family:"Gothic A1",sans-serif;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:11px;opacity:.85;margin:0}
+  .school-banner h2{color:#fff;margin:6px 0 4px;font-size:clamp(24px,6vw,32px)}
+  .school-banner .loc{font-size:13.5px;opacity:.92;margin:0;font-weight:500}
+  .school-banner .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .school-banner .tags span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600}
+
+  /* step numbers */
+  .steps{counter-reset:s;list-style:none;padding:0;margin:12px 0;display:grid;gap:10px}
+  .steps li{counter-increment:s;position:relative;padding:12px 14px 12px 48px;background:var(--surface);border:1px solid var(--line);border-radius:12px;font-size:14.5px}
+  .steps li::before{content:counter(s);position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;
+    background:var(--accent);color:#fff;font-family:"Gothic A1",sans-serif;font-weight:800;font-size:13px;
+    display:flex;align-items:center;justify-content:center}
+  .steps.teal li::before{background:var(--teal)}
+
+  /* checklist */
+  .check{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:8px 0;cursor:pointer;transition:.12s}
+  .check:hover{border-color:var(--teal)}
+  .check input{margin-top:3px;width:18px;height:18px;accent-color:var(--teal);flex:0 0 auto;cursor:pointer}
+  .check span{font-size:14.5px}
+  .check input:checked + span{color:var(--muted);text-decoration:line-through}
+  .prog{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:13px;color:var(--teal);margin:4px 0 12px}
+
+  footer{border-top:1px solid var(--line);margin-top:24px;padding-block:26px 40px;color:var(--muted);font-size:13px}
+
+  .kbd{font-family:"Gothic A1",sans-serif;font-weight:700;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:13px}
+
+  /* mock interview script */
+  .script{display:grid;gap:9px;margin:14px 0}
+  .line{display:flex;gap:11px;padding:11px 14px;border-radius:12px;font-size:14.5px;align-items:flex-start}
+  .line .who{flex:0 0 auto;font-family:"Gothic A1",sans-serif;font-weight:800;font-size:12.5px;min-width:64px}
+  .line.itv{background:var(--surface-2);border:1px solid var(--line)}
+  .line.itv .who{color:var(--accent)}
+  .line.ans{background:var(--teal-soft);border:1px solid color-mix(in srgb,var(--teal) 22%,transparent)}
+  .line.ans .who{color:var(--teal)}
+  .line.coach{background:var(--gold-soft);font-size:13px}
+  .line.coach .who{color:var(--gold)}
+  .stage{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:13px;color:var(--muted);letter-spacing:.04em;margin:20px 0 2px;text-transform:uppercase}
+
+  /* portfolio page-by-page */
+  .pfpage{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:12px 0;background:var(--surface);box-shadow:var(--shadow)}
+  .pfpage .ttl{background:var(--surface-2);padding:11px 15px;font-family:"Gothic A1",sans-serif;font-weight:800;display:flex;gap:10px;align-items:center;font-size:15.5px}
+  .pfpage .pg{background:var(--accent);color:#fff;border-radius:8px;font-size:11.5px;padding:3px 9px;font-weight:800;flex:0 0 auto}
+  .pfpage .body{padding:6px 15px 13px}
+  .pfpage .body .row{margin:9px 0;font-size:14px}
+  .pfpage .body .lbl{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:12px;letter-spacing:.03em;display:inline-block;padding:2px 8px;border-radius:6px;margin-right:6px}
+  .lbl.see{background:var(--teal-soft);color:var(--teal)}
+  .lbl.good{background:var(--surface-2);color:var(--ink)}
+  .lbl.bad{background:var(--accent-soft);color:var(--accent)}
+
+  /* self-scoring rubric */
+  .rubric{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:14px 0;background:var(--surface);box-shadow:var(--shadow)}
+  .rubric .r{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .rubric .r:last-child{border-bottom:0}
+  .rubric .rc{flex:1 1 220px;min-width:180px}
+  .rubric .rc b{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:14.5px;display:block}
+  .rubric .rc small{color:var(--muted);font-size:12.5px;line-height:1.5}
+  .rubric select{font-family:inherit;font-size:14px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer}
+  .rubric .pts{font-family:"Gothic A1",sans-serif;font-weight:800;font-variant-numeric:tabular-nums;min-width:56px;text-align:right;color:var(--teal)}
+  .scorebox{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:18px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);margin:14px 0}
+  .scorebox .big{font-family:"Black Han Sans",sans-serif;font-size:44px;line-height:1;color:var(--accent)}
+  .scorebox .big small{font-size:18px;color:var(--muted)}
+  .scorebox .grade{font-family:"Gothic A1",sans-serif;font-weight:800;font-size:16px}
+  .bar{height:12px;border-radius:999px;background:var(--line);overflow:hidden;flex:1 1 160px;min-width:140px}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--accent));width:0;transition:width .25s}
+  .logtbl input{font-family:inherit;font-size:13.5px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);width:100%;padding:4px 2px}
+  .logtbl input:focus{outline:none;border-bottom-color:var(--teal)}
+
+  @media print{
+    nav.top{display:none}
+    body{background:#fff;color:#000;font-size:12px}
+    .card,.qa,.check,.steps li{box-shadow:none}
+    section{padding-block:14px;page-break-inside:avoid}
+  }
+</style>
+
+<nav class="top"><div class="wrap" id="navbar">
+  <a href="#home">홈</a>
+  <a href="#common">공통 기초</a>
+  <a href="#bank">예상질문 은행</a>
+  <a href="#chungkang">청강대</a>
+  <a href="#baekseok">백석예대</a>
+  <a href="#yeongsang">한국영상대</a>
+  <a href="#practical">실기·드로잉</a>
+  <a href="#portfolio">포트폴리오</a>
+  <a href="#pfcomment">포폴 코멘트</a>
+  <a href="#mock">모의 대본</a>
+  <a href="#checklist">체크리스트</a>
+  <a href="#mindset">마인드셋</a>
+</div></nav>
+
+<div class="wrap">
+
+<header class="hero" id="home">
+  <p class="eyebrow">웹툰·만화과 면접 실전 가이드</p>
+  <h1 class="title">하음이<br><span>면접 노트</span></h1>
+  <p class="lede">청강대 · 백석예대 · 한국영상대 — 세 학교를 한 권으로. 실제 면접장에서 그대로 꺼내 쓰도록, 답변 공식·예상질문·실기·포트폴리오·당일 체크리스트까지 담았어요.</p>
+  <div class="note" style="margin-top:20px">
+    <p class="pen" style="margin:0">"그림 실력보다, '하고 싶은 이야기가 뚜렷한 사람'을 뽑아. 하음이 안엔 이미 그게 있어 — 그걸 말로 꺼내는 연습만 하면 돼." 💪</p>
+  </div>
+  <div class="meta-row">
+    <span class="chip">📅 2026학년도~2027 대비</span>
+    <span class="chip">🎯 목표 <b>웹툰·만화 전공</b></span>
+    <span class="chip">🖨️ <b>인쇄</b> 가능 (Ctrl/⌘+P)</span>
+  </div>
+  <div class="warn" style="margin-top:18px">
+    <b>꼭 확인!</b> 각 학교 요약표의 수치는 <b>2026학년도 확정 모집요강 기준</b>으로 반영했어요. 반영비율·전형명·모집인원·일정은 <b>매년 바뀌므로</b>, 하음이 지원하는 <b>당해년도(2027 등) 공식 모집요강(입학처)</b>으로 최종 확인하세요.
+  </div>
+</header>
+
+<!-- ===================== 공통 기초 ===================== -->
+<section id="common">
+  <div class="sec-head"><span class="sec-num">01</span><h2>공통 기초 — 답변의 뼈대</h2></div>
+  <p class="sec-sub">어느 학교든 통하는 '말하는 법'부터. 이걸 몸에 익히면 어떤 질문이 나와도 흔들리지 않아요.</p>
+
+  <h3>① 답변 공식 : PREP (30초 안에 끝내기)</h3>
+  <div class="grid two">
+    <div class="card">
+      <ul class="tick" style="margin:0">
+        <li><b>P</b>oint — 결론부터. "저는 ~라고 생각합니다."</li>
+        <li><b>R</b>eason — 이유 1가지. "왜냐하면 ~"</li>
+        <li><b>E</b>xample — 내 작품·경험으로 증명. "실제로 제 단편에서 ~"</li>
+        <li><b>P</b>oint — 한 번 더 못 박기 + 학교와 연결.</li>
+      </ul>
+    </div>
+    <div class="note" style="margin:0">
+      <p style="margin:0;font-size:14.5px">두괄식이 핵심! 면접관은 하루에 수십 명을 봐요. <b>결론 → 근거 → 예시</b> 순서로 말하면 "정리된 사람"으로 보입니다. 서론이 길면 흐려져요.</p>
+    </div>
+  </div>
+
+  <h3>② 30초 자기소개 템플릿</h3>
+  <div class="card">
+    <p style="margin:0 0 8px"><b style="color:var(--teal)">공식:</b> [한 줄 정체성] + [웹툰을 시작한 계기] + [내 강점 1개 + 근거 작품] + [이 학교에서 이루고 싶은 것]</p>
+    <p style="margin:10px 0 0;font-size:14.5px;color:var(--muted)">예) "안녕하세요, <b style="color:var(--ink)">일상의 작은 감정을 캐릭터로 옮기는 걸 좋아하는</b> 지원자 ○하음입니다. 중학교 때 친구 이야기를 4컷으로 그려준 게 시작이었고, 그 뒤로 <b style="color:var(--ink)">'완결된 짧은 이야기'</b>를 여러 편 만들며 스토리 구성에 강점을 키웠습니다. ○○대학교에서 연출과 작화를 제대로 배워 <b style="color:var(--ink)">제 세계관을 가진 연재 작가</b>가 되고 싶습니다."</p>
+  </div>
+  <div class="note"><p class="pen" style="margin:0">👉 자기소개는 <b style="font-family:inherit">외워서 녹음</b>하고, 30초 안에 자연스럽게 나올 때까지 반복! 눈 감고도 나와야 실전에서 안 떨려.</p></div>
+
+  <h3>③ 지원동기 — "왜 하필 이 학교?"</h3>
+  <p>가장 자주, 가장 깊게 파고드는 질문이에요. <b>모든 학교에 똑같이 쓸 수 있는 대답은 0점</b>. 각 학교의 <b>고유한 것 1가지</b>(커리큘럼·전공 구분·교수·시설·졸업생 작가)를 콕 집어 내 목표와 연결하세요. (학교별 무기는 아래 각 학교 섹션에 정리해뒀어요.)</p>
+
+  <h3>④ "좋아하는 작가/웹툰" 답변법</h3>
+  <div class="warn"><b>절대 금지:</b> "그냥 재밌어서요." / 제목만 말하고 끝 / 최신 트렌드 하나도 모름</div>
+  <ol class="steps">
+    <li><b>작품명</b>을 정확히 (작가명까지 알면 +점)</li>
+    <li><b>무엇이</b> 좋은지 구체적으로 — 연출·컷 분할·캐릭터·색·스토리 중 <b>1가지</b>를 콕</li>
+    <li>그게 <b>나에게 준 영향</b> — "이걸 보고 ~를 배웠다/시도했다"</li>
+    <li><b>내 작업에 어떻게 적용</b>했는지까지 연결하면 완벽</li>
+  </ol>
+  <p class="sec-sub" style="margin-top:12px">📌 챙겨갈 것: ①오래 좋아한 인생작 1편 ②최근 화제작 1편(트렌드 감각 증명) ③내 그림·이야기에 영향 준 작가 1명. 가능하면 <b>지원 학교 교수·졸업생 작가</b>도 하나 알아두면 강력해요.</p>
+</section>
+
+<!-- ===================== 예상질문 은행 ===================== -->
+<section id="bank">
+  <div class="sec-head"><span class="sec-num">02</span><h2>예상 질문 은행 + 답변 포인트</h2></div>
+  <p class="sec-sub">유형별로 정리했어요. 각 질문마다 <b style="color:var(--teal)">이렇게 답해라</b> 포인트가 붙어 있으니, 하음이 이야기로 살을 붙여 연습하면 돼요.</p>
+
+  <h4>A. 기본 · 정체성</h4>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>자기소개와 지원동기를 함께 말해보세요.</span></div><div class="a"><b>포인트</b> 위 30초 템플릿 그대로. <span class="tip">지원동기엔 반드시 그 학교만의 요소 1개를 넣기.</span></div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>왜 그림/웹툰을 하려고 하나요? 언제부터 그렸나요?</span></div><div class="a"><b>포인트</b> "재능"보다 <b>'구체적 계기 + 꾸준함'</b> 스토리. "언제, 무엇을 계기로, 그 뒤로 어떻게 계속해왔다"의 흐름.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>본인의 강점과 약점은?</span></div><div class="a"><b>포인트</b> 강점은 작품으로 증명. 약점은 <b>"그래서 이렇게 극복 중"</b>까지 세트로. (예: "마감 속도가 약점이라, 요즘은 완성 기한을 정해두고 러프-펜선-채색을 나눠 작업해요.")</div></div>
+
+  <h4>B. 작품 · 포트폴리오 (가장 깊게 파고드는 파트)</h4>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>가장 애착 가는 작품과 그 이유는?</span></div><div class="a"><b>포인트</b> <b>무엇을 표현하려 했는지(주제·감정)</b>를 먼저. 그 다음 어떤 연출·장치로 표현했는지. 그림 설명이 아니라 <b>이야기 설명</b>이 되어야 해요.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>이 작품에서 가장 어려웠던 점과 해결 방법은?</span></div><div class="a"><b>포인트</b> 문제 → 시도 → 해결/배운 점. <b>성장의 증거</b>로 보이게. 솔직하게, 하지만 해결 의지로 마무리.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>스토리/아이디어는 어디서 얻나요?</span></div><div class="a"><b>포인트</b> "일상 관찰, 대화, 다른 작품, 감정 메모" 등 <b>나만의 수집 습관</b>을 하나. 관찰형 작가라는 인상을 주면 좋아요.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>디지털 툴은 뭘 쓰나요? 작업 과정을 설명해보세요.</span></div><div class="a"><b>포인트</b> 프로그램명(클립스튜디오/포토샵/프로크리에이트 등) + 콘티→러프→펜선→채색 순서를 짧고 명확하게.</div></div>
+
+  <h4>C. 취향 · 안목</h4>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>좋아하는 작가·웹툰과 그 이유는?</span></div><div class="a"><b>포인트</b> 위 '④ 답변법' 4단계 그대로. <span class="tip">최근작 1개는 꼭 챙기기.</span></div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>요즘 웹툰 시장/트렌드를 어떻게 보나요? AI 웹툰은?</span></div><div class="a"><b>포인트</b> 정답 없음 — <b>본인 생각 + 근거</b>가 있으면 됩니다. AI는 "도구로 활용하되 이야기·연출은 사람의 몫"처럼 균형 잡힌 태도가 안전.</div></div>
+
+  <h4>D. 진로 · 비전</h4>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>졸업 후 뭘 하고 싶나요? 10년 뒤 모습은?</span></div><div class="a"><b>포인트</b> 막연한 "유명 작가"❌ → <b>구체적 장르·형태</b>(연재 작가/스토리 작가/캐릭터 IP 등) + 그 학교에서 뭘 배워 거기 도달할지.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>데뷔 계획이 있나요? 공모전 경험은?</span></div><div class="a"><b>포인트</b> 있으면 사실대로 + 배운 점. 없으면 <b>"재학 중 꼭 도전하겠다"</b>는 계획으로.</div></div>
+
+  <h4>E. 태도 · 인성</h4>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>피드백/비판을 받으면 어떻게 하나요?</span></div><div class="a"><b>포인트</b> "감정보다 성장" — 받아들이고 고쳐본 <b>실제 경험</b> 1개. 작가에게 필수 자질이라 자주 물어요.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>다른 학교도 지원했나요? 왜 우리 학교인가요?</span></div><div class="a"><b>포인트</b> 솔직하되, <b>이 학교의 고유 강점</b>으로 "그래서 여기가 1순위"라고 자연스럽게. 다른 학교 비하❌.</div></div>
+
+  <h4>F. 돌발 · 창의 (특히 청강·계원 계열)</h4>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>지금 옆 사람(또는 면접관)을 캐릭터로 그린다면?</span></div><div class="a"><b>포인트</b> 관찰력 + 순발력 테스트. 특징 1~2개 잡아 "이런 캐릭터로 잡겠다"고 <b>밝고 재치있게</b>. 정답보다 태도.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>무인도에 웹툰 한 편만 가져간다면? / 좋아하는 색·계절을 캐릭터로?</span></div><div class="a"><b>포인트</b> 당황 금지. <b>이유를 붙여</b> 답하면 무조건 통과. 침묵·"모르겠어요"만 피하면 됩니다.</div></div>
+  <div class="note"><p style="margin:0;font-size:14.5px">돌발질문의 목적은 <b>정답 확인이 아니라 '당황했을 때의 태도'</b> 확인. 웃으면서, 이유를 붙여 말하면 이미 성공이에요.</p></div>
+</section>
+
+<!-- ===================== 청강대 ===================== -->
+<section id="chungkang">
+  <div class="school-banner sb-ck">
+    <p class="kicker">School 01 · 만화콘텐츠스쿨</p>
+    <h2>청강문화산업대학교</h2>
+    <p class="loc">경기 이천 · 웹툰/만화 최상위권 · 경쟁률 높음(약 9:1대)</p>
+    <div class="tags"><span>웹툰만화콘텐츠전공</span><span>만화캐릭터일러스트레이션전공</span><span>포트폴리오+면접</span><span>즉석 드로잉</span></div>
+  </div>
+
+  <h3>한눈에 보기</h3>
+  <div class="tblwrap"><table>
+    <tr><th>구분</th><th>내용 <span style="font-weight:400;color:var(--muted)">(2026학년도 기준 · 2027 재확인)</span></th></tr>
+    <tr><td>전공·모집</td><td>만화콘텐츠스쿨 총 <b>315명</b> — 웹툰만화콘텐츠(만화과) <b>190명</b> · 만화캐릭터일러스트레이션(신설, 일러스트과) <b>25명</b> · 웹소설창작 100명</td></tr>
+    <tr><td>전형 2갈래</td><td><b>①면접전형</b>(면접 + 포트폴리오) / <b>②실기전형</b>(상황표현·만화적 주제표현 현장 실기)</td></tr>
+    <tr><td>반영비율</td><td>면접전형 = <b>면접 100%</b>(+포트폴리오) / 실기전형 = <b>실기 60% + 학생부 40%</b> <span style="color:var(--muted)">(융합·자율전공은 실기 100%)</span></td></tr>
+    <tr><td>면접전형 인원(예시)</td><td>수시1차 웹툰만화 40명 등(전공별) · <b>정시 면접전형 약 10명</b> ※ 경쟁률 높음(9:1대)</td></tr>
+    <tr><td>면접 방식</td><td><b>3테이블 부스 이동식</b> (입구·출구 다름, 일방향) · 태블릿으로 포폴 열람</td></tr>
+    <tr><td>장소</td><td>정시 면접=교내(1월), 수시1차=수원컨벤션센터인 해도 있음</td></tr>
+  </table></div>
+
+  <h3>면접 진행 — 3개 테이블을 돈다</h3>
+  <ol class="steps">
+    <li><b>테이블 1 — 자기소개 + 자기소개서 기반 질문.</b> 첫인상·전달력 승부처.</li>
+    <li><b>테이블 2 — 포트폴리오 집중 질문.</b> 태블릿으로 포폴을 보며 "이 작품 왜 이렇게?"를 파고듦.</li>
+    <li><b>테이블 3 — 일반 질문</b>(지원동기·기대·진로 등).</li>
+  </ol>
+  <p class="sec-sub">각 테이블엔 <b>태블릿</b>이 있어 교수가 그걸로 포폴을 봐요(종이 원본은 상대적으로 덜 넘겨봄). 테이블마다 짧게 진행되니 <b>두괄식·핵심</b>이 특히 중요.</p>
+
+  <h3>🎨 즉석 드로잉 (청강 면접전형의 핵심)</h3>
+  <div class="card">
+    <p style="margin:0 0 6px"><b style="color:var(--accent)">예시 주제:</b> "내 포트폴리오에 나온 캐릭터가 <b>우리 집 실내(거실·방)</b>에서 친구와 노는 모습"</p>
+    <ul class="tick" style="margin:8px 0 0">
+      <li><b>시간 20분</b>(배경 포함 과제일 때). 해마다 난이도 상승 — 예전 '캐릭터만' → 요즘 '배경까지'.</li>
+      <li>여러 후기가 <b>"드로잉은 점수에 직접 반영되지 않는다"</b>고 전해요 → 완성도에 과하게 압박받지 말 것.</li>
+      <li>단, <b>내 캐릭터를 즉석에서 다시 그릴 수 있어야</b> 해요. 포폴 캐릭터의 얼굴·비율을 손에 익혀두기!</li>
+    </ul>
+  </div>
+  <div class="note"><p class="pen" style="margin:0">✏️ 즉석 드로잉 연습법: 내 대표 캐릭터를 <b style="font-family:inherit">'다양한 상황(먹기·자기·달리기)+간단한 배경'</b>으로 20분 안에 그리는 걸 매일 1장씩. 시간 배분(러프 5분→클린 15분) 몸에 익히기.</p></div>
+
+  <h3>즉석 드로잉 예시 주제 모음 (연습용)</h3>
+  <div class="warn"><b>공식 주제는 매년 달라요.</b> 아래는 실제 출제 패턴 — <b>「내 캐릭터 + 상황 + 배경」</b> — 을 그대로 본떠 만든 <b>연습용 예상 주제</b>입니다. 하음이 <b>대표 캐릭터</b>로 하나씩 20분 타이머 걸고 그려보세요.</div>
+
+  <h4>주제는 대개 이 3가지 유형</h4>
+  <div class="grid three">
+    <div class="card"><h4 style="margin-top:0">① 캐릭터 + 공간(배경)</h4><p style="margin:0;font-size:13.5px">특정 장소에 내 캐릭터를 놓기. 공간감·투시가 관건. <span style="color:var(--muted)">(실제 출제: 우리 집 실내)</span></p></div>
+    <div class="card"><h4 style="margin-top:0">② 캐릭터 + 감정·상황</h4><p style="margin:0;font-size:13.5px">특정 감정/사건 순간. 표정·동작·연출로 감정 전달이 관건.</p></div>
+    <div class="card"><h4 style="margin-top:0">③ 캐릭터 + 관계(2인 이상)</h4><p style="margin:0;font-size:13.5px">친구·가족과 함께. 시선·거리로 '관계'를 보여주기.</p></div>
+  </div>
+
+  <div class="grid two" style="margin-top:14px">
+    <div class="card">
+      <h4 style="margin-top:0">🏠 일상 · 공간 (유형①)</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14px">
+        <li><b>내 캐릭터가 우리 집 거실/방에서 친구와 노는 모습</b> <span style="color:var(--muted)">(실제 출제)</span></li>
+        <li>아침에 막 일어나 침대에서 부스스한 모습</li>
+        <li>편의점/분식집에서 뭘 먹을지 고르는 모습</li>
+        <li>버스·지하철에서 창밖을 보는 모습</li>
+        <li>비 오는 날 우산 쓰고 골목을 걷는 모습</li>
+        <li>내 캐릭터의 '방' — 소지품으로 성격 보여주기</li>
+        <li>교실 책상에 엎드려 조는 모습</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">💥 감정 · 상황 (유형②)</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14px">
+        <li>시험을 망친 날의 표정</li>
+        <li>가장 행복했던 순간</li>
+        <li>화가 나서 폭발하기 직전</li>
+        <li>오랜만에 만난 친구가 반가운 순간</li>
+        <li>혼자 남겨진 쓸쓸한 장면</li>
+        <li>깜짝 놀라 뒤로 넘어지는 순간</li>
+        <li>좋아하는 걸 처음 발견한 설렘</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">🏃 동작 · 계절 (유형①·②)</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14px">
+        <li>달리거나 자전거를 타는 역동적 순간</li>
+        <li>요리하다 실수해 당황한 모습</li>
+        <li>반려동물과 뛰노는 장면</li>
+        <li>눈 오는 거리 / 벚꽃 아래 / 여름 바닷가</li>
+        <li>낙엽 지는 공원 벤치</li>
+        <li>운동회·축제 같은 시끌벅적한 순간</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">👥 관계 · 상상 (유형③·창의)</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14px">
+        <li>친구와 다투는(또는 화해하는) 장면</li>
+        <li>가족과 함께 식사하는 모습</li>
+        <li>동생/누군가를 돌봐주는 모습</li>
+        <li>내 세계관 속 캐릭터의 한 장면</li>
+        <li>좋아하는 음식이 거대해진 상상 세계</li>
+        <li>'나를 상징하는 물건'과 함께 있는 캐릭터</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note"><p style="margin:0;font-size:14px">⏱️ <b style="font-family:'Gothic A1'">어떤 주제가 나와도 통하는 3단계</b> — ①주제를 '한 문장 이야기'로 해석 → ②구도·시선·감정을 먼저 정하고 러프(5분) → ③내 캐릭터 얼굴·비율 정확히 클린업 + 필요한 배경만(15분). <b>내 캐릭터를 손에 익혀두는 게 8할!</b></p></div>
+
+  <h3>포트폴리오 규격</h3>
+  <ul>
+    <li><b>제본:</b> A3 스프링 제본 권장(제작비 약 5만 원), A4도 허용.</li>
+    <li><b>분량:</b> 25~30p 내외. 구성 예 — 표지·목차 + 캐릭터 시트 + <b>완결 단편 만화(웹툰/출판)</b> + 개인 창작작 + 크로키/스케치.</li>
+    <li><b>핵심:</b> 주제는 자유. 실기가 아니라 <b>"내가 하고 싶은 이야기"</b>를 자유롭게 보여주는 전형 — 캐릭터·세계관·연출이 뚜렷할수록 강함.</li>
+  </ul>
+
+  <h3>청강대 맞춤 예상질문 & 무기</h3>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>왜 청강대인가요? (다른 웹툰과 대비)</span></div><div class="a"><b>무기</b> "실기가 아닌 <b>내 이야기(포트폴리오)로 평가</b>하는 전형", "만화콘텐츠스쿨의 <b>실무·현업 중심</b> 교육", "웹툰만화 vs 캐릭터일러 <b>전공 세분화</b>"를 근거로. 좋아하는 청강 출신 작가가 있으면 언급.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>웹툰만화 전공과 캐릭터일러 전공 중 왜 이 전공?</span></div><div class="a"><b>포인트</b> 내 포폴 성향과 일치시키기. 서사·연재형이면 웹툰만화 / 캐릭터·비주얼·굿즈/일러 지향이면 캐릭터일러.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>(테이블2) 이 컷을 이렇게 연출한 이유는?</span></div><div class="a"><b>포인트</b> 내 포폴의 <b>모든 선택에 이유를 준비</b>. "이 장면은 감정을 강조하려 클로즈업+여백을 줬다"처럼 <b>의도 설명</b>이 가능해야.</div></div>
+</section>
+
+<!-- ===================== 백석예대 ===================== -->
+<section id="baekseok">
+  <div class="school-banner sb-bs">
+    <p class="kicker">School 02 · 영상학부</p>
+    <h2>백석예술대학교</h2>
+    <p class="loc">서울 서초 방배 · 2호선 방배(백석예술대)역 바로 앞 / 7호선 내방역 · 서울 소재 접근성 강점</p>
+    <div class="tags"><span>영상학부 만화애니메이션전공</span><span>실기전형 + 면접전형 (택1)</span><span>포폴 지참 가산점</span></div>
+  </div>
+
+  <h3>한눈에 보기</h3>
+  <div class="tblwrap"><table>
+    <tr><th>구분</th><th>내용 <span style="font-weight:400;color:var(--muted)">(2026학년도 기준 · 2027 재확인)</span></th></tr>
+    <tr><td>소속</td><td>영상학부 — <b>만화애니메이션전공</b> / 게임그래픽디자인전공 / 영상미디어전공 / 영화콘텐츠전공</td></tr>
+    <tr><td>전형 2갈래</td><td><b>①실기전형</b>(실기고사 있음) / <b>②면접전형</b>(포폴 지참 시 가산점) — <b>둘 중 택1 지원</b></td></tr>
+    <tr><td>면접전형 비율</td><td><b>학생부 40% + 면접 60%</b> (포트폴리오 지참 시 가산점)</td></tr>
+    <tr><td>실기전형 비율</td><td>학생부 + 실기 (실기 비중 큼) · 종목은 아래 참고</td></tr>
+    <tr><td>모집인원(예시)</td><td>수시1차 만화애니+게임그래픽 <b>실기 63명 · 면접 27명</b> / 정시 <b>실기 25명 · 면접 10명</b> <span style="color:var(--muted)">※ 두 전공 합산 수치, 당해 요강 확인</span></td></tr>
+  </table></div>
+
+  <div class="note"><p style="margin:0;font-size:14.5px">💡 <b style="font-family:'Gothic A1'">백석예대는 '실기 or 면접'을 골라 지원</b>해요. <b>면접전형</b>이면 그림 실기시험 없이 면접 60%로 승부(포폴 지참 가산점) → 공통 기초·예상질문 은행 집중. <b>실기전형</b>이면 아래 실기 예시 주제로 대비. 하음이가 <b>말하기에 자신 있으면 면접전형, 그림 실기에 자신 있으면 실기전형</b>을 선택!</p></div>
+  <div class="warn" style="border-left-color:var(--teal);background:var(--teal-soft)"><b style="color:var(--teal)">주의 — 학교 이름 혼동 금지!</b> 하음이 목표는 <b>백석예술대학교(서울 방배, bau.ac.kr)</b>예요. <b>백석대학교</b>(천안)·<b>백석문화대학교 웹툰애니메이션학부</b>는 다른 학교입니다. 요강 찾을 때 꼭 '백석예술대 입학처'로.</div>
+
+  <h3>면접 방식 · 절차</h3>
+  <ul class="tick">
+    <li>영상학부 공통 인성·전공 면접 형태. 자기소개서 기반 + 전공 이해도·진로 확인.</li>
+    <li>면접 전 <b>휴대폰 등 전자기기를 제출</b>했다가, 면접 후 <b>직접 수령하고 귀가</b>하는 절차(대기 중 검색·유출 방지).</li>
+    <li>면접전형 지원자는 <b>포트폴리오 지참 시 포폴 평가로 가산점</b>(꼭 챙겨가기!). 없어도 면접·학생부로 평가.</li>
+  </ul>
+
+  <h3>백석예대 실제/예상 면접질문</h3>
+  <div class="qa"><div class="q"><span class="mark">Q1</span><span>자기소개와 함께 지원동기를 말해주세요. <span style="font-weight:500;color:var(--muted)">(실제 출제 유형)</span></span></div><div class="a"><b>포인트</b> 30초 템플릿 + "서울 소재 영상학부에서 만화·애니를 배우고 싶은 이유"를 자연스럽게.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q2</span><span>전공(만화애니메이션)과 관련해 어떤 준비/경험을 했나요? <span style="font-weight:500;color:var(--muted)">(실제 출제 유형)</span></span></div><div class="a"><b>포인트</b> 그려온 작품·독학·학원·공모전 등 구체적으로. "이 전공을 진지하게 준비해왔다"는 증거.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>졸업 후 진로는? 어떤 창작자가 되고 싶나요?</span></div><div class="a"><b>포인트</b> 웹툰·애니·영상 등 학부 성격에 맞춰 구체적으로. 학부 커리큘럼과 연결.</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>가장 좋아하는 작품과 이유 / 최근 본 웹툰은?</span></div><div class="a"><b>포인트</b> 공통 '④ 답변법'. 애니메이션·영상까지 포함해 안목을 보여주면 학부 성격상 유리.</div></div>
+
+  <h3>백석 실기전형 — 실기 예시 주제 (연습용)</h3>
+  <div class="warn"><b>실기전형을 고를 때만 해당!</b> 백석 영상학부 실기 종목은 연도별로 <b>상황표현 · 기초디자인 · 스토리보드(콘티) · 이야기구성(스토리텔링)</b> 계열이 제시되고, 원서접수 때 유형을 선택해요. 아래는 <b>상황표현 중심 연습용 주제</b>입니다. <b>정확한 종목·시간·규격은 백석예술대 요강 필수 확인.</b></div>
+  <div class="grid two">
+    <div class="card">
+      <h4 style="margin-top:0">🎭 상황표현 — 감정·키워드형</h4>
+      <p style="margin:0 0 6px;font-size:13.5px;color:var(--muted)">주어진 한 단어를 '한 장면'으로 극적 연출. 구도·명암·표정으로 감정 압축.</p>
+      <ul style="margin:0;padding-left:18px;font-size:14px">
+        <li>기다림 / 설렘 / 후회 / 그리움</li>
+        <li>자유 / 일탈 / 해방감</li>
+        <li>위로 / 이별 / 재회</li>
+        <li>도전 / 성취의 순간 / 좌절</li>
+        <li>비밀 / 낯선 곳 / 혼자</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">🎬 상황표현 — 장면 상황형</h4>
+      <p style="margin:0 0 6px;font-size:13.5px;color:var(--muted)">구체적 상황을 감정이 드러나게 연출.</p>
+      <ul style="margin:0;padding-left:18px;font-size:14px">
+        <li>비 오는 날의 버스정류장</li>
+        <li>시험 발표 직후의 교실</li>
+        <li>밤늦은 편의점</li>
+        <li>불꽃놀이가 끝난 놀이공원</li>
+        <li>이사 가는 날, 텅 빈 방</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h4 style="margin-top:0">📋 스토리보드(콘티) · 이야기구성 유형이라면</h4>
+    <p style="margin:0;font-size:14px">키워드를 받아 <b>4~8컷의 짧은 이야기</b>를 기승전결로 구성하는 유형. 연습 주제 예 — <b>「선물」 「거짓말」 「첫날」 「마지막 버스」 「비밀친구」</b>. 컷 분할·시선 유도·반전을 넣어 <b>그림만으로 읽히게</b>. (하음이의 스토리텔링 강점이 그대로 통하는 유형!)</p>
+  </div>
+  <div class="note"><p style="margin:0;font-size:14px">⏱️ 상황표현 접근 3단계 — ①키워드를 '누가·언제·왜'의 한 장면으로 해석 → ②가장 보여줄 곳에 명암·시선 집중(러프) → ③인물 표정·동작으로 감정 확정 + 배경은 필요한 만큼만.</p></div>
+
+  <h3>백석예대 합격 전략</h3>
+  <ol class="steps teal">
+    <li><b>전형 선택 먼저</b> — 말하기·태도가 강점이면 <b>면접전형</b>(면접 60%), 그림 실기가 강점이면 <b>실기전형</b>. 원서접수 때 결정.</li>
+    <li><b>면접전형이면</b> — 자기소개·지원동기·진로 3종 세트 완벽 암기 + 포트폴리오 지참(가산점). 밝은 인상·눈맞춤·또렷한 발음.</li>
+    <li><b>실기전형이면</b> — 위 상황표현 주제로 시간 내 완성 훈련. 감정 전달·구도·기본기.</li>
+    <li><b>학생부 관리</b> — 두 전형 모두 학생부가 반영되니 출결·태도 점검, 창작 활동은 스토리로 엮기.</li>
+  </ol>
+</section>
+
+<!-- ===================== 한국영상대 ===================== -->
+<section id="yeongsang">
+  <div class="school-banner sb-ys">
+    <p class="kicker">School 03 · 만화웹툰콘텐츠과</p>
+    <h2>한국영상대학교</h2>
+    <p class="loc">세종 · 실무/취업 중심 · 전공 세분화가 강점</p>
+    <div class="tags"><span>만화웹툰전공</span><span>웹툰일러스트전공</span><span>웹툰PD전공</span><span>웹툰애니자율전공</span><span>애니메이션전공</span></div>
+  </div>
+
+  <h3>한눈에 보기</h3>
+  <div class="tblwrap"><table>
+    <tr><th>구분</th><th>내용 <span style="font-weight:400;color:var(--muted)">(2026학년도 기준 · 2027 재확인)</span></th></tr>
+    <tr><td>학과·전공</td><td>만화웹툰콘텐츠과 — 만화웹툰 / 웹툰일러스트 / 웹툰PD / 웹툰애니자율 / 애니메이션 전공으로 세분화</td></tr>
+    <tr><td>핵심 특징</td><td><b>실기 중심 학교</b> (학생부 위주 전형도 별도). 학과 실무·취업 색이 강함.</td></tr>
+    <tr><td>실기 방식</td><td>시험장에서 <b>화지 배부(화판 사용 불가)</b> → 제시 주제로 <b>상황표현 · 칸만화 · 웹툰(만화적 연출) 중 1가지 택1</b></td></tr>
+    <tr><td>반영비율</td><td>실기전형 <b>학생부 40% + 실기 60%</b> · 학생부(교과)위주 전형은 학생부 100%</td></tr>
+  </table></div>
+
+  <div class="note"><p style="margin:0;font-size:14.5px">💡 <b style="font-family:'Gothic A1'">한국영상대는 '실기' 학교</b>예요. 청강·백석과 결이 달라요 → 아래 <a href="#practical">실기·드로잉</a> 섹션을 이 학교 대비의 핵심으로 삼으세요. (면접이 병행되는 해도 있으니 요강 확인!)</p></div>
+
+  <h3>실기 — 3가지 중 무엇을 고를까</h3>
+  <div class="grid three">
+    <div class="card"><h4 style="margin-top:0">상황표현</h4><p style="margin:0;font-size:14px">주어진 상황/감정을 <b>한 장면</b>에 극적으로. 구도·명암·공간감으로 이야기를 압축.</p></div>
+    <div class="card"><h4 style="margin-top:0">칸만화</h4><p style="margin:0;font-size:14px">4~8컷 <b>기승전결</b>. 컷 분할·시선 유도·연출이 관건. 대사는 최소로.</p></div>
+    <div class="card"><h4 style="margin-top:0">웹툰</h4><p style="margin:0;font-size:14px"><b>세로 스크롤</b> 흐름·리듬·여백. 요즘 트렌드에 가장 가까운 선택지.</p></div>
+  </div>
+  <div class="warn"><b>규정 확인:</b> 화판 사용 가능 여부·화지 규격은 학교/연도별로 달라요(한국영상대는 화지 제공형). 반드시 요강에서 확인하고, 실제 시험과 같은 조건으로 연습하세요.</div>
+
+  <h3>한국영상대 맞춤 포인트</h3>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>(면접 병행 시) 여러 전공 중 왜 이 전공인가요?</span></div><div class="a"><b>포인트</b> 전공 세분화가 특징이니 <b>전공별 차이를 이해</b>하고 골랐다는 걸 보여주기. (그리기=만화웹툰/일러, 기획·연출=웹툰PD 등)</div></div>
+  <div class="qa"><div class="q"><span class="mark">Q</span><span>졸업 후 어떤 실무를 하고 싶나요?</span></div><div class="a"><b>포인트</b> 실무·취업 중심 학교라 <b>구체적 직무</b>(연재작가·어시·콘티/PD·채색 등)로 답하면 학교 성격과 맞아 좋아요.</div></div>
+  <ol class="steps teal" style="margin-top:16px">
+    <li><b>실기 기본기</b> — 인체 비율·투시·명암·구도. 매일 크로키.</li>
+    <li><b>시간 내 완성</b> — 실제 시간(예: 상황표현 기준)에 맞춰 완성하는 훈련 반복.</li>
+    <li><b>아이디어 스톡</b> — 주제가 뭐가 나와도 대응하도록 '상황→연출' 아이디어를 미리 여러 개.</li>
+  </ol>
+</section>
+
+<!-- ===================== 실기·드로잉 ===================== -->
+<section id="practical">
+  <div class="sec-head"><span class="sec-num">03</span><h2>실기 · 즉석 드로잉 대비</h2></div>
+  <p class="sec-sub">한국영상대(실기)와 청강대(즉석 드로잉) 공통으로 통하는 훈련법. '시간 안에 이야기가 보이게' 그리는 게 목표예요.</p>
+
+  <h3>상황표현 잘하는 법</h3>
+  <ul class="tick">
+    <li>주제를 받으면 <b>먼저 '한 문장 이야기'</b>로 정리 → 어떤 감정/순간을 그릴지 결정.</li>
+    <li><b>구도로 이야기</b>: 주인공 시선·동선, 빈 공간(여백)으로 긴장·고독 표현.</li>
+    <li><b>명암 대비</b>로 시선 유도 — 가장 보여주고 싶은 곳을 가장 밝게/어둡게.</li>
+    <li>배경은 <b>이야기에 필요한 만큼만</b>. 다 채우려다 시간 초과 금지.</li>
+  </ul>
+
+  <h3>칸만화·웹툰 연출</h3>
+  <ul class="tick">
+    <li>기(상황)–승(전개)–전(반전/절정)–결(마무리) <b>4박자</b>가 기본.</li>
+    <li>컷 크기로 <b>템포</b> 조절: 큰 컷=강조, 작은 컷=빠른 전개.</li>
+    <li>대사 없이 <b>그림만으로도 읽히게</b> — 표정·동작·시선.</li>
+  </ul>
+
+  <h3>즉석 드로잉(청강) 20분 시간 배분</h3>
+  <ol class="steps">
+    <li><b>0~3분</b> 주제 해석 + 머릿속 구도 잡기(작게 러프 썸네일).</li>
+    <li><b>3~8분</b> 전체 러프 스케치(캐릭터 위치·배경 큰 덩어리).</li>
+    <li><b>8~18분</b> 클린업(내 캐릭터 얼굴·비율 정확히!) + 필요한 배경.</li>
+    <li><b>18~20분</b> 마무리·정리. 미완이어도 <b>구도가 완결</b>돼 보이게.</li>
+  </ol>
+  <div class="note"><p class="pen" style="margin:0">🖊️ 매일 루틴: 내 대표 캐릭터를 다른 상황·앵글로 하루 1~2장, 20분 타이머 켜고. '내 캐릭터를 손에 익히는 것'이 즉석 드로잉의 8할!</p></div>
+
+  <h3>🎯 즉석 드로잉 자가 채점표 (20분 연습용)</h3>
+  <p class="sec-sub">20분 타이머로 한 장 그린 뒤, 각 항목을 스스로 평가해보세요. 점수를 고르면 <b>자동으로 합산·등급</b>이 나와요. 청강 실제 평가 관점(캐릭터 일관성·주제 해석·연출)에 맞춘 기준입니다.</p>
+
+  <div class="rubric" id="rubric">
+    <div class="r" data-key="time"><div class="rc"><b>① 시간 내 완성도 <span style="color:var(--muted);font-weight:600">(15)</span></b><small>20분 안에 화면이 '완결감' 있게 마무리됐나 (미완/여백 방치 아님)</small></div><select class="rub-sel" data-max="15"></select><span class="pts">0</span></div>
+    <div class="r" data-key="theme"><div class="rc"><b>② 주제 해석 <span style="color:var(--muted);font-weight:600">(15)</span></b><small>제시된 상황·주제를 정확히 이해하고 화면에 담았나</small></div><select class="rub-sel" data-max="15"></select><span class="pts">0</span></div>
+    <div class="r" data-key="char"><div class="rc"><b>③ 캐릭터 일관성 <span style="color:var(--accent);font-weight:700">(20·최중요)</span></b><small>내 포폴 캐릭터의 얼굴·비율·특징을 그대로 유지했나</small></div><select class="rub-sel" data-max="20"></select><span class="pts">0</span></div>
+    <div class="r" data-key="comp"><div class="rc"><b>④ 구도·연출 <span style="color:var(--muted);font-weight:600">(15)</span></b><small>시선 유도·화면 배치·강조점이 살아 있나</small></div><select class="rub-sel" data-max="15"></select><span class="pts">0</span></div>
+    <div class="r" data-key="emo"><div class="rc"><b>⑤ 동작·표정(감정 전달) <span style="color:var(--muted);font-weight:600">(15)</span></b><small>포즈·표정으로 상황과 감정이 '읽히나'</small></div><select class="rub-sel" data-max="15"></select><span class="pts">0</span></div>
+    <div class="r" data-key="bg"><div class="rc"><b>⑥ 배경·공간감 <span style="color:var(--muted);font-weight:600">(10)</span></b><small>필요한 배경을 투시·공간감 있게 (과하지 않게)</small></div><select class="rub-sel" data-max="10"></select><span class="pts">0</span></div>
+    <div class="r" data-key="attitude"><div class="rc"><b>⑦ 과정·태도 <span style="color:var(--muted);font-weight:600">(10)</span></b><small>러프→클린 순서, 지우개 남발 없이 자신감 있게</small></div><select class="rub-sel" data-max="10"></select><span class="pts">0</span></div>
+  </div>
+
+  <div class="scorebox">
+    <div class="big" id="scoreNum">0<small>/100</small></div>
+    <div style="flex:1 1 160px">
+      <div class="grade" id="scoreGrade">항목을 평가해 보세요</div>
+      <div class="bar" style="margin-top:8px"><i id="scoreBar"></i></div>
+    </div>
+    <button id="rubReset" style="font-family:'Gothic A1',sans-serif;font-weight:700;font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer">초기화</button>
+  </div>
+  <div class="note" id="weakTip" style="display:none"><p style="margin:0;font-size:14px"></p></div>
+
+  <h4>연습 기록장 (인쇄해서 손으로 채워도 OK)</h4>
+  <div class="tblwrap"><table class="logtbl">
+    <tr><th style="width:22%">날짜</th><th style="width:33%">주제</th><th style="width:15%">점수</th><th>다음에 고칠 점</th></tr>
+    <tr><td><input placeholder="9/22"></td><td><input placeholder="비 오는 골목"></td><td><input placeholder="/100"></td><td><input placeholder="배경 투시"></td></tr>
+    <tr><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+    <tr><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+    <tr><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+    <tr><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+  </table></div>
+  <p class="sec-sub">💡 점수 자체보다 <b>추이</b>가 중요해요. 같은 항목이 계속 낮으면 거기를 집중 연습! 3주만 기록해도 확 늘어요.</p>
+
+  <script>
+  (function(){
+    "use strict";
+    var LEVELS=[["미흡",0],["부족",0.4],["보통",0.7],["우수",0.9],["탁월",1.0]];
+    var TIPS={time:"러프 시간을 줄이고 클린업에 더 배분해보세요.",theme:"그리기 전 '한 문장 이야기'로 주제를 먼저 정리!",char:"내 대표 캐릭터를 매일 다른 각도로 그려 손에 익히기 — 청강 최중요 항목!",comp:"가장 보여줄 곳에 시선이 모이게 구도·명암 배치.",emo:"표정·포즈만으로 상황이 읽히는지 점검.",bg:"배경은 이야기에 필요한 만큼만, 투시선 한 번 긋고 시작.",attitude:"지우개 줄이고 러프→클린 순서 지키기. 침착하게!"};
+    var sels=[].slice.call(document.querySelectorAll('#rubric .rub-sel'));
+    sels.forEach(function(s){
+      LEVELS.forEach(function(l,i){ var o=document.createElement('option'); o.value=l[1]; o.textContent=l[0]; if(i===2)o.selected=true; s.appendChild(o); });
+    });
+    var numEl=document.getElementById('scoreNum'),gradeEl=document.getElementById('scoreGrade'),barEl=document.getElementById('scoreBar'),tipBox=document.getElementById('weakTip');
+    function grade(t){
+      if(t>=90)return"🏆 최상 — 실전 준비 완료!";
+      if(t>=75)return"😊 우수 — 합격권, 디테일만 더";
+      if(t>=60)return"🙂 보완 필요 — 약한 항목 집중";
+      return"💪 집중 연습 — 기본부터 차근차근";
+    }
+    function calc(){
+      var total=0,worst=null,worstFrac=2;
+      sels.forEach(function(s){
+        var max=+s.dataset.max, frac=+s.value, pt=Math.round(frac*max);
+        total+=pt;
+        s.parentNode.querySelector('.pts').textContent=pt;
+        if(frac<worstFrac){worstFrac=frac; worst=s.parentNode.dataset.key;}
+      });
+      numEl.innerHTML=total+'<small>/100</small>';
+      gradeEl.textContent=grade(total);
+      barEl.style.width=total+'%';
+      if(worst && worstFrac<0.9){
+        tipBox.style.display='';
+        tipBox.querySelector('p').innerHTML='<b>가장 먼저 보완할 항목:</b> '+TIPS[worst];
+      } else { tipBox.style.display='none'; }
+    }
+    sels.forEach(function(s){ s.addEventListener('change',calc); });
+    document.getElementById('rubReset').addEventListener('click',function(){
+      sels.forEach(function(s){ s.selectedIndex=2; }); calc();
+    });
+    calc();
+  })();
+  </script>
+</section>
+
+<!-- ===================== 포트폴리오 ===================== -->
+<section id="portfolio">
+  <div class="sec-head"><span class="sec-num">04</span><h2>포트폴리오 가이드</h2></div>
+  <p class="sec-sub">특히 청강대 면접전형의 핵심. "그림 잘 그린다"보다 <b>"하고 싶은 이야기가 있다"</b>가 보여야 해요.</p>
+
+  <h3>추천 구성 (25~30p)</h3>
+  <ol class="steps">
+    <li><b>표지 + 목차</b> — 나를 대표하는 이미지 1컷.</li>
+    <li><b>캐릭터 설정 시트</b> — 3면(정면·측면·후면), 표정 모음, 성격·설정 메모.</li>
+    <li><b>완결 단편 1편 이상</b> — 짧아도 <b>기승전결이 있는 완성작</b>. ⭐가장 중요⭐</li>
+    <li><b>개인 창작 일러스트</b> — 색·분위기·개성.</li>
+    <li><b>크로키/드로잉</b> — 기본기와 성실함의 증거.</li>
+  </ol>
+
+  <div class="grid two">
+    <div class="card"><h4 style="margin-top:0">✅ 이렇게</h4><ul class="tick" style="margin:0"><li>완결된 이야기 1편으로 스토리텔링 증명</li><li>나만의 주제·세계관 일관성</li><li>모든 컷 선택에 '이유' 준비</li><li>러프·설정도 넣어 '과정'과 성장 보여주기</li></ul></div>
+    <div class="card"><h4 style="margin-top:0;color:var(--accent)">🚫 이건 피하기</h4><ul style="margin:0;padding-left:20px"><li>남의 그림체·2차창작만 가득</li><li>완성작 없이 낙서·단편 조각만</li><li>양 채우기용 무의미한 페이지</li><li>주제 없이 예쁜 그림만 나열</li></ul></div>
+  </div>
+  <div class="warn"><b>제본·규격은 학교마다 달라요.</b> 청강=A3 스프링 권장/A4 허용. 제출 방식(파일/실물), 페이지 수 제한은 <b>각 학교 요강</b> 확인 후 맞추세요.</div>
+</section>
+
+<!-- ===================== 포폴 페이지별 코멘트 ===================== -->
+<section id="pfcomment">
+  <div class="sec-head"><span class="sec-num">05</span><h2>포트폴리오 페이지별 코멘트</h2></div>
+  <p class="sec-sub">특히 <b>청강대 면접전형</b>은 포폴이 곧 1차 관문이에요. 아래는 페이지마다 <b>평가자가 실제로 보는 것 · 강해지는 법 · 흔한 감점</b>을 정리한 프레임. 하음이 포폴 페이지를 하나씩 대보며 셀프 코멘트를 달아보세요.</p>
+
+  <div class="warn"><b>진짜 코멘트를 원하면:</b> 하음이 <b>실제 포폴 페이지를 사진/PDF로 이 대화에 올려주면</b>, 페이지마다 실제 코멘트(연출·구도·스토리·전공 적합성)를 달아드릴게요. 아래는 그 전에 스스로 점검하는 기준입니다.</div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">P.1</span> 표지 (Cover)</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span>첫인상 3초. "이 지원자의 색·분위기·완성도"를 한 컷으로 판단.</div>
+      <div class="row"><span class="lbl good">강해지는 법</span>내 <b>대표 캐릭터/대표작 한 장면</b>을 완성도 높게. 제목·이름·지원 전공 깔끔히.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>여러 그림 짜깁기, 저해상도, 남의 그림체 티나는 표지.</div>
+    </div>
+  </div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">P.2</span> 목차 · 자기소개 페이지</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span>구성력·정리 능력. 이 포폴을 어떤 순서로 볼지 안내받음.</div>
+      <div class="row"><span class="lbl good">강해지는 법</span>1~2줄 자기소개 + "내가 그리고 싶은 이야기"를 한 문장으로 선언.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>목차 없이 그림만 우르르 → 무엇을 봐야 할지 모호.</div>
+    </div>
+  </div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">P.3~4</span> 캐릭터 설정 시트 (3면 · 표정)</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span><b>일관성</b>(같은 캐릭터를 여러 각도에서 유지) + 캐릭터에 <b>성격/이야기</b>가 있는가.</div>
+      <div class="row"><span class="lbl good">강해지는 법</span>정면·측면·후면 + 표정 5종 + 한 줄 설정. <b>청강 즉석 드로잉 대비</b>로도 이 캐릭터를 손에 익혀두기.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>각도마다 얼굴·비율이 달라짐(일관성 붕괴), 설정 없는 예쁜 얼굴만.</div>
+    </div>
+  </div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">P.5~10</span> 완결 단편 (도입·전개·절정·결말) ⭐핵심⭐</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span><b>스토리텔링·연출력.</b> 청강·영상대가 가장 중요하게 보는 부분. "그림"이 아니라 "이야기가 읽히는가".</div>
+      <div class="row"><span class="lbl good">강해지는 법</span>짧아도 <b>기승전결이 있는 완성작 1편.</b> 컷 분할·시선 유도·감정 클로즈업 등 <b>연출 의도</b>를 설명할 수 있게.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>완성 못 한 도입부만, 대사로만 설명(그림 연출 부재), 컷이 밋밋하게 균일.</div>
+    </div>
+  </div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">P.11~13</span> 개인 창작 일러스트</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span>색감·분위기·개성. 하음이만의 취향과 미감.</div>
+      <div class="row"><span class="lbl good">강해지는 법</span>주제가 있는 일러 2~3장. <b>백석예대(면접)</b>에선 "이 그림으로 뭘 말하려 했나"를 말로 설명하는 연습까지.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>연습장 낙서 수준, 팬아트(2차창작)만 잔뜩.</div>
+    </div>
+  </div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">P.14~15</span> 크로키 · 기초 드로잉</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span><b>기본기·성실함.</b> 특히 실기 학교(<b>한국영상대</b>)는 인체·투시·관찰력을 여기서 확인.</div>
+      <div class="row"><span class="lbl good">강해지는 법</span>인체 크로키·손·발·투시 연습을 몇 장. "매일 그린다"는 증거.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>아예 없음(기초 회피로 보임), 베껴 그린 티.</div>
+    </div>
+  </div>
+
+  <div class="pfpage">
+    <div class="ttl"><span class="pg">끝 P.</span> 마무리 · 대표작</div>
+    <div class="body">
+      <div class="row"><span class="lbl see">평가자가 보는 것</span>마지막 인상. 가장 자신 있는 한 장.</div>
+      <div class="row"><span class="lbl good">강해지는 법</span><b>가장 완성도 높은 작품</b>으로 마무리 → 여운을 남기기.</div>
+      <div class="row"><span class="lbl bad">감점 포인트</span>가장 약한 그림으로 끝나 인상이 흐려짐.</div>
+    </div>
+  </div>
+
+  <h3>학교별 포폴 우선순위</h3>
+  <div class="tblwrap"><table>
+    <tr><th>학교</th><th>포폴에서 특히 중요한 것</th></tr>
+    <tr><td><b>청강대</b></td><td>완결 단편(스토리텔링)·캐릭터/세계관·연출 의도. 포폴이 1차 관문이라 <b>가장 중요.</b> A3 스프링 권장.</td></tr>
+    <tr><td><b>백석예대</b></td><td><b>면접전형</b>: 포폴 지참 시 가산점 + "이 그림/이야기로 뭘 말하려 했는지 <b>말로 설명</b>"까지. <b>실기전형</b>: 상황표현 등 기본기.</td></tr>
+    <tr><td><b>한국영상대</b></td><td>실기 중심 → 포폴은 <b>기본기(크로키·인체·연출)</b>가 실기 실력을 방증. 완결 단편도 플러스.</td></tr>
+  </table></div>
+</section>
+
+<!-- ===================== 모의 면접 대본 ===================== -->
+<section id="mock">
+  <div class="sec-head"><span class="sec-num">06</span><h2>모의 면접 대본 (학교별)</h2></div>
+  <p class="sec-sub">실제 흐름 그대로 만든 <b>연습용 대본</b>이에요. <span style="color:var(--accent);font-weight:700">🎤 면접관</span> 질문을 가족이 읽어주고, 하음인 <span style="color:var(--teal);font-weight:700">🙋 예시 답변</span>을 참고해 <b>자기 이야기로 바꿔</b> 말해보세요. <span style="color:var(--gold);font-weight:700">💡 코치</span>는 팁이에요. (예시 답변 속 작품명은 하음이 실제 작품으로 교체!)</p>
+
+  <!-- 청강 -->
+  <div class="stage">■ 대본 1 — 청강대 (면접전형 · 3테이블 부스 이동)</div>
+  <p class="sec-sub" style="margin-top:4px">테이블마다 이동하며 진행. 짧고 또렷하게, 두괄식으로.</p>
+
+  <p style="font-family:'Gothic A1',sans-serif;font-weight:800;color:var(--accent);margin:14px 0 4px">테이블 1 · 자기소개 + 자소서 기반</p>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>자리에 앉으세요. 긴장 풀고, 먼저 자기소개 30초 정도로 해볼까요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>안녕하세요. 일상의 작은 감정을 캐릭터로 옮기는 걸 좋아하는 지원자 ○하음입니다. 중학교 때 친구 이야기를 4컷으로 그려준 게 시작이었고, 그 뒤로 '완결된 짧은 이야기'를 여러 편 만들며 스토리 구성에 강점을 키웠습니다. 청강대에서 연출과 작화를 제대로 배워 제 세계관을 가진 연재 작가가 되고 싶습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>자기소개서에 '스토리 구성에 강점'이라고 썼는데, 실제로 어떻게 이야기를 만드나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>저는 먼저 '어떤 감정을 남기고 싶은지'를 정합니다. 예를 들어 제 단편 「(작품명)」은 '이별 뒤의 후련함'을 목표로 잡고, 거기서 캐릭터와 사건을 거꾸로 설계했습니다. 감정 → 사건 → 캐릭터 순서로 짜는 편입니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>자소서에 쓴 단어는 <b>반드시 꼬리질문</b>이 와요. 쓴 문장마다 "구체적 예시"를 하나씩 준비할 것.</span></div>
+  </div>
+
+  <p style="font-family:'Gothic A1',sans-serif;font-weight:800;color:var(--accent);margin:16px 0 4px">테이블 2 · 포트폴리오 집중</p>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>(태블릿으로 포폴을 보며) 이 단편, 이 장면에서 컷을 크게 쓰고 배경을 비웠네요. 왜 이렇게 연출했죠?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>그 장면이 주인공이 처음 혼자가 되는 순간이라, 배경을 비워 '고립감'을 강조하고 싶었습니다. 큰 컷으로 시간이 멈춘 듯한 느낌을 주려 했습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>이 캐릭터, 지금 여기서 종이에 한 번 그려볼 수 있어요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>네! (침착하게 대표 캐릭터를 그리며) 이 친구는 눈매가 처지고 앞머리가 긴 게 특징이에요.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>포폴의 <b>모든 연출에 이유</b>를 붙여둘 것. 그리고 <b>내 캐릭터는 즉석에서도 그릴 수 있게</b> 손에 익히기(청강 즉석 드로잉과 직결).</span></div>
+  </div>
+
+  <p style="font-family:'Gothic A1',sans-serif;font-weight:800;color:var(--accent);margin:16px 0 4px">테이블 3 · 일반 질문</p>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>다른 웹툰과도 많은데, 왜 청강대예요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>청강대는 실기 점수가 아니라 '제가 하고 싶은 이야기(포트폴리오)'로 평가한다는 점이 저와 맞았습니다. 만화콘텐츠스쿨의 현업 중심 커리큘럼에서 연재 실무를 배우고 싶어 1순위로 지원했습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>졸업 후 계획은요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>재학 중 공모전에 도전해 데뷔 경험을 쌓고, 졸업 후엔 제 세계관을 가진 연재 작가로 자리 잡는 게 목표입니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>지원동기엔 <b>청강만의 것</b>(포폴 평가·만화콘텐츠스쿨) 꼭 1개. "유명해지고 싶다"❌ → 구체적 형태로.</span></div>
+  </div>
+
+  <!-- 백석 -->
+  <div class="stage">■ 대본 2 — 백석예대 (면접전형 · 면접 60%)</div>
+  <p class="sec-sub" style="margin-top:4px">실기 없이 <b>말·태도가 점수의 60%.</b> 전달력·인상·진정성 승부.</p>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>자기소개와 함께 우리 학교 만화애니메이션전공에 지원한 동기를 말해주세요.</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>안녕하세요, 이야기를 그림으로 전하는 걸 좋아하는 ○하음입니다. 서울에서 접근성이 좋은 백석예대 영상학부에서, 만화·애니·영상을 폭넓게 배우며 제 이야기를 다양한 매체로 확장하고 싶어 지원했습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>전공과 관련해서 지금까지 어떤 걸 준비하거나 경험해봤나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>독학과 학원에서 클립스튜디오로 단편 웹툰을 여러 편 완성했고, (교내 대회/공모전 등) 경험이 있습니다. 특히 '완결까지 그려내는 것'을 목표로 꾸준히 작업해왔습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>졸업 후엔 어떤 창작자가 되고 싶어요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>웹툰 연재를 중심으로 하되, 학부에서 영상·애니까지 배워 제 캐릭터를 여러 형태로 보여주는 창작자가 되고 싶습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>최근 인상 깊게 본 작품이 있나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>「(최근 화제작)」을 인상 깊게 봤습니다. (연출/캐릭터 중 1가지)가 특히 좋았고, 그걸 보며 제 작업에도 (적용한 점)을 시도해봤습니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>백석은 <b>밝은 인상·눈맞춤·또렷한 발음</b>이 곧 점수. 답변마다 두괄식 + 짧은 예시. 폰은 면접 전 제출 → 대기 중 마음 정리.</span></div>
+  </div>
+
+  <!-- 영상대 -->
+  <div class="stage">■ 대본 3 — 한국영상대 (실기 중심 · 면접 병행 시)</div>
+  <p class="sec-sub" style="margin-top:4px">실기가 메인. 면접이 병행되면 <b>실무·취업 지향</b>과 <b>전공 이해</b>를 확인해요.</p>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>우리 과는 만화웹툰·웹툰일러스트·웹툰PD·애니메이션 등 전공이 나뉘어요. 왜 이 전공을 골랐나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>저는 직접 그리며 이야기를 끌고 가는 걸 좋아해서 '만화웹툰전공'이 맞다고 생각했습니다. 기획·연출 쪽 PD 전공도 알아봤지만, 저는 작화와 연재를 중심에 두고 싶었습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>졸업 후 어떤 실무를 하고 싶어요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>먼저 연재 스튜디오에서 작화·콘티 실무를 익히고, 제 작품으로 연재 데뷔하는 것을 목표로 합니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>오늘 실기(상황표현/칸만화/웹툰) 중에 뭘 골랐고, 왜 그렇게 표현했죠?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>저는 세로 흐름 연출에 자신 있어 '웹툰'을 골랐습니다. 주어진 상황을 (감정)으로 잡고, 시선을 아래로 유도하며 절정에서 큰 컷을 써서 강조했습니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>실무·취업 색이 강한 학교 → <b>구체적 직무</b>로 답하면 맞아떨어져요. 실기 선택엔 <b>이유</b>를 붙일 것.</span></div>
+  </div>
+
+  <!-- 꼬리/돌발 -->
+  <div class="stage">■ 대본 4 — 꼬리질문 · 돌발 대응 (공통)</div>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>(꼬리) 방금 '연출에 자신 있다'고 했는데, 연출이 뭐라고 생각해요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>독자의 시선과 감정을 그림으로 설계하는 것이라고 생각합니다. 어디를 먼저 보게 할지, 언제 숨을 쉬게 할지를 컷과 여백으로 정하는 것입니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>(돌발) 지금 저를 캐릭터로 만든다면 어떻게 잡을래요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>(웃으며) 안경과 부드러운 눈매가 인상적이셔서, 차분하지만 관찰력 좋은 멘토 캐릭터로 잡을 것 같습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>(압박) 그림 실력이 아직 부족해 보이는데요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>부족한 부분이 있다는 걸 압니다. 그래서 매일 크로키로 기본기를 채우고 있고, 무엇보다 '이야기를 끝까지 완성하는 힘'은 제 강점이라고 자신합니다. 대학에서 작화를 더 다듬고 싶습니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>압박질문의 목적은 <b>태도 확인</b>. 반박❌·주눅❌ → "인정 + 극복 노력 + 강점"으로 받아치기. 돌발엔 <b>웃으며 이유 붙여</b> 답하면 무조건 통과.</span></div>
+  </div>
+
+  <div class="note"><p class="pen" style="margin:0">🎬 연습법: 이 대본을 가족이 🎤면접관 대사만 읽어주고, 하음인 대본을 안 보고 답해보기. <b style="font-family:inherit">영상으로 찍어 다시 보면</b> 표정·목소리·속도가 확 좋아져요!</p></div>
+
+  <div class="sec-head" style="margin-top:30px;border-bottom-color:var(--teal)"><span class="sec-num" style="color:var(--teal)">2회차</span><h2 style="font-size:clamp(20px,5vw,26px)">심화·압박 대본</h2></div>
+  <p class="sec-sub">1회차로 흐름을 익혔다면, 2회차는 <b>더 깊고 까다로운 꼬리질문</b>이에요. 예시 답변은 일부러 짧게 줬으니 <b>하음이 스스로 채워</b> 말해보세요. 실전처럼 대본 안 보고!</p>
+
+  <!-- 청강 2회차 -->
+  <div class="stage">■ 대본 5 — 청강대 2회차 (주제의식·세계관 심화)</div>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>포트폴리오를 보면 계속 '외로움'이 나오는데, 왜 그 감정에 끌리나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>제가 관찰을 많이 하는 편이라, 사람들의 겉모습 뒤에 있는 감정에 관심이 많습니다. 그중 외로움은 누구나 겪지만 잘 안 드러내는 감정이라, 그림으로 대신 말해주고 싶었습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>그럼 그 주제, 웹툰 독자들이 좋아할까요? 상업성은 어떻게 보죠?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>무거운 주제라도 캐릭터의 매력과 밝은 순간을 섞으면 충분히 대중적일 수 있다고 생각합니다. 저는 '공감'이 결국 가장 큰 상업성이라고 봅니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>자기소개서엔 '연출이 강점'이라 했는데, 방금 포폴 컷들은 다소 평범해 보여요. 어떻게 생각해요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>(당황 않고) 지적 감사합니다. 초반 작업이라 연출이 덜 다듬어진 부분이 있습니다. 뒤쪽 단편에서는 컷 크기와 시선 흐름을 의식해서 발전시켰고, 대학에서 더 체계적으로 배우고 싶은 지점이기도 합니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>청강 2회차 핵심은 <b>'주제의식을 얼마나 깊게 설명하나'</b>. 내 포폴의 반복 요소(감정·소재)에 <b>"왜"</b>를 미리 3개 준비. 지적엔 인정+발전 스토리로.</span></div>
+  </div>
+
+  <!-- 백석 2회차 -->
+  <div class="stage">■ 대본 6 — 백석예대 2회차 (면접전형 심화)</div>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>실기전형도 있는데 왜 면접전형으로 지원했어요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>저는 제 작품을 '말로 설명하고 소통하는 것'에 자신이 있어서, 포트폴리오와 면접으로 저를 더 잘 보여줄 수 있다고 생각했습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>우리 학부는 만화·애니·영상을 함께 배워요. 웹툰만 하고 싶다면 다른 학교가 낫지 않나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>저는 제 이야기를 웹툰에서 시작하되 애니·영상으로도 확장하고 싶어서, 오히려 이 학부의 융합 환경이 저에게 맞다고 생각했습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>최근 본 애니메이션이나 영상 작품 중 인상 깊었던 건?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>「(작품)」에서 (연출/색/편집)이 인상 깊었고, 웹툰에도 그런 '장면 전환의 리듬'을 적용해보고 싶었습니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>백석 2회차는 <b>학부 정체성(융합)</b>을 건드려요. "웹툰만" 대신 <b>"웹툰에서 시작해 확장"</b> 프레임. 애니·영상 작품 1개는 꼭 챙기기.</span></div>
+  </div>
+
+  <!-- 한국영상대 2회차 -->
+  <div class="stage">■ 대본 7 — 한국영상대 2회차 (실무·전공 심화)</div>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>작화가 좋아도 마감이 안 되면 현업에선 못 버텨요. 마감 경험 있어요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>공모전/개인 연재로 기한 안에 완성한 경험이 있습니다. 러프-펜선-채색으로 단계를 나누고 하루 분량을 정해 마감을 지켰습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>웹툰 스튜디오는 분업이에요. 하음이는 콘티·선화·채색·배경 중 어디에 강해요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>콘티와 선화에 강점이 있습니다. 채색·배경도 기본은 되지만, 스튜디오에선 제 강점으로 기여하며 나머지를 더 배우고 싶습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>AI가 채색·배경을 다 해주는 시대인데, 하음이의 경쟁력은?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>AI는 도구로 활용하되, '어떤 이야기를 어떤 감정으로 연출할지'는 사람의 몫이라고 생각합니다. 저는 그 기획·연출력을 키우겠습니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>영상대 2회차는 <b>실무 현실 검증</b>. 마감·분업·AI 질문에 <b>구체적 경험 + 균형 잡힌 태도</b>로. 내 강점 파트를 분명히 말하기.</span></div>
+  </div>
+
+  <!-- 공통 마무리 2회차 -->
+  <div class="stage">■ 대본 8 — 마무리 질문 세트 (공통 2회차)</div>
+  <div class="script">
+    <div class="line itv"><span class="who">🎤 면접관</span><span>만약 우리 학교에 떨어지면 어떻게 할 거예요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>물론 아쉽겠지만, 부족한 점을 보완해 다시 도전할 만큼 이 길이 확실합니다. 그림과 이야기는 계속 그릴 거예요.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>가장 존경하는 작가 한 명, 그리고 그 사람처럼 되고 싶지 않은 점도 있나요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>(작가명)을 존경합니다. (강점) 때문입니다. 다만 저는 (다른 방향/나만의 색)은 제 식대로 하고 싶습니다.</span></div>
+    <div class="line itv"><span class="who">🎤 면접관</span><span>마지막으로 하고 싶은 말 있어요?</span></div>
+    <div class="line ans"><span class="who">🙋 하음</span><span>저는 아직 부족하지만 '끝까지 이야기를 완성하는 힘'과 배우려는 태도는 자신 있습니다. 이 학교에서 꼭 성장하고 싶습니다. 감사합니다.</span></div>
+    <div class="line coach"><span class="who">💡 코치</span><span>'떨어지면?'엔 <b>흔들림 없는 진심</b>으로. '마지막 한마디'는 <b>미리 준비한 30초 클로징</b>(강점+의지+감사)으로 강한 인상 남기기!</span></div>
+  </div>
+</section>
+
+<!-- ===================== 체크리스트 ===================== -->
+<section id="checklist">
+  <div class="sec-head"><span class="sec-num">07</span><h2>D-7 → 당일 체크리스트</h2></div>
+  <p class="sec-sub">체크박스를 눌러 진행 상황을 표시하세요. (이 기기 브라우저에 저장돼요)</p>
+
+  <h3>D-7 ~ D-2 : 준비</h3>
+  <div class="prog" id="prog-prep"></div>
+  <div id="list-prep">
+    <label class="check"><input type="checkbox" data-k="p1"><span>30초 자기소개 완성 → 녹음해서 반복 연습</span></label>
+    <label class="check"><input type="checkbox" data-k="p2"><span>예상질문 은행 20개 → 내 이야기로 답변 작성</span></label>
+    <label class="check"><input type="checkbox" data-k="p3"><span>지원 학교별 '고유 무기(지원동기)' 1개씩 정리</span></label>
+    <label class="check"><input type="checkbox" data-k="p4"><span>좋아하는 작품 3개(인생작·최근작·영향작) 정리</span></label>
+    <label class="check"><input type="checkbox" data-k="p5"><span>지원 학교 커리큘럼·전공구분·교수/졸업생 조사</span></label>
+    <label class="check"><input type="checkbox" data-k="p6"><span>포트폴리오 최종 점검 + 제본/파일 준비 (규격 확인)</span></label>
+    <label class="check"><input type="checkbox" data-k="p7"><span>(청강) 즉석 드로잉 20분 연습 / (영상대) 실기 시간 내 완성 연습</span></label>
+    <label class="check"><input type="checkbox" data-k="p8"><span>모의 면접 최소 2회 (가족·거울·영상 촬영)</span></label>
+  </div>
+
+  <h3>D-1 : 전날</h3>
+  <div class="prog" id="prog-day1"></div>
+  <div id="list-day1">
+    <label class="check"><input type="checkbox" data-k="d1"><span>준비물: 수험표·신분증·포트폴리오·필기구·드로잉 도구</span></label>
+    <label class="check"><input type="checkbox" data-k="d2"><span>복장 준비 (단정·깔끔, 손 편한 옷 — 그림 그릴 수 있으니)</span></label>
+    <label class="check"><input type="checkbox" data-k="d3"><span>교통편·소요시간·고사장 위치 확인 (백석=방배역 앞)</span></label>
+    <label class="check"><input type="checkbox" data-k="d4"><span>자기소개 마지막으로 1회 소리 내 리허설</span></label>
+    <label class="check"><input type="checkbox" data-k="d5"><span>일찍 취침 😴</span></label>
+  </div>
+
+  <h3>D-DAY : 당일</h3>
+  <div class="prog" id="prog-dday"></div>
+  <div id="list-dday">
+    <label class="check"><input type="checkbox" data-k="t1"><span>고사장 30분 전 도착 → 화장실 → 심호흡</span></label>
+    <label class="check"><input type="checkbox" data-k="t2"><span>입장: 밝은 인사 + 눈맞춤 + 미소 (첫인상이 절반)</span></label>
+    <label class="check"><input type="checkbox" data-k="t3"><span>답변은 두괄식 — 결론 먼저, 30초 안에</span></label>
+    <label class="check"><input type="checkbox" data-k="t4"><span>모르는 질문엔 솔직 + "배우고 싶다"는 의지로 마무리</span></label>
+    <label class="check"><input type="checkbox" data-k="t5"><span>천천히·또렷하게. 떨려도 웃기! 태도로 만회 가능</span></label>
+  </div>
+  <button id="reset" style="margin-top:16px;font-family:'Gothic A1',sans-serif;font-weight:700;font-size:13px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer">전체 체크 초기화</button>
+</section>
+
+<!-- ===================== 마인드셋 ===================== -->
+<section id="mindset">
+  <div class="sec-head"><span class="sec-num">08</span><h2>면접장에 들어가기 전, 딱 3가지</h2></div>
+  <div class="grid three">
+    <div class="card"><h4 style="margin-top:0">1. 면접관은 '적'이 아니야</h4><p style="margin:0;font-size:14px">떨어뜨리려는 사람이 아니라 <b>같이 공부할 학생을 찾는</b> 사람. 대화한다 생각하기.</p></div>
+    <div class="card"><h4 style="margin-top:0">2. 완벽한 그림 ❌ 뚜렷한 이야기 ⭕</h4><p style="margin:0;font-size:14px">뽑는 기준은 실력보다 <b>'하고 싶은 게 뚜렷하고 성장 가능성이 있는가'</b>. 하음인 이미 있어.</p></div>
+    <div class="card"><h4 style="margin-top:0">3. 실수해도 태도로</h4><p style="margin:0;font-size:14px">말 막혀도 웃으며 다시. 마지막 인상은 <b>진심과 태도</b>가 만들어요.</p></div>
+  </div>
+  <div class="note" style="margin-top:22px"><p class="pen" style="margin:0;font-size:1.7em">하음아, 지금까지 그려온 그 시간들이 곧 하음이의 실력이야.<br>긴장은 준비했다는 증거일 뿐. 하고 싶은 이야기를 그대로 말하고 와. 아빠는 이미 하음이가 자랑스러워. 🍀</p></div>
+</section>
+
+<footer>
+  <p><b>출처·검증 안내</b> — 이 노트는 각 학교 공식 정보 + 최신 합격/입시 후기(강남 애니포스·카툰레시피·애니벅스·애니톡 김포 등 입시학원 후기, 학과 공식 블로그)를 종합해 <b>실전 준비용</b>으로 정리했습니다.</p>
+  <p><b>반드시 재확인:</b> 반영비율·전형명·모집인원·일정·실기 규정·포트폴리오 규격은 <b>연도별로 바뀝니다.</b> 지원 전 각 학교 입학처 <b>당해년도 공식 모집요강</b>을 최종 기준으로 삼으세요. (청강대 ipsi.ck.ac.kr · 백석예술대 입학처 · 한국영상대 입학처)</p>
+  <p style="margin-top:14px">🖨️ 인쇄: <span class="kbd">Ctrl</span>/<span class="kbd">⌘</span> + <span class="kbd">P</span> · 하음이 파이팅 💪</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // ---- scroll-spy nav ----
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.top a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function spy(){
+    var y = window.scrollY + 90, best = 0;
+    for (var i=0;i<secs.length;i++){ if(secs[i] && secs[i].offsetTop <= y) best = i; }
+    links.forEach(function(l,i){ l.classList.toggle('active', i===best); });
+  }
+  window.addEventListener('scroll', spy, {passive:true});
+  window.addEventListener('resize', spy); spy();
+
+  // ---- checklist persistence ----
+  var KEY = 'haeum-interview-checks-v1';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }catch(e){ state = {}; }
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[type=checkbox][data-k]'));
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function progress(){
+    [['list-prep','prog-prep'],['list-day1','prog-day1'],['list-dday','prog-dday']].forEach(function(pair){
+      var box = document.getElementById(pair[0]); if(!box) return;
+      var all = box.querySelectorAll('input[type=checkbox]');
+      var done = box.querySelectorAll('input[type=checkbox]:checked');
+      var el = document.getElementById(pair[1]);
+      if(el){ el.textContent = '진행 ' + done.length + ' / ' + all.length + (done.length===all.length && all.length ? '  ✅ 완료!' : ''); }
+    });
+  }
+  boxes.forEach(function(b){
+    if(state[b.dataset.k]) b.checked = true;
+    b.addEventListener('change', function(){ state[b.dataset.k] = b.checked; save(); progress(); });
+  });
+  progress();
+
+  var reset = document.getElementById('reset');
+  if(reset) reset.addEventListener('click', function(){
+    boxes.forEach(function(b){ b.checked = false; state[b.dataset.k]=false; });
+    save(); progress();
+  });
+})();
+</script>

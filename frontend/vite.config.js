@@ -26,6 +26,11 @@ export default defineConfig({
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+        // 학습 노트(public/notes/*.html)는 한 장이 1MB가 넘는다.
+        // 프리캐시에 넣으면 앱 설치가 무거워져서 제외하고, 열 때 네트워크로 받는다.
+        globIgnores: ['**/notes/**'],
+        // SPA 폴백이 노트 주소까지 index.html 로 바꿔치기하지 않게 막는다
+        navigateFallbackDenylist: [/^\/notes\//],
         // 생성된 서비스워커가 푸시 핸들러(public/push-sw.js)를 불러옴
         importScripts: ['push-sw.js'],
         // 한 번 받은 음성 파일은 브라우저에 캐싱 → 서버/네트워크 비용 0
