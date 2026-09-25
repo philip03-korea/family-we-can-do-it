@@ -1,0 +1,1024 @@
+[
+  {
+    "id": "sl01",
+    "book": "",
+    "title": "17단원 표지",
+    "summary": "17단원 '탐험의 시대'를 여는 표지로, 세계화와 돈이 역사를 움직였는지 묻는다.",
+    "keypoints": ["Chapter 17 The Age of Exploration", "세계화", "돈이 역사를 움직였나"],
+    "tb": ["tb01"],
+    "blocks": [
+      { "kind": "heading", "en": "Chapter 17 – The Age of Exploration", "ko": "17단원 — 탐험의 시대" },
+      { "kind": "p", "sentences": [
+        { "en": "World Becoming Even More Globalized?",
+          "ko": "세계가 더욱 세계화되고 있었을까?",
+          "words": [
+            { "w": "globalized", "ko": "세계화된", "x": "나라와 나라가 무역·이동으로 하나처럼 이어지는 것. global(지구의)에서 나온 말이야." }
+          ] },
+        { "en": "Money is driving history?",
+          "ko": "돈이 역사를 끌고 가는 걸까?",
+          "important": true,
+          "note": "이 단원 전체를 관통하는 질문이야. 탐험의 동기 Gold·Glory·God 중에서 결국 Gold(돈)가 가장 크게 작동했는지를 계속 물어봐. 마지막 결론 슬라이드에서 이 질문으로 다시 돌아오니까 기억해 둬." }
+      ] }
+    ]
+  },
+  {
+    "id": "sl02",
+    "book": "",
+    "title": "크래시코스 요약 1",
+    "summary": "수업 전 영상(Crashcourse)을 보고 학생들이 정리한 탐험 시대 핵심 포인트다.",
+    "keypoints": ["Columbus", "Zheng He", "Prince Henry the Navigator", "Cartaz", "Vasco da Gama"],
+    "tb": ["tb04", "tb05", "tb06"],
+    "blocks": [
+      { "kind": "heading", "en": "Summary from Crashcourse", "ko": "크래시코스 영상 요약" },
+      { "kind": "p", "sentences": [
+        { "en": "Columbus discovered (explored, reached) America, Zheng He the main figure – Ocean voyage (Rachel)",
+          "ko": "콜럼버스가 아메리카를 '발견(탐험, 도달)'했고, 정화도 바다 항해의 주요 인물이다 (레이첼)",
+          "important": true,
+          "note": "'discovered'를 '탐험했다·도달했다'로 고쳐 쓴 게 핵심이야. 이미 사람이 살던 땅을 '발견'했다고 말하는 게 왜 문제인지, 6번·26번 슬라이드에서 다시 다뤄." },
+        { "en": "Prince Henry the Navigator – Portuguese, Prester John a Christian kingdom (",
+          "ko": "'항해왕' 엔히크 왕자 — 포르투갈 사람, 프레스터 존은 전설 속 기독교 왕국",
+          "words": [
+            { "w": "Prester John", "ko": "프레스터 존", "x": "아프리카나 아시아 어딘가에 있다고 유럽인들이 믿었던 전설 속 기독교 왕. 실제로는 없었어." }
+          ] },
+        { "en": "Columbus was not a lucky idiot – he knew lots of things about sea (Edward)",
+          "ko": "콜럼버스는 운 좋은 얼간이가 아니었다 — 바다에 대해 아는 게 많았다 (에드워드)" },
+        { "en": "Portuguese – Cartaz (trade x piracy yes) (Hailey)",
+          "ko": "포르투갈 — 카르타스 (정당한 무역이라기보다 사실상 해적질) (헤일리)",
+          "words": [
+            { "w": "cartaz", "ko": "카르타스", "x": "포르투갈이 발급한 통행·무역 허가증. 이게 없는 배는 공격당했어." },
+            { "w": "piracy", "ko": "해적질", "x": "바다에서 배를 습격해 빼앗는 것. pirate(해적)의 명사형." }
+          ] },
+        { "en": "Vasco da Gama – introducing the Indian Ocean trade (Lizzy)",
+          "ko": "바스쿠 다 가마 — 인도양 무역을 열어젖힌 인물 (리지)" }
+      ] }
+    ]
+  },
+  {
+    "id": "sl03",
+    "book": "",
+    "title": "크래시코스 요약 2",
+    "summary": "정화(鄭和)의 항해에 대해 학생들이 정리한 세 가지 포인트다.",
+    "keypoints": ["정화", "무슬림 중국인", "중국의 위신을 위한 항해"],
+    "tb": [],
+    "blocks": [
+      { "kind": "heading", "en": "Summary from Crashcourse", "ko": "크래시코스 영상 요약" },
+      { "kind": "p", "sentences": [
+        { "en": "Zheng He: Chinese Noah (many animals) – Sarah",
+          "ko": "정화: 중국의 노아 같았다 (동물을 많이 실어 왔다) — 사라" },
+        { "en": "Zheng He: Muslim Chinese",
+          "ko": "정화: 무슬림 중국인이었다" },
+        { "en": "He sailed: prestige/respect of China - Sung Jung",
+          "ko": "정화가 항해한 이유: 중국의 위신과 존중을 얻기 위해서 — 성정",
+          "important": true,
+          "note": "유럽은 '돈을 벌려고' 나갔는데 정화는 '위신을 보이려고' 나갔다는 대비가 시험 포인트야. 목적이 다르니까 항해가 중단된 이유도 달랐어. 교과서 본문에는 정화가 나오지 않으니 수업에서 추가된 내용으로 알아 둬.",
+          "words": [
+            { "w": "prestige", "ko": "위신, 명성", "x": "남들이 우러러보는 지위나 평판. 돈이 아니라 체면을 위한 항해였다는 뜻이야." }
+          ] }
+      ] }
+    ]
+  },
+  {
+    "id": "sl04",
+    "book": "",
+    "title": "두 번째 주제 표지",
+    "summary": "사람·물건·생각의 세계적 이동을 가져온 탐험이라는, 이번 수업의 두 번째 큰 주제를 알리는 표지다.",
+    "keypoints": ["Second Theme: 탐험과 지구적 이동", "First Theme: 르네상스와 종교개혁"],
+    "tb": ["tb01"],
+    "blocks": [
+      { "kind": "heading", "en": "Second Theme – Exploration that brough global movement of people, goods, and Ideas", "ko": "두 번째 주제 — 사람·물건·생각의 지구적 이동을 가져온 탐험" },
+      { "kind": "p", "sentences": [
+        { "en": "First Theme – The Renaissance & the Reformation as a Modernizing Force",
+          "ko": "첫 번째 주제 — 근대를 밀어 올린 힘으로서의 르네상스와 종교개혁",
+          "important": true,
+          "note": "앞 단원(르네상스·종교개혁)과 이 단원을 하나로 묶어 주는 문장이야. 호기심과 지식의 확산이라는 르네상스의 분위기가 그대로 바다로 나가는 동력이 됐다는 흐름으로 이해하면 돼.",
+          "words": [
+            { "w": "modernizing", "ko": "근대화시키는", "x": "사회를 옛 방식에서 근대적인 모습으로 바꾸는. modern(근대의)에서 왔어." }
+          ] }
+      ] }
+    ]
+  },
+  {
+    "id": "sl05",
+    "book": "",
+    "title": "탐험의 동기",
+    "summary": "르네상스의 호기심, 향신료 수요, 막힌 무역로가 어떻게 유럽을 바다로 내몰았는지 정리한다.",
+    "keypoints": ["마르코 폴로와 호기심", "향신료 인기", "1453년 콘스탄티노플 함락", "Gold·Glory·God"],
+    "tb": ["tb04", "tb05"],
+    "blocks": [
+      { "kind": "figure", "en": "The Travels of Marco Polo (book cover) and a map of Marco Polo's route from Venice to China",
+        "ko": "『마르코 폴로의 동방견문록』 표지와, 베네치아에서 중국까지 이어지는 마르코 폴로의 이동 경로 지도",
+        "where": "슬라이드 왼쪽 위·아래 두 장",
+        "note": "지도에서 베네치아(Venecia)—콘스탄티노플—카슈가르—대도(Chantu/Peking)로 이어지는 붉은 선을 따라가 봐. 육로로 이렇게 멀었기 때문에 값이 비쌌고, 나중에 이 길이 막히자 유럽이 바닷길을 찾게 돼." },
+      { "kind": "p", "sentences": [
+        { "en": "During the Renaissance",
+          "ko": "르네상스 시기에" },
+        { "en": "Interest in trade increased: the Crusade, Marco Polo",
+          "ko": "무역에 대한 관심이 커졌다: 십자군, 마르코 폴로" },
+        { "en": "Asia with amazing stories – circulation of knowledge, spirit of curiosity",
+          "ko": "놀라운 이야기로 가득한 아시아 — 지식의 유통, 호기심의 정신" },
+        { "en": "Spices became popular",
+          "ko": "향신료가 인기를 끌었다",
+          "words": [
+            { "w": "spices", "ko": "향신료", "x": "후추·정향·육두구처럼 음식에 넣는 향이 강한 재료. 당시 유럽에서 금값이었어." }
+          ] },
+        { "en": "Muslims (Ottoman) and Italian traders charged too much",
+          "ko": "무슬림(오스만)과 이탈리아 상인들이 값을 너무 비싸게 불렀다" },
+        { "en": "1360s: Silk Road closed, 1453: ERE conquered = Europe's access to wealth decreased?",
+          "ko": "1360년대에 실크로드가 막히고, 1453년에 동로마 제국이 정복되면서 유럽이 부(富)에 닿을 길이 줄었다",
+          "important": true,
+          "note": "연도 두 개가 시험 단골이야. 1453년 오스만이 콘스탄티노플을 함락하면서 육로 무역이 막혔고, 그래서 '바닷길을 뚫자'는 동기가 생겨. 원인(길이 막힘) → 결과(대항해)의 인과관계로 외워 둬.",
+          "words": [
+            { "w": "ERE", "ko": "동로마 제국", "x": "Eastern Roman Empire의 약자. 비잔틴 제국이라고도 해. 1453년 오스만에 함락됐어." },
+            { "w": "conquered", "ko": "정복된", "x": "전쟁으로 빼앗긴. conquer(정복하다)의 과거분사." }
+          ] },
+        { "en": "Desire: make colonies and become rich",
+          "ko": "욕망: 식민지를 만들어 부자가 되는 것",
+          "words": [
+            { "w": "colonies", "ko": "식민지", "x": "본국이 차지해 지배하는 바깥 땅. colony의 복수형." }
+          ] },
+        { "en": "Glory for fame: Fountain of Youth, El Dorado",
+          "ko": "명성을 위한 영광: 젊음의 샘, 엘도라도" },
+        { "en": "To spread the Gospel: the Jesuits, Moravians (Jan Huss followers in Bohemia)",
+          "ko": "복음을 전하기 위해: 예수회, 모라비아 교도(보헤미아의 얀 후스 추종자들)",
+          "important": true,
+          "note": "여기까지가 Gold(부자 되기)·Glory(명성)·God(복음 전파)의 세 동기야. 9번 슬라이드에서 이 셋이 제목으로 다시 나오니까 세트로 묶어서 기억해.",
+          "words": [
+            { "w": "Gospel", "ko": "복음", "x": "기독교의 가르침. 선교의 대상이 되는 내용이야." },
+            { "w": "Jesuits", "ko": "예수회", "x": "선교에 힘쓴 가톨릭 수도회. 아시아·아메리카 선교에 앞장섰어." }
+          ] }
+      ] }
+    ]
+  },
+  {
+    "id": "sl06",
+    "book": "",
+    "title": "대륙을 넘은 탐험가들",
+    "summary": "유럽보다 앞선 이븐 바투타·정화의 항해를 소개하고, '발견'이라는 말의 문제를 짚는다.",
+    "keypoints": ["Ibn Battuta 1325-1354", "Zheng He 1405-33", "시기 1485-1600", "이미 사람이 살고 있었다"],
+    "tb": ["tb03", "tb04"],
+    "blocks": [
+      { "kind": "figure", "en": "Map of Ming China 1368–1644 with the Silk Road, Japanese sea pirate raids, and Zheng He's sea routes",
+        "ko": "실크로드, 일본 해적의 침입로, 정화의 바닷길이 표시된 명나라(1368~1644) 지도",
+        "where": "슬라이드 왼쪽 위",
+        "note": "지도 왼쪽 연표에 1368년 건국, 1421년 베이징 천도, 1522~1566년 몽골·왜구 침입이 적혀 있어. 북쪽 국경이 시끄러워지면서 명이 바다에서 손을 뗀 흐름을 함께 보면 정화의 항해가 왜 끊겼는지 짐작할 수 있어." },
+      { "kind": "figure", "en": "Map of the routes of Ibn Battutah, 1325–1354, across Africa, Arabia, India and China",
+        "ko": "1325~1354년 이븐 바투타가 아프리카·아라비아·인도·중국을 돌아다닌 경로 지도",
+        "where": "슬라이드 왼쪽 아래",
+        "note": "위의 명나라 지도와 나란히 놓고 비교하라는 뜻이야. 유럽이 바다로 나가기 훨씬 전부터 이슬람권과 중국이 대륙과 바다를 오가고 있었다는 걸 두 지도가 같이 보여 줘." },
+      { "kind": "p", "sentences": [
+        { "en": "Transcontinental Explorers",
+          "ko": "대륙을 가로지른 탐험가들",
+          "words": [
+            { "w": "transcontinental", "ko": "대륙을 가로지르는", "x": "trans(가로질러) + continental(대륙의). 대륙과 대륙을 넘나드는 규모라는 뜻이야." }
+          ] },
+        { "en": "Ibn Battuta  (1325-1354): 75,000 mi./120,000 km.",
+          "ko": "이븐 바투타 (1325~1354): 7만 5천 마일, 12만 킬로미터를 이동했다" },
+        { "en": "Zheng He 鄭和 zhèng hé;  (1405-33): Transcontinental Navigations",
+          "ko": "정화 鄭和 (1405~1433): 대륙을 넘나드는 항해를 했다" },
+        { "en": "Other Words: Age of Discovery, The European Discovery of the World, Age of Navigation",
+          "ko": "다른 이름들: 발견의 시대, 유럽의 세계 발견, 항해의 시대" },
+        { "en": "Time Period: 1485-1600",
+          "ko": "시기: 1485년부터 1600년까지" },
+        { "en": "Europeans did not discover; there were already people living",
+          "ko": "유럽인이 '발견'한 게 아니다. 그곳에는 이미 사람들이 살고 있었다",
+          "important": true,
+          "note": "이 단원에서 가장 중요한 관점 한 줄이야. '발견'이라는 말 자체가 누구의 시선인지 묻게 해 줘. 26번 슬라이드의 이름 붙이기 논쟁, 33번 결론의 원주민 피해와 곧장 이어지니까 함께 묶어 둬." }
+      ] }
+    ]
+  },
+  {
+    "id": "sl07",
+    "book": "",
+    "title": "오늘의 쓰기 과제",
+    "summary": "모험과 탐험을 자기 경험과 연결해 한 문단을 쓰게 하는 수업 과제다.",
+    "keypoints": ["모험 경험", "앞으로의 탐험 계획", "인류에게 열리는 새 영역", "7문장 이상"],
+    "tb": [],
+    "blocks": [
+      { "kind": "heading", "en": "Today's Writing Prompt", "ko": "오늘의 쓰기 과제" },
+      { "kind": "p", "sentences": [
+        { "en": "People go on an adventure to change something. Have you had adventure before?",
+          "ko": "사람들은 무언가를 바꾸려고 모험을 떠나. 너는 모험을 해 본 적 있어?" },
+        { "en": "Do you have a plan of exploring something later?",
+          "ko": "나중에 무언가를 탐험해 볼 계획이 있어?" },
+        { "en": "What is something (or anything) that is being opened for humanity to dig into? What do you think about this adventure?",
+          "ko": "지금 인류가 파고들 수 있게 열리고 있는 영역은 뭘까? 그 모험을 너는 어떻게 생각해?" }
+      ] },
+      { "kind": "check", "en": "Write a solid paragraph (min. 7 sentences), upload your writing on Google Classroom at home, and expect to share with others.",
+        "ko": "탄탄한 한 문단(최소 7문장)을 써서 집에서 구글 클래스룸에 올리고, 다른 사람들과 나눌 준비를 해 둬.",
+        "note": "수업에서 직접 낸 과제라 평가에 들어갈 가능성이 높아. 5번 슬라이드의 Gold·Glory·God 세 동기를 네 경험에 빗대어 쓰면 문단이 훨씬 깊어져. 최소 7문장이라는 분량 조건을 놓치지 마." }
+    ]
+  },
+  {
+    "id": "sl08",
+    "book": "",
+    "title": "탐험가와 배 이미지",
+    "summary": "글자 없이 사진만 있는 장으로, 이동 경로 지도와 중국·포르투갈의 배, 엔히크 왕자를 나란히 보여 준다.",
+    "keypoints": ["마르코 폴로·이븐 바투타 경로 지도", "중국 정크선", "포르투갈 카라벨선", "엔히크 왕자"],
+    "tb": ["tb03", "tb05"],
+    "blocks": [
+      { "kind": "figure", "en": "World map showing Marco Polo's travels and Ibn Battuta's travels in two different colored lines",
+        "ko": "마르코 폴로의 여정과 이븐 바투타의 여정을 서로 다른 색 선으로 그린 세계 지도",
+        "where": "슬라이드 왼쪽 위",
+        "note": "두 선이 어디서 겹치고 어디서 갈라지는지 비교해 보라는 지도야. 유럽·아프리카·아시아가 이미 촘촘히 연결돼 있었다는 걸 보여 줘." },
+      { "kind": "figure", "en": "Model of a Chinese junk with several battened sails",
+        "ko": "돛이 여러 개 달린 중국 정크선 모형 사진",
+        "where": "슬라이드 왼쪽 아래",
+        "note": "정화의 함대가 쓰던 배야. 옆의 카라벨선과 크기·돛 모양을 비교해 보면 중국 배가 훨씬 컸다는 걸 알 수 있어." },
+      { "kind": "figure", "en": "A Portuguese caravel with lateen (triangular) sails and the Portuguese flag",
+        "ko": "삼각돛(라틴 세일)을 달고 포르투갈 깃발을 단 카라벨선 사진",
+        "where": "슬라이드 가운데 아래",
+        "note": "돛이 삼각형인 걸 확인해 봐. 이 삼각돛 덕분에 바람을 거슬러 갈 수 있었고, 그래서 먼 바다 항해가 가능해졌어. 9번 슬라이드의 'Caravels: 배 건조 기술'과 이어지는 사진이야." },
+      { "kind": "figure", "en": "Portrait of Prince Henry the Navigator in a wide black hat",
+        "ko": "챙 넓은 검은 모자를 쓴 '항해왕' 엔히크 왕자의 초상화",
+        "where": "슬라이드 오른쪽 아래",
+        "note": "포르투갈 항해를 후원한 인물이야. 10번 슬라이드에서 다시 등장하니까 얼굴을 기억해 두면 좋아." }
+    ]
+  },
+  {
+    "id": "sl09",
+    "book": "",
+    "title": "17-1 신·영광·금과 기술",
+    "summary": "탐험의 세 동기와, 먼 바다를 가능하게 한 항해 기술들을 정리한다.",
+    "keypoints": ["For God, Glory, and Gold", "바르톨로메우 디아스의 말", "아스트롤라베·육분의", "나침반·카라벨·메르카토르 지도"],
+    "tb": ["tb05"],
+    "blocks": [
+      { "kind": "heading", "en": "17-1 European Expansion and Expansion", "ko": "17-1 유럽의 팽창" },
+      { "kind": "p", "sentences": [
+        { "en": "For God, Glory, and Gold",
+          "ko": "신을 위해, 영광을 위해, 금을 위해",
+          "important": true,
+          "note": "이 단원 전체를 꿰는 한 줄이야. 시험에서 '탐험의 동기'를 물으면 이 셋으로 답하면 돼. God=기독교 전파, Glory=명예, Gold=경제적 이익." }
+      ] },
+      { "kind": "quote", "sentences": [
+        { "en": "Bartolomeu Dias: “To serve God and His Majesty, to give light to those who were in darkness and to grow rich as all men desire to do”",
+          "ko": "바르톨로메우 디아스: “신과 국왕을 섬기고, 어둠 속에 있던 이들에게 빛을 주며, 모든 사람이 바라듯 부자가 되기 위하여”",
+          "important": true,
+          "note": "당시 사람이 직접 남긴 말이라 사료로서 힘이 세. 한 문장 안에 God(신을 섬김)·Glory(국왕을 섬김)·Gold(부자 되기)가 다 들어 있어서 세 동기의 증거로 인용하기 딱 좋아. '어둠 속에 있던 이들'이라는 표현이 누구의 시선인지도 같이 생각해 봐.",
+          "words": [
+            { "w": "His Majesty", "ko": "국왕 폐하", "x": "왕을 높여 부르는 말. 여기서는 포르투갈 왕을 가리켜." }
+          ] }
+      ] },
+      { "kind": "p", "sentences": [
+        { "en": "Technology",
+          "ko": "기술" },
+        { "en": "Astrolabe to Sextant: measuring a ship's location",
+          "ko": "아스트롤라베에서 육분의로: 배의 위치를 재는 도구",
+          "words": [
+            { "w": "astrolabe", "ko": "아스트롤라베", "x": "별과 태양의 높이를 재서 위도를 알아내던 옛 기구." },
+            { "w": "sextant", "ko": "육분의", "x": "아스트롤라베보다 정확하게 위치를 재도록 개량된 기구." }
+          ] },
+        { "en": "Compass from China",
+          "ko": "중국에서 온 나침반" },
+        { "en": "Caravels: ship construction technology",
+          "ko": "카라벨선: 배를 만드는 기술" },
+        { "en": "Mapmaking Technology: Mercator's World Map",
+          "ko": "지도 제작 기술: 메르카토르의 세계 지도",
+          "words": [
+            { "w": "Mercator", "ko": "메르카토르", "x": "항로를 직선으로 그릴 수 있게 만든 지도 투영법을 만든 사람. 항해에 아주 유용했어." }
+          ] }
+      ] },
+      { "kind": "figure", "en": "Illustration of a compass and a sailing ship with red crosses on its sails, over a map background",
+        "ko": "지도 배경 위에 그려진 나침반과, 돛에 붉은 십자가가 그려진 범선 그림",
+        "where": "슬라이드 오른쪽 위",
+        "note": "돛의 붉은 십자가는 이 항해가 기독교 국가의 사업이라는 표시야. God과 Gold가 한 배에 타고 있었다는 걸 그림 하나로 보여 줘." },
+      { "kind": "figure", "en": "Diagram showing how to point a sextant to the horizon",
+        "ko": "육분의를 수평선에 맞추는 방법을 보여 주는 도해",
+        "where": "슬라이드 오른쪽 아래",
+        "note": "수평선과 천체의 각도를 재서 위도를 계산하는 원리야. 이 도구가 없으면 망망대해에서 자기 위치를 알 수 없었어." }
+    ]
+  },
+  {
+    "id": "sl10",
+    "book": "",
+    "title": "중요 인물들",
+    "summary": "엔히크 왕자, 바스쿠 다 가마, 콜럼버스 세 사람과 연도를 정리한다.",
+    "keypoints": ["Prince Henry the Navigator", "1497-98 다 가마 인도 도착", "1492-93 콜럼버스 서인도제도"],
+    "tb": ["tb05", "tb06"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "Important Figures",
+          "ko": "중요 인물들" },
+        { "en": "Prince Henry “the Navigator”: lead the Portuguese explorations",
+          "ko": "'항해왕' 엔히크 왕자: 포르투갈의 탐험을 이끌었다",
+          "words": [
+            { "w": "navigator", "ko": "항해자", "x": "배의 길을 잡는 사람. 정작 엔히크는 직접 배를 타진 않고 후원했어." }
+          ] },
+        { "en": "1497-98: Vasco da Gama reached India",
+          "ko": "1497~98년: 바스쿠 다 가마가 인도에 도착했다",
+          "important": true,
+          "note": "아프리카를 돌아 인도로 가는 바닷길이 실제로 열린 순간이야. 1453년에 육로가 막힌 것(5번 슬라이드)의 직접적인 결과로 이어서 외워 둬." },
+        { "en": "1492-93: Columbus (Genoese Italian) reached the West Indies",
+          "ko": "1492~93년: 제노바 출신 이탈리아인 콜럼버스가 서인도제도에 도착했다",
+          "important": true,
+          "note": "'인도'가 아니라 '서인도제도'라고 적힌 게 중요해. 콜럼버스는 죽을 때까지 아시아에 닿았다고 믿었고, 그 착각 때문에 원주민을 '인디언'이라 부르게 됐어. 26번 슬라이드의 이름 논쟁과 바로 연결돼.",
+          "words": [
+            { "w": "West Indies", "ko": "서인도제도", "x": "카리브해의 섬들. 콜럼버스가 인도인 줄 알고 붙인 이름이야." }
+          ] }
+      ] },
+      { "kind": "figure", "en": "Three portraits: Prince Henry the Navigator, Christopher Columbus, and Vasco da Gama",
+        "ko": "엔히크 왕자, 크리스토퍼 콜럼버스, 바스쿠 다 가마의 초상화 세 점",
+        "where": "슬라이드 오른쪽, 원형으로 배치",
+        "note": "왼쪽 위가 엔히크, 오른쪽이 콜럼버스, 아래가 다 가마야. 세 사람이 각각 '후원자 — 서쪽으로 간 사람 — 동쪽으로 간 사람'을 대표한다고 묶어서 기억하면 헷갈리지 않아." }
+    ]
+  },
+  {
+    "id": "sl11",
+    "book": "",
+    "title": "포르투갈과 스페인",
+    "summary": "포르투갈은 아프리카를 돌아 동쪽으로, 스페인은 서쪽으로 간 과정과 토르데시야스 조약을 정리한다.",
+    "keypoints": ["포르투갈: 아프리카 우회", "카르타스", "스페인: 서쪽 항로", "토르데시야스 조약"],
+    "tb": ["tb06", "tb13"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "Portugal: went around Africa",
+          "ko": "포르투갈: 아프리카를 돌아갔다" },
+        { "en": "Spices from India and Southeast Asia",
+          "ko": "인도와 동남아시아에서 향신료를 들여왔다" },
+        { "en": "Slave Trade: from Africa – to the Americas",
+          "ko": "노예무역: 아프리카에서 아메리카로 사람들을 강제로 실어 날랐다",
+          "important": true,
+          "note": "향신료를 찾던 항로가 곧바로 사람을 사고파는 항로로 이어졌다는 점이 이 단원의 가장 무거운 대목이야. 16~18번 슬라이드에서 자세히 다루니까 여기서는 '언제 시작됐는지'를 잡아 두면 돼." },
+        { "en": "Start of the Atlantic Slave Trade: 9-12 million",
+          "ko": "대서양 노예무역의 시작: 900만~1200만 명에 이르는 사람들이 끌려갔다" },
+        { "en": "Cartaz: trade license issued by Portugal",
+          "ko": "카르타스: 포르투갈이 발급한 무역 허가증" },
+        { "en": "No cartaz, ships were attacked = violent rule",
+          "ko": "카르타스가 없으면 배는 공격당했다 = 폭력으로 유지된 지배" },
+        { "en": "Attack Muslims, Hindus, anyone",
+          "ko": "무슬림이든 힌두교도든 가리지 않고 공격했다" },
+        { "en": "Spain: went west – reaches the Americas",
+          "ko": "스페인: 서쪽으로 가서 아메리카에 닿았다" },
+        { "en": "Columbus (1492), Magellan (around the world), conquered Aztec and Inca (Latin America)",
+          "ko": "콜럼버스(1492), 마젤란(세계 일주), 그리고 아즈텍과 잉카 정복(라틴아메리카)" },
+        { "en": "Getting: gold, silver, plantation (farms), cochineal",
+          "ko": "얻은 것: 금, 은, 플랜테이션(대농장), 코치닐",
+          "words": [
+            { "w": "cochineal", "ko": "코치닐", "x": "선인장에 사는 벌레에서 뽑는 붉은 염료. 당시 유럽에서 아주 비싸게 팔렸어." }
+          ] },
+        { "en": "Treaty of Tordesillas: split the world into Portuguese (East) and Spanish (West)",
+          "ko": "토르데시야스 조약: 세계를 포르투갈(동쪽)과 스페인(서쪽)으로 갈라 나눴다",
+          "important": true,
+          "note": "1494년, 교황이 그은 선 하나로 두 나라가 지구를 나눠 가진 사건이야. 브라질만 포르투갈어를 쓰는 이유가 바로 이 선 때문이라는 걸 연결해 두면 23번 슬라이드가 쉬워져.",
+          "words": [
+            { "w": "treaty", "ko": "조약", "x": "나라와 나라가 맺는 공식 약속." }
+          ] }
+      ] },
+      { "kind": "figure", "en": "World map showing the Tordesillas meridian 1494 A.D., the Line of Pope Alexander VI 1493 (Inter caetera), the Zaragoza antimeridian 1529, and the areas controlled by Spain and Portugal",
+        "ko": "1494년 토르데시야스 자오선, 1493년 교황 알렉산데르 6세의 분계선, 1529년 사라고사 반자오선과 스페인·포르투갈의 지배 구역을 표시한 세계 지도",
+        "where": "슬라이드 오른쪽 위",
+        "note": "선 하나를 기준으로 왼쪽은 스페인, 오른쪽은 포르투갈로 갈린 걸 비교해 보라는 지도야. 브라질이 선의 오른쪽에 살짝 걸쳐 있는 것, 향신료의 목적지 몰루카 제도(MOLUCCAS)가 어느 쪽인지 확인해 봐." },
+      { "kind": "figure", "en": "Map of the Atlantic slave trade with arrows from Africa to the Americas, the width of each arrow showing the number of people transported",
+        "ko": "아프리카에서 아메리카로 향하는 화살표로 그린 대서양 노예무역 지도. 화살표 굵기가 끌려간 사람 수를 나타낸다",
+        "where": "슬라이드 오른쪽 아래",
+        "note": "화살표가 굵을수록 더 많은 사람이 강제로 실려 갔다는 뜻이야. 브라질과 카리브해로 향하는 선이 가장 굵다는 점을 확인해 봐. 숫자가 아니라 사람의 삶이라는 걸 생각하면서 보자." }
+    ]
+  },
+  {
+    "id": "sl12",
+    "book": "",
+    "title": "향신료 지도",
+    "summary": "글자 설명 없이 지도만 있는 장으로, 향신료의 산지와 유럽의 무역망을 크게 펼쳐 보여 준다.",
+    "keypoints": ["Spice Islands(몰루카)", "세계 향신료 산지 지도", "네덜란드 동인도회사 무역망"],
+    "tb": ["tb06", "tb13"],
+    "blocks": [
+      { "kind": "figure", "en": "Map titled “The Spice Islands” showing the Moluccas, Halmahera, Ambon, Celebes, New Guinea and East Timor in Indonesia",
+        "ko": "“향신료 제도” 지도. 인도네시아의 몰루카 제도, 할마헤라, 암본, 셀레베스, 뉴기니, 동티모르가 표시돼 있다",
+        "where": "슬라이드 왼쪽 위",
+        "note": "유럽이 그렇게 가고 싶어 했던 곳이 지도에서는 이렇게 작은 섬 몇 개야. 이 좁은 지역을 차지하려고 나라들이 지구 반 바퀴를 돌았다는 걸 크기로 실감해 봐." },
+      { "kind": "figure", "en": "Photographs of spices: cinnamon, coriander, saffron, bay leaves, cumin, cloves, chiles/peppers, pepper, nutmeg and sesame seeds",
+        "ko": "계피, 고수, 사프란, 월계수 잎, 커민, 정향, 고추, 후추, 육두구, 참깨 같은 향신료 사진 모음",
+        "where": "슬라이드 왼쪽 가운데",
+        "note": "지금은 마트에서 쉽게 사는 것들이지만 당시에는 같은 무게의 금과 맞먹기도 했어. 값이 왜 그렇게 비쌌는지는 5번 슬라이드의 '중간 상인이 값을 올렸다'와 이어서 생각해 봐." },
+      { "kind": "figure", "en": "Diagram of the Dutch East India Company trade network in the 17th century, with regional routes, inbound routes to Batavia and Galle, and return routes",
+        "ko": "17세기 네덜란드 동인도회사(VOC)의 무역망 도해. 지역 항로, 바타비아와 갈레로 들어오는 항로, 돌아가는 항로가 색으로 구분돼 있다",
+        "where": "슬라이드 왼쪽 아래",
+        "note": "암스테르담—희망봉—바타비아로 이어지는 선을 따라가 봐. 14번 슬라이드의 VOC 설명과 짝을 이루는 그림이야." },
+      { "kind": "figure", "en": "Large poster map “The World of Herbs & Spices” showing where each herb and spice comes from, a history of herbs and spices, and the exploration routes of Columbus, Vasco da Gama and Magellan",
+        "ko": "“세계의 허브와 향신료” 대형 포스터 지도. 나라별 향신료 산지, 허브·향신료의 역사, 콜럼버스·바스쿠 다 가마·마젤란의 탐험 항로가 함께 그려져 있다",
+        "where": "슬라이드 오른쪽 전체",
+        "note": "어느 향신료가 어느 지역에서 나는지를 한눈에 비교하라는 지도야. 아시아와 아메리카 대륙에 산지가 몰려 있고, 정작 유럽에는 거의 없다는 점이 대항해의 이유를 그대로 설명해 줘." }
+    ]
+  },
+  {
+    "id": "sl13",
+    "book": "",
+    "title": "탐험 항로 지도",
+    "summary": "글자 없이 지도 한 장만 있는 장으로, 나라별 탐험 항로를 색으로 구분해 보여 준다.",
+    "keypoints": ["포르투갈: 디아스·다 가마·카브랄", "스페인: 콜럼버스·마젤란", "프랑스: 카르티에", "영국: 드레이크·캐벗"],
+    "tb": ["tb03"],
+    "blocks": [
+      { "kind": "figure", "en": "World map of European voyages of exploration with a legend: PORTUGAL (Dias 1487–1488, Da Gama 1497–1498, Cabral 1500–1501), SPAIN (Columbus 1492–1493, Magellan 1519–1522), FRANCE (Cartier 1534–1535), ENGLAND (Drake 1577–1580, Cabot 1497–1498)",
+        "ko": "유럽의 탐험 항로를 나라별로 색을 달리해 그린 세계 지도. 범례에 포르투갈(디아스 1487~1488, 다 가마 1497~1498, 카브랄 1500~1501), 스페인(콜럼버스 1492~1493, 마젤란 1519~1522), 프랑스(카르티에 1534~1535), 영국(드레이크 1577~1580, 캐벗 1497~1498)이 적혀 있다",
+        "where": "슬라이드 전체를 채우는 지도",
+        "note": "나라별로 '어느 방향으로 갔는가'를 비교하라는 지도야. 포르투갈(초록)은 아프리카를 돌아 동쪽, 스페인(빨강)은 대서양을 건너 서쪽, 프랑스·영국(보라·주황)은 북쪽 길을 찾는다는 패턴이 보여. 연도까지 함께 외우면 시험에서 인물과 연도를 짝짓는 문제에 강해져." }
+    ]
+  },
+  {
+    "id": "sl14",
+    "book": "",
+    "title": "프랑스·네덜란드·영국",
+    "summary": "뒤늦게 뛰어든 나라들이 어디를 차지했는지와, 동아시아가 어떻게 대응했는지 정리한다.",
+    "keypoints": ["프랑스: 캐나다 동부", "네덜란드 VOC와 향신료 제도", "영국: 버지니아와 인도", "동아시아의 제한된 교역"],
+    "tb": ["tb08", "tb09", "tb13"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "France: reached Canada (eastern)",
+          "ko": "프랑스: 캐나다 동부에 닿았다" },
+        { "en": "Netherlands: controlled the Spice Islands (Indonesia)",
+          "ko": "네덜란드: 향신료 제도(인도네시아)를 장악했다" },
+        { "en": "The Dutch East India Company (VOC): monopoly given by gov. - make money, make treaties, raise army for conquering (Tulip War)",
+          "ko": "네덜란드 동인도회사(VOC): 정부에게 독점권을 받아 돈을 벌고, 조약을 맺고, 정복을 위해 군대까지 거느렸다",
+          "important": true,
+          "note": "회사가 군대를 갖고 조약을 맺었다는 게 핵심이야. 오늘날 기업과 완전히 다른 존재였고, 20번 슬라이드의 주식회사·자본주의 이야기와 곧장 이어져.",
+          "words": [
+            { "w": "monopoly", "ko": "독점", "x": "한 곳만 그 사업을 할 수 있게 해 주는 권리. 경쟁자가 없으니 값을 마음대로 매길 수 있어." }
+          ] },
+        { "en": "England: colonized Virginia (US), turned to India",
+          "ko": "영국: 버지니아(지금의 미국)를 식민지로 삼았고, 이후 인도로 눈을 돌렸다" },
+        { "en": "Virginia became successful with tobacco",
+          "ko": "버지니아는 담배 재배로 성공했다" },
+        { "en": "The English East India Company: conquer India (later)",
+          "ko": "영국 동인도회사: 나중에 인도를 정복하게 된다" },
+        { "en": "East Asia: few trades in China, stopped in Japan, none in Korea",
+          "ko": "동아시아: 중국과는 교역이 조금, 일본에서는 중단, 조선과는 없었다",
+          "important": true,
+          "note": "유럽의 팽창이 동아시아에서는 통하지 않았다는 대비 포인트야. 조선이 왜 이 흐름에서 비켜나 있었는지는 15번 슬라이드의 그림과 함께 생각해 보면 좋아." },
+        { "en": "Korea's main interaction: China and Japan",
+          "ko": "조선의 주된 교류 상대: 중국과 일본" }
+      ] }
+    ]
+  },
+  {
+    "id": "sl15",
+    "book": "",
+    "title": "조선의 궁중 행렬 그림",
+    "summary": "글자 없이 옛 그림 두 점만 있는 장으로, 같은 시기 조선의 모습을 보여 준다.",
+    "keypoints": ["조선 시대 기록화", "궁중 의례와 행렬", "유럽 팽창기의 동아시아"],
+    "tb": [],
+    "blocks": [
+      { "kind": "figure", "en": "Old Korean painting of a royal ceremony held in an open field, with rows of officials, flags and tents arranged in a wide circle, and a column of Chinese characters in the upper left",
+        "ko": "넓은 들판에서 열린 조선 시대 궁중 의례를 그린 옛 기록화. 관원들의 줄, 깃발, 천막이 크게 둥글게 배치돼 있고 왼쪽 위에 한문이 적혀 있다",
+        "where": "슬라이드 왼쪽",
+        "note": "14번 슬라이드의 '조선과는 교역이 없었다'를 그림으로 받쳐 주는 장이야. 유럽이 바다로 나가던 바로 그 시기에 조선은 육지의 의례와 질서 속에 있었다는 대비를 보여 줘." },
+      { "kind": "figure", "en": "Old Korean painting of a royal procession passing a large tiled pavilion, with a crowd of people in colorful robes and black hats watching from both sides of the street",
+        "ko": "큰 기와 누각 앞을 지나는 조선 시대 행렬을 그린 옛 그림. 길 양쪽에서 색색의 옷과 갓을 쓴 사람들이 구경하고 있다",
+        "where": "슬라이드 오른쪽",
+        "note": "왼쪽 그림과 함께, 조선의 교류가 바다 건너가 아니라 중국·일본과의 사신 왕래 중심이었다는 걸 보여 주는 자료로 쓰였어. 두 그림 다 사람들이 줄지어 늘어선 '질서'가 강조돼 있다는 점을 봐." }
+    ]
+  },
+  {
+    "id": "sl16",
+    "book": "",
+    "title": "17-2 대서양 노예무역",
+    "summary": "대서양 노예무역의 규모와 결과, 그리고 그 이전의 역사를 담담하게 정리한다.",
+    "keypoints": ["900만~1200만 명", "아프리카 인구 감소", "무슬림 대상 상인", "유럽 이전의 노예무역"],
+    "tb": ["tb13", "tb14"],
+    "blocks": [
+      { "kind": "heading", "en": "17-2 The First Global Economic Systems", "ko": "17-2 최초의 세계 경제 체제" },
+      { "kind": "p", "sentences": [
+        { "en": "The Atlantic Slave Trade : 9-12 million people",
+          "ko": "대서양 노예무역: 900만~1200만 명의 사람들",
+          "important": true,
+          "note": "숫자를 그냥 외우지 말고, 한 사람 한 사람이 이름과 가족이 있던 사람이라는 걸 기억하자. 이 규모가 아메리카의 인구 구성과 아프리카의 인구 감소를 동시에 설명해 줘." },
+        { "en": "Maltreatment of innocent Africans",
+          "ko": "아무 잘못 없는 아프리카 사람들이 가혹한 대우를 받았다",
+          "words": [
+            { "w": "maltreatment", "ko": "학대, 가혹한 대우", "x": "mal(나쁘게) + treatment(대우). 사람을 함부로 다루는 것을 뜻해." }
+          ] },
+        { "en": "Human rights not existing",
+          "ko": "인권이라는 것이 존재하지 않았다" },
+        { "en": "Massive population decline in Africa, mixture of ethnic groups (Mulato in Brazil)",
+          "ko": "아프리카의 인구가 크게 줄었고, 여러 민족이 뒤섞이게 됐다 (브라질의 물라토)",
+          "important": true,
+          "note": "노예무역의 결과를 두 갈래로 정리한 문장이야. 아프리카 쪽에서는 인구가 빠져나갔고, 아메리카 쪽에서는 새로운 인구 구성이 생겼어. 32번 슬라이드의 신분 피라미드와 이어서 보면 이해가 깊어져.",
+          "words": [
+            { "w": "decline", "ko": "감소", "x": "수나 양이 줄어드는 것." },
+            { "w": "ethnic", "ko": "민족의", "x": "같은 언어·문화·조상을 가진 집단을 가리키는 말." }
+          ] },
+        { "en": "History",
+          "ko": "이전의 역사" },
+        { "en": "Muslim caravan traders started in Africa",
+          "ko": "아프리카에서는 무슬림 대상(隊商) 상인들이 먼저 시작했다",
+          "words": [
+            { "w": "caravan", "ko": "대상(隊商)", "x": "사막을 무리 지어 오가던 상인 행렬." }
+          ] },
+        { "en": "Slave trade before Europeans",
+          "ko": "유럽인들이 오기 전에도 노예무역은 있었다" },
+        { "en": "Non-Muslim could be sold as slaves: ex. Crusade",
+          "ko": "무슬림이 아닌 사람은 노예로 팔릴 수 있었다: 예를 들어 십자군 시기" }
+      ] }
+    ]
+  },
+  {
+    "id": "sl17",
+    "book": "",
+    "title": "중간항로와 삼각무역",
+    "summary": "글자 없이 자료 사진과 지도만 있는 장으로, 노예선의 내부와 삼각무역의 구조를 보여 준다.",
+    "keypoints": ["노예선 단면 모형", "브룩스호 적재 도면", "삼각무역", "Middle Passage"],
+    "tb": ["tb14", "tb15"],
+    "blocks": [
+      { "kind": "figure", "en": "Museum model showing the cut-away inside of a slave ship, with people packed on narrow decks between cargo",
+        "ko": "노예선 내부를 잘라 보여 주는 박물관 모형. 좁은 갑판 사이에 사람들이 짐처럼 빼곡히 실려 있다",
+        "where": "슬라이드 왼쪽 위",
+        "note": "사람을 화물처럼 실었다는 사실을 눈으로 보여 주는 자료야. 숫자로만 배우던 '900만~1200만 명'이 어떤 환경이었는지 가늠하게 해 줘. 보기 힘든 자료지만, 피해자의 경험을 사실 그대로 기억하려고 수업에서 쓰는 거야." },
+      { "kind": "figure", "en": "The famous printed diagram of a slave ship's lower deck, showing how tightly people were to be arranged",
+        "ko": "노예선 하갑판에 사람을 얼마나 빽빽하게 배치했는지 보여 주는, 널리 알려진 인쇄 도면",
+        "where": "슬라이드 왼쪽 아래",
+        "note": "18세기 노예제 폐지 운동가들이 실상을 알리려고 배포했던 도면이야. 18번 슬라이드의 윌버포스와 폐지 운동으로 이어지는 자료라서, '기록이 어떻게 변화를 만들었나'라는 관점으로도 볼 수 있어." },
+      { "kind": "figure", "en": "Map of the Triangular Trade across the Atlantic: manufactured goods, cloth, iron and beer from England to Africa; slaves along the Middle Passage to the Caribbean; sugar, molasses and wood to North America and Europe",
+        "ko": "대서양 삼각무역 지도. 영국에서 아프리카로 공산품·천·철·맥주가, 아프리카에서 카리브해로는 중간항로를 따라 사람들이, 아메리카에서는 설탕·당밀·목재가 오갔다",
+        "where": "슬라이드 오른쪽",
+        "note": "세 변이 각각 무엇을 싣고 갔는지 비교하라는 지도야. 유럽에서 아프리카로는 '물건', 아프리카에서 아메리카로는 '사람', 아메리카에서 유럽으로는 '작물'이 갔다는 구조를 외워 두면 돼. 가운데 분홍 화살표가 MIDDLE PASSAGE라고 적힌 구간이야." }
+    ]
+  },
+  {
+    "id": "sl18",
+    "book": "",
+    "title": "노예무역의 영향과 폐지",
+    "summary": "노예무역이 확대된 배경과, 아이티·영국·미국에서 노예제가 끝나기까지의 과정을 정리한다.",
+    "keypoints": ["원주민 인구 급감", "Middle Passage", "아이티 혁명 1804", "윌버포스 1807·1833", "미국 남북전쟁"],
+    "tb": ["tb14", "tb15"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "Changing situation",
+          "ko": "달라진 상황" },
+        { "en": "Colonization and development of the Americas, indigenous dying rapidly",
+          "ko": "아메리카가 식민지가 되고 개발되는 동안, 원주민들이 빠르게 목숨을 잃었다",
+          "important": true,
+          "note": "왜 아프리카에서 사람들을 데려왔는지에 대한 답이야. 질병으로 원주민 인구가 급감하자 강제 노동력을 바깥에서 데려온 거지. 22번 슬라이드의 콜럼버스의 교환(천연두·홍역)과 원인-결과로 이어져.",
+          "words": [
+            { "w": "indigenous", "ko": "원주민의, 토착의", "x": "그 땅에 원래부터 살던 사람들을 가리키는 말. 26번 슬라이드에서 이 단어가 왜 쓰이는지 다시 나와." }
+          ] },
+        { "en": "Part of the Triangular Trade",
+          "ko": "삼각무역의 한 축이었다" },
+        { "en": "Middle Passage: slaves to the Americas",
+          "ko": "중간항로: 노예가 된 사람들을 아메리카로 실어 나른 구간" },
+        { "en": "Impact and Consequences",
+          "ko": "영향과 결과" },
+        { "en": "Haitian Revolution: slave revolt against France, first country to end slavery in 1804",
+          "ko": "아이티 혁명: 프랑스에 맞선 노예 봉기로, 1804년 세계 최초로 노예제를 끝낸 나라가 됐다",
+          "important": true,
+          "note": "노예제를 끝낸 힘이 바깥의 시혜가 아니라 당사자들의 봉기에서 나왔다는 점이 중요해. 라틴아메리카 독립운동의 출발점이기도 하니까 다음 단원과 연결해 둬.",
+          "words": [
+            { "w": "revolt", "ko": "봉기, 반란", "x": "억압에 맞서 들고일어나는 것." }
+          ] },
+        { "en": "Britain: William Wilberforce ends slave trade in 1807; slavery banned in 1833",
+          "ko": "영국: 윌리엄 윌버포스가 1807년에 노예'무역'을 끝냈고, 1833년에는 노예제 자체가 금지됐다",
+          "important": true,
+          "note": "1807년과 1833년을 구분하는 게 시험 포인트야. 1807년은 사고파는 '무역'을 막은 것이고, 노예제라는 제도 자체가 없어진 건 1833년이야. 슬라이드에서 trade만 기울임체로 강조한 이유가 바로 이거야." },
+        { "en": "United States: US Civil War and Abe Lincoln (1861-1865)",
+          "ko": "미국: 남북전쟁과 에이브러햄 링컨 (1861~1865)" }
+      ] }
+    ]
+  },
+  {
+    "id": "sl19",
+    "book": "",
+    "title": "교환된 작물과 노예 경매 전단",
+    "summary": "글자 설명 없이 자료 사진만 있는 장으로, 대륙 사이에 오간 작물과 노예 경매 광고 전단을 나란히 보여 준다.",
+    "keypoints": ["신대륙 작물", "구대륙 작물", "1769년 노예 경매 전단", "사람이 상품으로 취급된 기록"],
+    "tb": ["tb12", "tb15"],
+    "blocks": [
+      { "kind": "figure", "en": "Photographs of crops that came from the Americas: corn, tomato, potato, vanilla, tobacco, cacao, rubber",
+        "ko": "아메리카에서 건너간 작물 사진: 옥수수, 토마토, 감자, 바닐라, 담배, 카카오, 고무",
+        "where": "슬라이드 왼쪽 위",
+        "note": "아래쪽 구대륙 작물 사진과 짝을 이뤄서 '어느 쪽에서 어느 쪽으로 갔는지'를 비교하라는 자료야. 감자와 옥수수가 유럽으로 가서 인구를 늘렸다는 점이 22번 슬라이드의 콜럼버스의 교환과 이어져." },
+      { "kind": "figure", "en": "Photographs of crops that came from Europe, Africa and Asia: citrus fruits, apples, bananas, mangoes, rice, wheat, coffee, onions",
+        "ko": "유럽·아프리카·아시아에서 아메리카로 건너간 작물 사진: 감귤류, 사과, 바나나, 망고, 쌀, 밀, 커피, 양파",
+        "where": "슬라이드 왼쪽 아래",
+        "note": "위 사진과 비교해 보면, 지금 우리가 '당연히 그 지역 음식'이라고 생각하는 것들이 대부분 이때 옮겨 간 거라는 걸 알 수 있어. 이탈리아의 토마토, 아일랜드의 감자가 대표적인 예야." },
+      { "kind": "figure", "en": "A 1769 printed broadside from Charlestown advertising the sale of ninety-four enslaved African people — thirty-nine men, fifteen boys, twenty-four women and sixteen girls — who had just arrived by ship from Sierra Leone",
+        "ko": "1769년 찰스턴에서 인쇄된 노예 경매 광고 전단. 시에라리온에서 막 배로 도착한 아프리카인 94명(남성 39명, 소년 15명, 여성 24명, 소녀 16명)을 팔겠다고 적혀 있다",
+        "where": "슬라이드 오른쪽",
+        "note": "전단에는 오늘날 절대 쓰지 않는 인종차별적 표현이 인쇄돼 있어서 여기에 그대로 옮기지 않았어. 이 자료가 보여 주는 건 사람을 '화물(A CARGO)'이라고 부르고 남녀와 아이의 수를 물건처럼 세었다는 사실이야. 16~18번 슬라이드에서 배운 숫자가 실제로 어떤 문서로 이뤄졌는지를 보여 주는 1차 사료야." }
+    ]
+  },
+  {
+    "id": "sl20",
+    "book": "",
+    "title": "중상주의와 자본주의",
+    "summary": "식민지에서 들어온 부가 유럽의 경제 제도를 어떻게 바꿨는지 정리한다.",
+    "keypoints": ["mercantilism", "정부를 위한 규제", "capitalism", "주식회사", "인플레이션"],
+    "tb": ["tb11"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "Rise of mercantilism in Europe",
+          "ko": "유럽에서 중상주의가 떠올랐다",
+          "important": true,
+          "note": "교과서가 굵게 표시한 핵심 용어야. 나라의 부를 금·은의 양으로 재고, 수출은 늘리고 수입은 막으려던 생각이야. 식민지를 원료 공급처이자 상품 시장으로 본 이유가 여기 있어.",
+          "words": [
+            { "w": "mercantilism", "ko": "중상주의", "x": "나라가 무역을 통제해 금과 은을 최대한 쌓아 두려던 경제 사상." }
+          ] },
+        { "en": "Emphasis on gaining commercial success of a country",
+          "ko": "나라 단위의 상업적 성공을 강조했다" },
+        { "en": "Regulations to only benefit the government",
+          "ko": "규제는 오직 정부에게 이익이 되도록 만들어졌다" },
+        { "en": "Developing capitalism",
+          "ko": "자본주의가 자라났다",
+          "words": [
+            { "w": "capitalism", "ko": "자본주의", "x": "개인이 자본을 모아 이윤을 좇아 사업하는 경제 체제." }
+          ] },
+        { "en": "Stocks and joint-stock companies become available (especially in Britain)",
+          "ko": "주식과 주식회사가 등장했다 (특히 영국에서)",
+          "important": true,
+          "note": "여러 사람이 돈을 나눠 대고 위험도 나눠 지는 방식이야. 먼 바다 항해처럼 실패하면 다 잃는 사업이 가능해진 이유가 바로 이거고, 14번 슬라이드의 VOC와 21번의 튤립 투기로 이어져.",
+          "words": [
+            { "w": "joint-stock company", "ko": "주식회사", "x": "여러 투자자가 주식을 나눠 갖고 이익과 손실을 함께 나누는 회사." }
+          ] },
+        { "en": "Money in Europe: causing inflations, powerful kingdoms (revolution…)",
+          "ko": "유럽에 돈이 쏟아지며 인플레이션이 생기고, 강력한 왕국들이 만들어졌다 (그리고 혁명으로…)",
+          "words": [
+            { "w": "inflation", "ko": "인플레이션, 물가 상승", "x": "돈이 흔해져 물건 값이 오르는 현상. 아메리카의 은이 대량으로 들어오면서 심해졌어." }
+          ] }
+      ] }
+    ]
+  },
+  {
+    "id": "sl21",
+    "book": "",
+    "title": "튤립 광풍",
+    "summary": "네덜란드의 튤립 투기 거품을 통해 자본주의 초기의 위험을 보여 준다.",
+    "keypoints": ["중앙아시아 원산", "버블", "DEIC의 돈", "튤립 한 뿌리 = 집 한 채"],
+    "tb": [],
+    "blocks": [
+      { "kind": "heading", "en": "Tulip Mania – Botany, Economics, and History", "ko": "튤립 광풍 — 식물학, 경제학, 그리고 역사" },
+      { "kind": "p", "sentences": [
+        { "en": "Originally from Central Asia",
+          "ko": "튤립은 원래 중앙아시아에서 왔다" },
+        { "en": "Bubble: price up, price down more rapidly",
+          "ko": "거품: 값이 올랐다가, 훨씬 더 빠르게 무너졌다",
+          "important": true,
+          "note": "교과서에 없는 수업 추가 내용이야. 20번 슬라이드의 주식회사·자본주의가 만들어 낸 첫 번째 대형 투기 사건으로 기억해 두면 좋아. 오늘날의 부동산·코인 거품과 구조가 똑같다는 점이 수업의 포인트야.",
+          "words": [
+            { "w": "bubble", "ko": "거품, 버블", "x": "실제 가치보다 값이 크게 부풀었다가 한순간에 꺼지는 현상." }
+          ] },
+        { "en": "DEIC: brought lots of money in the Netherlands",
+          "ko": "네덜란드 동인도회사(DEIC)가 네덜란드에 막대한 돈을 들여왔다" },
+        { "en": "Trading “unbud” tulips: speculation (stock)",
+          "ko": "아직 싹도 트지 않은 튤립을 사고팔았다: 투기(주식과 같은 방식)",
+          "words": [
+            { "w": "speculation", "ko": "투기", "x": "값이 오를 것만 노리고 사고파는 것. 실제 물건을 쓰려는 게 아니야." }
+          ] },
+        { "en": "One tulip bud = could buy a townhouse",
+          "ko": "튤립 한 뿌리 값으로 집 한 채를 살 수도 있었다" }
+      ] },
+      { "kind": "figure", "en": "Photograph of a red-and-white striped tulip, and a line graph titled “Dutch Tulip price, Nov. 1636 - Feb. 1637” showing the price rising from about 20 to 200 and then crashing back to about 20",
+        "ko": "붉고 흰 줄무늬 튤립 사진과, “1636년 11월~1637년 2월 네덜란드 튤립 가격” 그래프. 값이 20에서 200까지 올랐다가 다시 20으로 폭락한다",
+        "where": "슬라이드 오른쪽",
+        "note": "그래프의 모양 자체가 '버블'의 정의야. 100일 동안 열 배로 올랐다가 20일 만에 제자리로 돌아온 걸 눈으로 확인해 봐. 교과서에 없는 수업 추가 내용이지만 경제 개념 설명으로 시험에 나올 수 있어." }
+    ]
+  },
+  {
+    "id": "sl22",
+    "book": "",
+    "title": "콜럼버스의 교환",
+    "summary": "대륙 사이에 작물·가축·질병·생각이 오간 콜럼버스의 교환을 지도로 정리한다.",
+    "keypoints": ["Columbian Exchange", "신대륙: 옥수수·감자·담배", "구대륙: 커피·말·질병", "천연두와 홍역"],
+    "tb": ["tb12"],
+    "blocks": [
+      { "kind": "figure", "en": "Map of the Columbian Exchange with two big arrows across the Atlantic: “AMERICAS TO EUROPE, AFRICA, AND ASIA” carrying tobacco, pumpkin, quinine, turkey, squash, pineapple, sweet potato, avocado, peppers, cassava, peanut, potato, tomato, corn, beans and vanilla; “EUROPE, AFRICA, AND ASIA TO AMERICAS” carrying coffee bean, peach, pear, citrus fruits, olive, banana, sugar cane, honeybee, grains (wheat, rice, barley, oats), livestock (cattle, sheep, pig, horse), turnip, onion, grape, and diseases (smallpox, influenza, typhus, measles, malaria, diphtheria, whooping cough)",
+        "ko": "콜럼버스의 교환 지도. 대서양을 건너는 큰 화살표 두 개로, 아메리카에서 유럽·아프리카·아시아로는 담배·호박·키니네·칠면조·파인애플·고구마·아보카도·고추·카사바·땅콩·감자·토마토·옥수수·콩·바닐라가, 반대 방향으로는 커피·복숭아·배·감귤·올리브·바나나·사탕수수·꿀벌·곡물(밀·쌀·보리·귀리)·가축(소·양·돼지·말)·순무·양파·포도, 그리고 질병(천연두·독감·발진티푸스·홍역·말라리아·디프테리아·백일해)이 건너간다",
+        "where": "슬라이드 위쪽 전체",
+        "note": "어느 쪽에서 무엇이 갔는지를 비교하라는 지도야. 오른쪽 끝 해골 표시 옆의 질병 목록이 가장 중요해. 이 질병들이 18번 슬라이드의 '원주민이 빠르게 죽어 갔다'와 33번 결론의 '원주민 학살'을 설명하는 열쇠야." },
+      { "kind": "heading", "en": "The Columbian Exchange and Global Trade", "ko": "콜럼버스의 교환과 세계 무역" },
+      { "kind": "p", "sentences": [
+        { "en": "Global transfer of food, plants, and animals (+ideas)",
+          "ko": "음식·식물·동물(그리고 생각)이 지구 규모로 옮겨 다녔다",
+          "important": true,
+          "note": "교과서가 굵게 표시한 핵심 개념이야. '교환'이라는 말이 대등해 보이지만 실제로는 한쪽에 질병과 죽음이 훨씬 무겁게 돌아갔다는 점을 함께 기억해.",
+          "words": [
+            { "w": "transfer", "ko": "이동, 옮김", "x": "한 곳에서 다른 곳으로 옮겨 가는 것." }
+          ] },
+        { "en": "From the New World: corn, potatoes, tobacco",
+          "ko": "신대륙에서 간 것: 옥수수, 감자, 담배" },
+        { "en": "From the Old World: coffee, horses, diseases (smallpox, measles)",
+          "ko": "구대륙에서 간 것: 커피, 말, 그리고 질병(천연두, 홍역)",
+          "words": [
+            { "w": "smallpox", "ko": "천연두", "x": "면역이 없던 아메리카 원주민에게 가장 큰 피해를 준 전염병." }
+          ] }
+      ] }
+    ]
+  },
+  {
+    "id": "sl23",
+    "book": "",
+    "title": "17-3 식민지 라틴아메리카",
+    "summary": "라틴아메리카에 남은 유산과, 오늘날 콜럼버스의 날을 둘러싼 논쟁을 다룬다.",
+    "keypoints": ["스페인어권 라틴아메리카", "카리브해는 영어·프랑스어", "Columbus Day", "Indigenous People's Day"],
+    "tb": ["tb16"],
+    "blocks": [
+      { "kind": "heading", "en": "17-3 Colonial Latin America", "ko": "17-3 식민지 시대의 라틴아메리카" },
+      { "kind": "p", "sentences": [
+        { "en": "Legacy",
+          "ko": "남겨진 유산",
+          "words": [
+            { "w": "legacy", "ko": "유산", "x": "과거가 오늘날까지 남겨 놓은 것. 좋은 것만 뜻하지는 않아." }
+          ] },
+        { "en": "Latin America: Spanish speaking region (+Brazil)",
+          "ko": "라틴아메리카: 스페인어를 쓰는 지역 (그리고 브라질)",
+          "important": true,
+          "note": "브라질만 포르투갈어를 쓰는 이유가 11번 슬라이드의 토르데시야스 조약이야. 500년 전에 그은 선 하나가 지금 쓰는 언어를 결정했다는 게 이 단원에서 가장 실감 나는 연결고리야." },
+        { "en": "Caribbean: English and French more dominant",
+          "ko": "카리브해: 영어와 프랑스어가 더 우세하다" },
+        { "en": "Columbus Day (2nd Monday of Oct): losing status as national holiday in US",
+          "ko": "콜럼버스의 날(10월 둘째 월요일): 미국에서 국경일로서의 지위를 잃어 가고 있다",
+          "important": true,
+          "note": "교과서에 없는 수업 추가 내용이야. 6번 슬라이드의 '유럽인이 발견한 게 아니다'가 오늘날 실제 제도의 변화로 이어진 사례라서, 역사 해석이 현재를 바꾼다는 예로 쓰기 좋아." },
+        { "en": "Indigenous People's Day: replacement",
+          "ko": "원주민의 날: 그 자리를 대신하는 이름" }
+      ] },
+      { "kind": "figure", "en": "Map “Columbus Day by State” colouring each US state by whether it is observed as Columbus Day, Indigenous Peoples' Day, Native American's Day, Cabrini Day, or not observed at all",
+        "ko": "“주별 콜럼버스의 날” 지도. 주마다 콜럼버스의 날로 기념하는지, 원주민의 날·아메리카 원주민의 날·카브리니의 날로 바꿨는지, 아예 기념하지 않는지를 색으로 구분했다",
+        "where": "슬라이드 왼쪽 전체",
+        "note": "같은 날을 주마다 다르게 부른다는 걸 비교하라는 지도야. 흰색(기념하지 않음)이 꽤 많다는 점을 확인해 봐. 교과서에 없는 수업 추가 내용이지만, 역사 해석이 지금도 바뀌는 중이라는 걸 보여 주는 좋은 자료야." }
+    ]
+  },
+  {
+    "id": "sl24",
+    "book": "",
+    "title": "1492와 1992",
+    "summary": "글자라고는 두 연도뿐인 장으로, 500년이라는 간격을 생각해 보게 한다.",
+    "keypoints": ["1492년", "1992년", "500주년"],
+    "tb": ["tb16"],
+    "blocks": [
+      { "kind": "figure", "en": "A slide showing only two large numbers in green: 1492 above and 1992 below",
+        "ko": "연두색 큰 숫자 두 개만 있는 슬라이드. 위에 1492, 아래에 1992",
+        "where": "슬라이드 전체",
+        "note": "콜럼버스의 항해에서 정확히 500년이 지난 해를 나란히 놓은 거야. 1992년 500주년 기념 행사를 계기로 '기념할 일인가, 애도할 일인가'라는 논쟁이 크게 벌어졌고, 그래서 23번 슬라이드의 원주민의 날 움직임이 본격화됐어. 교과서에 없는 수업 추가 내용이지만 앞뒤 슬라이드를 잇는 고리야." }
+    ]
+  },
+  {
+    "id": "sl25",
+    "book": "",
+    "title": "콜럼버스의 네 차례 항해",
+    "summary": "콜럼버스의 1~4차 항로 지도와 함께, 그가 역사의 방향을 어떻게 바꿨는지 쓰게 한다.",
+    "keypoints": ["1~4차 항해 경로", "팔로스·카디스 출발", "카리브해 상륙지", "성찰 과제"],
+    "tb": ["tb06"],
+    "blocks": [
+      { "kind": "figure", "en": "Map of Christopher Columbus's four voyages, with the first, second, third and fourth voyage drawn in four different colours from Palos, S. Lucar and Cadiz in Spain to the Bahamas, Cuba, Santo Domingo, Jamaica, Guadeloupe, Martinique and the coast of Central and South America",
+        "ko": "콜럼버스의 네 차례 항해 지도. 1·2·3·4차 항로가 서로 다른 색으로 그려져, 스페인의 팔로스·산루카르·카디스에서 출발해 바하마·쿠바·산토도밍고·자메이카·과들루프·마르티니크와 중남미 해안까지 이어진다",
+        "where": "슬라이드 전체를 채우는 지도",
+        "note": "네 번의 항로가 점점 남쪽·서쪽으로 내려가는 걸 비교해 보라는 지도야. 1차 항해에서 닿은 곳이 아시아가 아니라 카리브해의 섬들이라는 게 핵심이고, 그래도 끝까지 인도 근처라고 믿었다는 점이 '서인도제도'라는 이름으로 남았어." },
+      { "kind": "check", "en": "Homework Reflection  In a short paragraph form, how did Columbus change the direction of history?",
+        "ko": "숙제 성찰  짧은 한 문단으로, 콜럼버스는 역사의 방향을 어떻게 바꿨을까?",
+        "note": "수업이 직접 낸 과제라 서술형 평가로 이어질 수 있어. 1번 슬라이드의 '돈이 역사를 움직였나'라는 질문과 6번의 '발견이 아니다'를 같이 넣어서 쓰면 한쪽에 치우치지 않은 답이 돼. 좋은 결과와 나쁜 결과를 모두 언급하는 게 좋아." }
+    ]
+  },
+  {
+    "id": "sl26",
+    "book": "",
+    "title": "이름 붙이기 논쟁",
+    "summary": "원주민을 무엇이라 부를지를 둘러싼 논쟁을 통해, 이름이 왜 중요한지 생각하게 한다.",
+    "keypoints": ["Native Americans vs. American Indians", "Inuit vs. Eskimo", "이름이 담는 편견", "First Nations·Aboriginals·Indigenous People"],
+    "tb": [],
+    "blocks": [
+      { "kind": "figure", "en": "Three covers of the same Agatha Christie novel side by side: the current title, an older edition whose title used a racist slur (not repeated here), and the title used today, And Then There Were None",
+        "ko": "같은 애거사 크리스티 소설의 표지 세 장. 하나는 원주민을 가리키는 옛 제목, 하나는 과거 아동서·소설 제목에 쓰인 인종차별 표현이 인쇄된 옛 판본(여기에는 옮기지 않았다), 하나는 오늘날 쓰는 제목 『그리고 아무도 없었다』이다",
+        "where": "슬라이드 왼쪽",
+        "note": "그 표현 자체를 여기 옮기지 않은 이유가 수업의 핵심이야. 같은 책인데 제목이 세 번 바뀌었다는 사실이, 사람을 부르는 말이 시대에 따라 문제로 인식되고 고쳐진다는 걸 보여 줘. 무엇을 썼는지보다 '왜 바꿨는지'에 집중해서 보자." },
+      { "kind": "p", "sentences": [
+        { "en": "The controversy of “Native Americans” vs. “American Indians”",
+          "ko": "'네이티브 아메리칸'이냐 '아메리칸 인디언'이냐를 둘러싼 논쟁",
+          "important": true,
+          "note": "이 단원의 관점을 정리하는 문장이야. 6번 슬라이드의 '유럽인이 발견한 게 아니다'가 여기서 '그럼 뭐라고 불러야 하나'라는 질문으로 이어져. 정답 하나를 외우는 게 아니라, 당사자들이 스스로를 뭐라 부르길 원하는지가 기준이라는 걸 기억해.",
+          "words": [
+            { "w": "controversy", "ko": "논쟁", "x": "사람들 의견이 크게 갈리는 문제." }
+          ] },
+        { "en": "Indians: Columbus thought they were (Asian) Indians",
+          "ko": "'인디언': 콜럼버스가 그들을 (아시아의) 인도 사람이라고 착각한 데서 나온 이름이다",
+          "important": true,
+          "note": "이름의 출발점 자체가 남의 착각이었다는 게 핵심이야. 10번 슬라이드의 '서인도제도'와 같은 뿌리에서 나온 말이고, 그래서 지금까지도 논쟁이 되는 거야." },
+        { "en": "Native Americans vs. (American) Indians",
+          "ko": "네이티브 아메리칸이냐, (아메리칸) 인디언이냐" },
+        { "en": "Inuit vs. Eskimo",
+          "ko": "이누이트냐, 에스키모냐",
+          "words": [
+            { "w": "Inuit", "ko": "이누이트", "x": "북극권 원주민이 스스로를 부르는 이름. '사람들'이라는 뜻이야." }
+          ] },
+        { "en": "Naming implies: low level of civilization",
+          "ko": "이름 붙이기에는 '문명 수준이 낮다'는 생각이 깔려 있었다",
+          "important": true,
+          "note": "왜 말을 고쳐야 하는지에 대한 답이야. 어떤 호칭은 그 사람들을 덜 발전한 존재로 깎아내리는 전제를 품고 있어서, 단어를 바꾸는 일이 곧 그 전제를 거부하는 일이 돼. 이름은 부르는 사람이 아니라 불리는 사람의 것이라는 관점으로 정리해 두자.",
+          "words": [
+            { "w": "imply", "ko": "함축하다, 은근히 담다", "x": "직접 말하지 않아도 그런 뜻이 깔려 있다는 것." },
+            { "w": "civilization", "ko": "문명", "x": "한 사회가 이룬 제도·기술·문화 전체." }
+          ] },
+        { "en": "First Nations (Can), Aboriginals (Australia)",
+          "ko": "퍼스트 네이션스(캐나다), 애버리지널(호주)" },
+        { "en": "Indigenous People (Global)",
+          "ko": "인디저너스 피플, 곧 원주민 (세계적으로 쓰는 말)" }
+      ] }
+    ]
+  },
+  {
+    "id": "sl27",
+    "book": "",
+    "title": "스페인의 정복",
+    "summary": "아메리카라는 이름의 유래와, 정복자들이 무엇을 노렸는지를 정리한다.",
+    "keypoints": ["Amerigo Vespucci", "Conquistadors", "금·은·플랜테이션", "인플레이션", "Mestizos"],
+    "tb": ["tb07", "tb17", "tb18"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "America = Amerigo Vespucci (it is not India, but the New World)",
+          "ko": "아메리카라는 이름은 아메리고 베스푸치에게서 왔다 (그곳은 인도가 아니라 새로운 대륙이었다)",
+          "important": true,
+          "note": "콜럼버스가 발견했다고 배우는데 정작 대륙 이름은 다른 사람 이름이라는 점이 재미있는 포인트야. 베스푸치가 '여기는 아시아가 아니다'라고 알아본 사람이라 이름이 붙었어. 26번 슬라이드의 이름 논쟁과 함께 보면 좋아." },
+        { "en": "Spanish Explorations",
+          "ko": "스페인의 탐험" },
+        { "en": "Conquistadors (Conquistadores): conquered many parts of the Americas (+present day US)",
+          "ko": "콩키스타도르(정복자들): 아메리카의 많은 지역을 정복했다 (오늘날의 미국 땅까지)",
+          "words": [
+            { "w": "conquistador", "ko": "콩키스타도르, 정복자", "x": "스페인어로 '정복하는 사람'. 코르테스·피사로가 대표적이야." }
+          ] },
+        { "en": "Spain wanted gold, silver, and plantation (growing money-making plants)",
+          "ko": "스페인이 원한 것은 금, 은, 그리고 돈이 되는 작물을 기르는 플랜테이션이었다",
+          "important": true,
+          "note": "Gold·Glory·God 중에서 실제로는 Gold가 앞섰다는 증거 문장이야. 1번 슬라이드의 '돈이 역사를 움직였나'라는 질문에 답할 때 쓰면 좋아.",
+          "words": [
+            { "w": "plantation", "ko": "플랜테이션, 대농장", "x": "설탕·담배처럼 돈이 되는 작물 하나를 대규모로 기르는 농장. 많은 노동력이 필요했어." }
+          ] },
+        { "en": "Massive gold/silver brought inflation",
+          "ko": "엄청난 양의 금과 은이 들어와 인플레이션을 일으켰다" },
+        { "en": "Mestizos in Latin America: Spanish + Original Inhabitant",
+          "ko": "라틴아메리카의 메스티소: 스페인 사람과 원래 살던 사람 사이에서 태어난 이들",
+          "words": [
+            { "w": "Mestizo", "ko": "메스티소", "x": "스페인계와 원주민 사이에서 태어난 사람을 가리키던 말. 32번 슬라이드의 신분 피라미드에 나와." }
+          ] }
+      ] }
+    ]
+  },
+  {
+    "id": "sl28",
+    "book": "",
+    "title": "아즈텍과 아메리카 문명",
+    "summary": "글자 없이 그림과 지도만 있는 장으로, 정복 이전 아메리카 문명의 위치와 규모를 보여 준다.",
+    "keypoints": ["테노치티틀란", "호수 위의 도시", "아즈텍·마야·잉카의 위치", "쿠스코와 안데스"],
+    "tb": ["tb07", "tb08"],
+    "blocks": [
+      { "kind": "figure", "en": "Painted reconstruction of La Gran Tenochtitlan, the Aztec capital built on a lake, with its ceremonial centre, causeways to Tacuba and Chapultepec, and volcanoes in the distance",
+        "ko": "호수 위에 세워진 아즈텍의 수도 테노치티틀란을 복원해 그린 그림. 중앙 의례 구역, 타쿠바와 차풀테펙으로 이어지는 둑길, 멀리 화산이 보인다",
+        "where": "슬라이드 왼쪽",
+        "note": "정복당하기 전의 아즈텍이 얼마나 큰 도시를 가지고 있었는지 보여 주는 그림이야. 당시 유럽의 어느 도시보다도 컸다고 해. '문명이 없는 땅'이라는 말이 사실과 얼마나 다른지 이 그림 하나로 반박돼." },
+      { "kind": "figure", "en": "Map of Latin America colouring the areas of the Aztec, Maya and Inca civilizations, marking Tenochtitlán, Tikal, Cuzco and the Andes Mountains",
+        "ko": "아즈텍·마야·잉카 문명의 영역을 색으로 구분한 라틴아메리카 지도. 테노치티틀란, 티칼, 쿠스코와 안데스산맥이 표시돼 있다",
+        "where": "슬라이드 오른쪽",
+        "note": "세 문명이 서로 어디에 있었는지를 비교하라는 지도야. 아즈텍과 마야는 중앙아메리카, 잉카는 안데스산맥을 따라 길게 뻗어 있다는 위치를 확실히 구분해 두면 시험에서 헷갈리지 않아." }
+    ]
+  },
+  {
+    "id": "sl29",
+    "book": "",
+    "title": "아즈텍과 마야의 유적",
+    "summary": "글자 없이 사진만 있는 장으로, 아즈텍 달력돌과 마야의 도시·피라미드를 보여 준다.",
+    "keypoints": ["아즈텍 태양의 돌", "팔렝케 유적", "치첸이트사 피라미드"],
+    "tb": ["tb07"],
+    "blocks": [
+      { "kind": "figure", "en": "Photograph of the Aztec calendar stone (Sun Stone), a large carved circular disc",
+        "ko": "아즈텍의 달력돌(태양의 돌) 사진. 커다란 원반에 정교한 조각이 새겨져 있다",
+        "where": "슬라이드 왼쪽 위",
+        "note": "정교한 천문·역법 지식을 가지고 있었다는 증거야. 28번 슬라이드의 도시 그림과 함께, 정복 이전에 이미 높은 수준의 문명이 있었다는 근거로 쓰여." },
+      { "kind": "figure", "en": "Photograph of the Maya ruins at Palenque, stone temples and palaces among green forest",
+        "ko": "초록 숲 사이에 남은 마야의 팔렝케 유적 사진. 돌로 지은 신전과 궁전이 보인다",
+        "where": "슬라이드 왼쪽 아래",
+        "note": "마야 문명의 건축 수준을 보여 주는 사진이야. 아즈텍보다 앞선 시기의 문명이라는 점을 28번 지도에서 위치와 함께 확인해 봐." },
+      { "kind": "figure", "en": "Photograph of the stepped pyramid at Chichen Itza with tourists climbing the stairs",
+        "ko": "관광객들이 계단을 오르고 있는 치첸이트사의 계단식 피라미드 사진",
+        "where": "슬라이드 오른쪽",
+        "note": "지금도 남아 있는 마야의 대표 유적이야. 사람과 비교하면 규모를 짐작할 수 있어. 이런 건축물을 남긴 사회가 어떻게 무너졌는지가 다음 슬라이드들의 주제야." }
+    ]
+  },
+  {
+    "id": "sl30",
+    "book": "",
+    "title": "마추픽추",
+    "summary": "글자 없이 사진 한 장만 있는 장으로, 안데스 산속의 잉카 도시 마추픽추를 보여 준다.",
+    "keypoints": ["마추픽추", "잉카의 석조 건축", "안데스 고산 도시"],
+    "tb": ["tb08"],
+    "blocks": [
+      { "kind": "figure", "en": "Photograph of Machu Picchu, the Inca stone city set on a green ridge high in the Andes mountains",
+        "ko": "안데스산맥 높은 능선 위에 자리 잡은 잉카의 석조 도시 마추픽추 사진",
+        "where": "슬라이드 전체",
+        "note": "잉카가 시멘트 없이 돌을 정밀하게 깎아 맞춰 지은 도시야. 해발 2,400미터 산속에 이런 도시를 세웠다는 게 잉카의 기술력을 보여 줘. 28번 지도에서 쿠스코와 안데스 표시를 다시 찾아보면 위치가 감이 올 거야." }
+    ]
+  },
+  {
+    "id": "sl31",
+    "book": "",
+    "title": "엔코미엔다와 광산 노동",
+    "summary": "글자 없이 그림 두 점만 있는 장으로, 식민지의 강제 노동 구조를 보여 준다.",
+    "keypoints": ["엔코미엔다 구조도", "강제 노동", "금·은 채굴", "감시받는 원주민 노동"],
+    "tb": ["tb18"],
+    "blocks": [
+      { "kind": "figure", "en": "Illustrated diagram titled “Encomienda americana”, labelling in Spanish the fields (campos de cultivo), the Spanish fortress (fortaleza española), the port (puerto), the Aztec temple (templo azteca), the monastery (monasterio), the indigenous dwellings (viviendas indígenas), the overseer (capataz) and the forced labour (trabajos forzados)",
+        "ko": "“아메리카의 엔코미엔다” 구조도. 경작지, 스페인 요새, 항구, 아즈텍 신전, 수도원, 원주민 거주지, 감독관, 강제 노동이 스페인어로 표시돼 있다",
+        "where": "슬라이드 왼쪽",
+        "note": "한 장의 그림 안에 식민지 지배의 뼈대가 다 들어 있어. 요새(군사)·수도원(종교)·경작지(경제)가 한 세트로 묶이고, 맨 아래에 강제 노동(trabajos forzados)이 있다는 배치를 눈여겨봐. 32번 슬라이드의 엔코미엔다 설명과 짝을 이루는 그림이야." },
+      { "kind": "figure", "en": "Old coloured engraving of indigenous workers digging and carrying baskets of gold ore in a mine while armed Spaniards stand watching",
+        "ko": "무장한 스페인 사람들이 지켜보는 가운데 원주민들이 광산에서 금광석을 캐고 바구니로 나르는 모습을 그린 옛 채색 판화",
+        "where": "슬라이드 오른쪽",
+        "note": "27번 슬라이드의 '스페인이 원한 것은 금과 은'이 실제로 누구의 몸으로 이뤄졌는지를 보여 주는 그림이야. 감시하는 사람과 일하는 사람이 누구인지, 그 관계가 그림에 그대로 드러나 있어." }
+    ]
+  },
+  {
+    "id": "sl32",
+    "book": "",
+    "title": "엔코미엔다와 신분 구조",
+    "summary": "엔코미엔다 제도와 선교 거점, 그리고 식민지의 신분 피라미드를 정리한다.",
+    "keypoints": ["Encomiendas", "Haciendas", "선교 거점", "페닌술라르~노예로 이어지는 신분 피라미드"],
+    "tb": ["tb17", "tb18", "tb19"],
+    "blocks": [
+      { "kind": "p", "sentences": [
+        { "en": "Encomiendas: land given from the crown, tributary system (receive gold/protect the Indigenous & teach Christianity, but) = small European master ruling over everyone = violence in the New World",
+          "ko": "엔코미엔다: 국왕이 내려 준 땅과 공납 제도. 원주민을 보호하고 기독교를 가르치는 대신 금을 받는다는 명분이었지만, 실제로는 소수의 유럽인 주인이 모두를 지배하는 구조였고 곧 폭력이었다",
+          "important": true,
+          "note": "명분과 실제가 얼마나 달랐는지를 보여 주는 핵심 문장이야. 제도 이름만 외우지 말고 '보호와 교육'이라는 말이 실제로는 강제 노동이었다는 점을 짚어야 해. 31번 슬라이드의 구조도가 바로 이 제도를 그린 거야.",
+          "words": [
+            { "w": "encomienda", "ko": "엔코미엔다", "x": "정복자에게 원주민의 노동과 공납을 거둘 권리를 준 스페인의 식민지 제도." },
+            { "w": "tributary system", "ko": "공납 제도", "x": "지배받는 쪽이 정해진 물건이나 노동을 바치게 하는 제도." },
+            { "w": "crown", "ko": "왕실, 국왕", "x": "왕관이라는 뜻에서 나아가 '국왕·왕실'을 가리켜." }
+          ] },
+        { "en": "Became Haciendas: paid labor system, but no different from slavery",
+          "ko": "이후 아시엔다로 바뀌었다: 임금을 주는 형태였지만 실상은 노예제와 다르지 않았다",
+          "words": [
+            { "w": "hacienda", "ko": "아시엔다", "x": "라틴아메리카의 큰 사유 농장. 빚에 묶인 노동으로 굴러갔어." }
+          ] },
+        { "en": "Missions in the Americas: Spanish catholic centers",
+          "ko": "아메리카의 선교 거점: 스페인 가톨릭의 중심지" }
+      ] },
+      { "kind": "figure", "en": "Map of the Spanish missions founded in Alta California, from San Diego de Alcalá (1769) in the south to San Francisco Solano (1823) in the north",
+        "ko": "알타 캘리포니아에 세워진 스페인 선교 거점 지도. 남쪽 샌디에이고 데 알칼라(1769)부터 북쪽 샌프란시스코 솔라노(1823)까지 이어진다",
+        "where": "슬라이드 오른쪽 위",
+        "note": "선교 거점이 해안을 따라 사슬처럼 이어진 걸 보라는 지도야. 오늘날 샌디에이고·샌프란시스코 같은 캘리포니아 도시 이름이 여기서 왔다는 점이 흥미로워. 종교가 식민 지배의 한 축이었다는 증거이기도 해." },
+      { "kind": "figure", "en": "Pyramid diagram of colonial Latin American society: PENINSULARES (Spaniards born in Spain) at the top, then CREOLES (born in New Spain of Spanish parents), MESTIZOS (born of Spanish and Native American parents), NATIVE AMERICAN INDIANS, and ENSLAVED PERSONS (brought from Africa and the Caribbean) at the bottom",
+        "ko": "식민지 라틴아메리카의 신분 피라미드. 맨 위가 페닌술라르(스페인에서 태어난 스페인인), 그 아래 크리오요(현지에서 태어난 스페인계), 메스티소(스페인계와 원주민 사이에서 태어난 사람), 원주민, 그리고 맨 아래가 아프리카와 카리브해에서 끌려온 노예 신분의 사람들이다",
+        "where": "슬라이드 오른쪽 아래",
+        "note": "'어디서 태어났는가'만으로 평생 자리가 정해졌다는 걸 보여 주는 도표야. 같은 스페인계인데 페닌술라르와 크리오요를 나눈 이 차별이 나중에 라틴아메리카 독립운동의 불씨가 돼. 27번 슬라이드의 메스티소, 16번의 노예무역이 모두 이 그림 안에 들어 있어." }
+    ]
+  },
+  {
+    "id": "sl33",
+    "book": "",
+    "title": "결론 — 유럽의 발견?",
+    "summary": "대항해가 남긴 영향을 원주민 피해, 노예무역, 새 항로, 환경 파괴, 유럽 경제의 성장으로 정리한다.",
+    "keypoints": ["원주민 학살과 질병", "대서양 노예무역", "북서항로와 운하", "환경 파괴의 시작", "유럽 경제의 성장"],
+    "tb": ["tb22"],
+    "blocks": [
+      { "kind": "heading", "en": "Conclusion – European Discovery?", "ko": "결론 — 유럽의 '발견'이었을까?" },
+      { "kind": "p", "sentences": [
+        { "en": "Impacts",
+          "ko": "영향" },
+        { "en": "Native American Massacre: Diseases (smallpox, measles) and Slavery",
+          "ko": "아메리카 원주민의 참극: 질병(천연두, 홍역)과 노예화",
+          "important": true,
+          "note": "22번 슬라이드의 콜럼버스의 교환에서 건너간 질병이 여기서 결과로 나타나. 총칼보다 병으로 죽은 사람이 훨씬 많았다는 점이 이 단원에서 꼭 기억할 사실이야.",
+          "words": [
+            { "w": "massacre", "ko": "대량 학살", "x": "많은 사람이 한꺼번에 죽임을 당하는 것." }
+          ] },
+        { "en": "Colonization of Other Parts of the World",
+          "ko": "세계 다른 지역들의 식민지화" },
+        { "en": "Trans-Atlantic Slave Trade",
+          "ko": "대서양 횡단 노예무역" },
+        { "en": "Desire for more efficient travel routes",
+          "ko": "더 효율적인 항로를 향한 욕망" },
+        { "en": "The Northwest Passage",
+          "ko": "북서항로" },
+        { "en": "Canals: Suez (1869), Panama (1914)",
+          "ko": "운하: 수에즈(1869), 파나마(1914)",
+          "words": [
+            { "w": "canal", "ko": "운하", "x": "배가 다니도록 사람이 판 물길. 대륙을 돌아가지 않아도 되게 해 줬어." }
+          ] },
+        { "en": "Beginning of Environmental Destruction",
+          "ko": "환경 파괴의 시작",
+          "important": true,
+          "note": "교과서에 없는 수업 추가 내용이야. 대항해를 경제사로만 보지 않고 환경사로도 본다는 관점이라 서술형에 쓰기 좋아. 외래종 유입, 단일 작물 재배, 광산 개발 세 가지를 근거로 들면 돼.",
+          "words": [
+            { "w": "environmental", "ko": "환경의", "x": "우리를 둘러싼 자연 조건에 관한. environment(환경)의 형용사." }
+          ] },
+        { "en": "Columbian Exchange and invasive species",
+          "ko": "콜럼버스의 교환과 침입 외래종",
+          "words": [
+            { "w": "invasive species", "ko": "침입 외래종", "x": "원래 없던 곳에 들어와 그곳 생태계를 헤집는 생물." }
+          ] },
+        { "en": "Destroy nature, plant cash crops (tobacco, sugar cane)",
+          "ko": "자연을 밀어내고 돈이 되는 작물(담배, 사탕수수)을 심었다",
+          "words": [
+            { "w": "cash crop", "ko": "환금 작물", "x": "먹으려고가 아니라 팔아서 돈을 벌려고 기르는 작물." }
+          ] },
+        { "en": "Gold and silver destroyed environment",
+          "ko": "금과 은을 캐내느라 환경이 망가졌다" },
+        { "en": "Development of European Economy",
+          "ko": "유럽 경제의 발전" },
+        { "en": "Also sharing economic destruction",
+          "ko": "동시에 경제적 파괴도 함께 퍼뜨렸다" }
+      ] },
+      { "kind": "figure", "en": "Two globes comparing the Northwest Passage and the Northern Sea Route (dotted red) with the current shipping routes (dotted yellow) between Rotterdam, San Francisco and Yokohama",
+        "ko": "북서항로·북극해 항로(붉은 점선)와 현재 항로(노란 점선)를 비교한 지구본 두 개. 로테르담과 샌프란시스코, 요코하마를 잇는다",
+        "where": "슬라이드 오른쪽 위",
+        "note": "붉은 선이 노란 선보다 훨씬 짧다는 걸 비교하라는 그림이야. 500년 전 사람들이 찾던 지름길을 지금도 찾고 있고, 기후변화로 북극 얼음이 녹으면서 실제로 열리고 있다는 게 수업의 마지막 반전이야." },
+      { "kind": "figure", "en": "Map of the Canadian Arctic showing the Northwest Passage route through the Bering Sea, Banks Island, Victoria Island and Baffin Bay",
+        "ko": "베링해에서 뱅크스섬·빅토리아섬을 지나 배핀만으로 이어지는 북서항로를 표시한 캐나다 북극 지도",
+        "where": "슬라이드 오른쪽 아래",
+        "note": "위 지구본의 붉은 점선을 확대해 놓은 지도야. 섬과 얼음 사이를 헤집고 가야 해서 오랫동안 불가능했던 길인데, 그 길을 찾다가 북아메리카 탐험이 이어졌다는 점을 기억해 둬." }
+    ]
+  }
+]

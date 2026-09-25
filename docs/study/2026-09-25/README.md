@@ -8,12 +8,34 @@
 | 파일 | 내용 | 공개 페이지(아티팩트) |
 |---|---|---|
 | `haeum-interview-note.html` | 하음 웹툰·만화과 면접 노트 (청강대·백석예대·한국영상대) | https://claude.ai/artifact/VMD5NEzMV15riPi3u12EKb (Version 6) |
-| `haul-worldhistory-ch17.html` | 하울 세계사 노트 — Ch.17 대항해시대 | https://claude.ai/artifact/BFQYaoziMet7j5QTBUFwcU (Version 2) |
+| ~~`haul-worldhistory-ch17.html`~~ → **`frontend/public/notes/haul-worldhistory-ch17.html`** | 하울 세계사 노트 — Ch.17 대항해시대 (**2026-09-25 v2 로 전면 개편**) | https://claude.ai/artifact/BFQYaoziMet7j5QTBUFwcU |
 
 - HTML은 브라우저로 바로 열린다 (구글 폰트만 외부 로드).
 - 아티팩트는 **비공개**다. 아이들이 보려면 페이지의 Share 메뉴에서 공유해야 한다.
 - 아티팩트를 수정하려면: 다른 세션에서 위 URL을 `url`로 넘겨 읽고(read) → 고친 뒤 같은 URL로 publish. 로컬 HTML을 고쳤다면 그 파일로 같은 URL에 publish 하면 된다.
 - 이 폴더는 `docs/` 아래라 Vercel(프론트 `frontend/`만 배포)에 올라가지 않는다 → 아이들 자료가 외부에 노출되지 않는다.
+
+## 0. ⚠️ 세계사 노트는 v2 로 다시 만들어졌다 (2026-09-25)
+
+이 폴더에 있던 `haul-worldhistory-ch17.html` 은 **삭제했다.** 사본이 갈라지는 걸 막기 위해서다.
+지금 쓰는 파일은 앱 안에 하나뿐이다.
+
+```
+frontend/public/notes/haul-worldhistory-ch17.html   ← 노트 본문 (유일한 원본)
+frontend/public/notes/ch17/                          ← 교과서 24쪽 + 슬라이드 33장 + AI 그림 8장 이미지
+```
+
+v2 에서 달라진 것:
+
+- **교과서·슬라이드 PDF 를 페이지 이미지로 넣었다.** 책과 똑같은 쪽을 펼쳐 볼 수 있다.
+- **영어 문장을 누르면 해석**이 나온다. 안 누르면 영어만 보인다.
+- **단어를 두 번 누르면** 뜻과 설명이 뜬다(휴대폰 두 번 탭도 됨).
+- 중요한 문장은 밑줄과 👆 로 표시하고, 누르면 **해석 / 부연설명**을 골라서 볼 수 있다.
+- 교과서 한 쪽 = 카드 하나이고, 그 안에 **원문 · 요약 · 관련 슬라이드**가 탭으로 묶여 있다.
+- 노트를 고칠 때는 `scratchpad` 가 아니라 **원본 데이터 → 빌드 스크립트** 흐름을 다시 만들어야 한다.
+  데이터는 이 폴더의 `content-v2/` 에 함께 저장해 두었다.
+
+---
 
 ## 1. 하음이 면접 노트 — 무엇이 들어 있나
 
